@@ -17,6 +17,20 @@ Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages f
 | `tools/import-workbench.py` | Copies the workbench in from `~/self-study` and adds offline support |
 | `style.css`, `script.js` | Shared styles; `script.js` fills every `data-list` block from `/data/` |
 
+## Colours
+
+Defined once at the top of `style.css`. Keep to these five (tints of them are fine):
+
+| Colour | HEX | Role | Share |
+| --- | --- | --- | ---: |
+| White | `#FFFFFF` | base background, whitespace | 65% |
+| Light Gray | `#F5F6F7` | section backgrounds, cards | 15% |
+| Charcoal | `#252A2E` | text, main UI, icons | 10% |
+| Ice Blue | `#A9D9E6` | brand colour, secondary accent | 8% |
+| Acid Lime | `#B7F000` | emphasis, hover, special elements | 2% |
+
+Ice Blue and Acid Lime are too light to be text on white — use them as backgrounds, underlines and highlights with Charcoal text on top.
+
 ## Adding things
 
 Every list item is written once with `en` and `ja` text, and shows up on Home, the list page, and both languages. Lists are shown in file order — put the newest entry first.

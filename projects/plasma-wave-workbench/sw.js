@@ -3,7 +3,7 @@
    3 s so a weak train signal doesn't leave you waiting. Fonts and icons:
    cache first. */
 
-const VERSION = "93e28c8f1c39";
+const VERSION = "40ce8322813e";
 const CACHE = `workbench-${VERSION}`;
 const PRECACHE = ["./", "manifest.webmanifest", "/favicon.svg", "/assets/icons/icon-180.png", "/assets/icons/icon-512.png"];
 

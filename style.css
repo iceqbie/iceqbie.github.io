@@ -4,18 +4,19 @@
 
 :root {
 
-    /* Colors */
-    --snow: #F8FAFA;
-    --white: #FFFFFF;
-    --charcoal: #20242A;
-    --ice-blue: #A8DCE8;
-    --slate: #667483;
-    --mist: #DDE3E6;
+    /* Colors — the ice³ palette (share of the page in brackets) */
+    --white: #FFFFFF;        /* base background, whitespace (65%) */
+    --light-gray: #F5F6F7;   /* section backgrounds, cards (15%) */
+    --charcoal: #252A2E;     /* text, main UI, icons (10%) */
+    --ice-blue: #A9D9E6;     /* brand colour, secondary accent (8%) */
+    --lime: #B7F000;         /* emphasis, hover, special elements (2%) */
 
-    /* Accent — deep teal (5.7:1 on snow) */
-    --accent: #1F6F86;
-    --accent-strong: #17566A;
-    --accent-soft: rgba(31, 111, 134, 0.08);
+    /* Tints of the palette (not new hues). Ice blue and lime are too
+       light for text on white, so they are only ever backgrounds,
+       underlines or highlights with charcoal text on top. */
+    --charcoal-soft: #5C6268;                 /* secondary text, 6.3:1 on white */
+    --line: rgba(37, 42, 46, 0.12);           /* borders, rules */
+    --ice-soft: rgba(169, 217, 230, 0.35);    /* tags, badges */
 
     /* Typography */
     --font-sans: "Inter", "Noto Sans JP", sans-serif;
@@ -36,9 +37,9 @@
     --space-xxl: 128px;
 
     /* Borders */
-    --border: 1px solid var(--mist);
+    --border: 1px solid var(--line);
     --radius: 6px;
-    --focus-ring: 2px solid var(--accent);
+    --focus-ring: 2px solid var(--charcoal);
 }
 
 
@@ -60,7 +61,7 @@ html {
 body {
     margin: 0;
 
-    background: var(--snow);
+    background: var(--white);
     color: var(--charcoal);
 
     font-family: var(--font-sans);
@@ -114,25 +115,28 @@ ol {
     padding: 8px 14px;
 
     background: var(--charcoal);
-    color: var(--snow);
+    color: var(--white);
 }
 
 .skip-link:focus {
     top: var(--space-sm);
 }
 
-/* Body links: accent colour with an underline, so they are
-   recognisable without relying on colour alone. */
+/* Body links: charcoal text with an ice-blue underline; on hover a
+   lime highlight. Recognisable without relying on colour alone. */
 .text-link,
 .prose a,
 .about-main a,
 .timeline-content a,
 .publication-body h3 a {
-    color: var(--accent);
+    color: var(--charcoal);
 
     text-decoration: underline;
-    text-decoration-thickness: 1px;
+    text-decoration-color: var(--ice-blue);
+    text-decoration-thickness: 2px;
     text-underline-offset: 3px;
+
+    transition: background-color 160ms ease;
 }
 
 .text-link:hover,
@@ -140,8 +144,8 @@ ol {
 .about-main a:hover,
 .timeline-content a:hover,
 .publication-body h3 a:hover {
-    color: var(--accent-strong);
-    text-decoration-thickness: 2px;
+    background: var(--lime);
+    text-decoration-color: var(--charcoal);
 }
 
 
@@ -168,7 +172,7 @@ ol {
     top: 0;
     z-index: 100;
 
-    background: rgba(248, 250, 250, 0.92);
+    background: rgba(255, 255, 255, 0.92);
 
     border-bottom: var(--border);
 
@@ -219,14 +223,11 @@ ol {
 }
 
 .site-nav a:hover {
-    color: var(--accent);
-    background: var(--accent-soft);
+    background: var(--light-gray);
 }
 
 .site-nav a[aria-current="page"] {
-    color: var(--accent);
-
-    box-shadow: inset 0 -2px 0 var(--accent);
+    box-shadow: inset 0 -3px 0 var(--ice-blue);
     border-radius: 0;
 }
 
@@ -278,7 +279,7 @@ ol {
     font-family: var(--font-mono);
     font-size: 14px;
 
-    border: 1px solid var(--mist);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--white);
 
@@ -288,21 +289,15 @@ ol {
         color 160ms ease;
 }
 
-.button:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+.button:hover,
+.button-primary:hover {
+    background: var(--lime);
+    border-color: var(--lime);
 }
 
 .button-primary {
-    color: var(--white);
-    background: var(--accent);
-    border-color: var(--accent);
-}
-
-.button-primary:hover {
-    color: var(--white);
-    background: var(--accent-strong);
-    border-color: var(--accent-strong);
+    background: var(--ice-blue);
+    border-color: var(--ice-blue);
 }
 
 
@@ -378,7 +373,7 @@ ol {
     max-width: var(--text-width);
     margin-bottom: 0;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-size: 1.1rem;
 }
@@ -396,7 +391,7 @@ ol {
 }
 
 .section-tinted {
-    background: rgba(221, 227, 230, 0.25);
+    background: var(--light-gray);
 }
 
 .section-heading {
@@ -409,10 +404,17 @@ ol {
 }
 
 .section-number {
-    color: var(--accent);
+    align-self: center;
+
+    padding: 2px 10px;
+
+    color: var(--charcoal);
+    background: var(--ice-blue);
+
+    border-radius: 99px;
 
     font-family: var(--font-mono);
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 500;
 }
 
@@ -427,17 +429,20 @@ ol {
 .section-more {
     margin-left: auto;
 
-    color: var(--accent);
+    color: var(--charcoal);
 
     font-family: var(--font-mono);
     font-size: 14px;
 
     text-decoration: underline;
+    text-decoration-color: var(--ice-blue);
+    text-decoration-thickness: 2px;
     text-underline-offset: 3px;
 }
 
 .section-more:hover {
-    color: var(--accent-strong);
+    background: var(--lime);
+    text-decoration-color: var(--charcoal);
 }
 
 .sub-heading {
@@ -448,7 +453,7 @@ ol {
 }
 
 .list-empty {
-    color: var(--slate);
+    color: var(--charcoal-soft);
 }
 
 
@@ -473,7 +478,7 @@ ol {
 }
 
 .about-main p + p {
-    color: var(--slate);
+    color: var(--charcoal-soft);
 }
 
 .about-meta {
@@ -499,7 +504,7 @@ ol {
 .meta-label {
     margin-bottom: 2px;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 13px;
@@ -527,9 +532,9 @@ ol {
 
     overflow: hidden;
 
-    background: var(--white);
+    background: var(--light-gray);
 
-    border: var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius);
 
     transition:
@@ -538,9 +543,14 @@ ol {
         box-shadow 160ms ease;
 }
 
+/* Cards are light gray on white sections, white on gray ones. */
+.section-tinted .card {
+    background: var(--white);
+}
+
 .card:has(.card-link):hover {
-    border-color: var(--accent);
-    box-shadow: 0 6px 20px rgba(32, 36, 42, 0.06);
+    border-color: var(--charcoal);
+    box-shadow: 0 6px 20px rgba(37, 42, 46, 0.08);
     transform: translateY(-2px);
 }
 
@@ -555,7 +565,7 @@ ol {
 
     object-fit: cover;
 
-    background: var(--mist);
+    background: var(--white);
 
     border-bottom: var(--border);
 }
@@ -567,10 +577,10 @@ ol {
     padding: var(--space-sm) var(--space-md);
 
     background:
-        radial-gradient(circle at 80% 20%, rgba(168, 220, 232, 0.9), transparent 55%),
-        linear-gradient(135deg, var(--accent-soft), rgba(168, 220, 232, 0.35));
+        radial-gradient(circle at 80% 20%, var(--ice-blue), transparent 60%),
+        linear-gradient(135deg, var(--light-gray), var(--ice-soft));
 
-    color: var(--accent);
+    color: var(--charcoal);
 
     font-size: 3rem;
     font-weight: 600;
@@ -596,7 +606,7 @@ ol {
 
     margin: 0;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 13px;
@@ -624,14 +634,15 @@ ol {
     outline: none;
 }
 
-.card:has(.card-link):hover .card-title {
-    color: var(--accent);
+/* Highlighter stroke under the title on hover. */
+.card:has(.card-link):hover .card-link {
+    background: linear-gradient(transparent 60%, var(--lime) 60%);
 }
 
 .card-summary {
     margin: 0;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-size: 15.5px;
 }
@@ -650,9 +661,9 @@ ol {
 .tags li {
     padding: 2px 8px;
 
-    color: var(--accent);
+    color: var(--charcoal);
+    background: var(--ice-soft);
 
-    border: 1px solid rgba(31, 111, 134, 0.3);
     border-radius: 99px;
 
     font-family: var(--font-mono);
@@ -664,8 +675,8 @@ ol {
 
     padding: 1px 8px;
 
-    color: var(--accent);
-    background: var(--accent-soft);
+    color: var(--charcoal);
+    background: var(--ice-soft);
 
     border-radius: 99px;
 
@@ -675,12 +686,11 @@ ol {
 }
 
 .badge-award {
-    color: var(--charcoal);
-    background: var(--ice-blue);
+    background: var(--lime);
 }
 
 .interest-index {
-    color: var(--accent);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 13px;
@@ -707,7 +717,7 @@ ol {
 }
 
 .publication-year {
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 14px;
@@ -728,7 +738,7 @@ ol {
 .journal {
     margin-bottom: var(--space-xs);
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
     font-size: 15px;
 }
 
@@ -742,10 +752,17 @@ ol {
 }
 
 .publication-links a {
-    color: var(--accent);
+    color: var(--charcoal);
 
     text-decoration: underline;
+    text-decoration-color: var(--ice-blue);
+    text-decoration-thickness: 2px;
     text-underline-offset: 3px;
+}
+
+.publication-links a:hover {
+    background: var(--lime);
+    text-decoration-color: var(--charcoal);
 }
 
 
@@ -771,7 +788,7 @@ ol {
 .timeline-year {
     padding-top: 2px;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 14px;
@@ -795,7 +812,7 @@ ol {
 .timeline-content p {
     margin: 0;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
     font-size: 15.5px;
 }
 
@@ -845,7 +862,7 @@ ol {
 
     -webkit-overflow-scrolling: touch;
 
-    scrollbar-color: var(--mist) transparent;
+    scrollbar-color: var(--line) transparent;
 }
 
 .photo-card {
@@ -853,7 +870,7 @@ ol {
 
     overflow: hidden;
 
-    background: var(--mist);
+    background: var(--light-gray);
 
     border-radius: 4px;
 }
@@ -907,7 +924,7 @@ ol {
 
     border-top: var(--border);
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 13px;
@@ -930,7 +947,7 @@ ol {
 .prose-meta {
     margin-bottom: var(--space-lg);
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
     font-size: 13px;
@@ -1002,7 +1019,7 @@ ol {
 .prose figcaption {
     margin-top: 6px;
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-size: 14px;
 }
@@ -1012,9 +1029,9 @@ ol {
     margin-inline: 0;
     padding: 12px 18px;
 
-    background: var(--accent-soft);
+    background: var(--light-gray);
 
-    border-left: 3px solid var(--accent);
+    border-left: 3px solid var(--ice-blue);
     border-radius: 0 var(--radius) var(--radius) 0;
 }
 
@@ -1026,7 +1043,7 @@ ol {
 .prose code {
     padding: 1px 5px;
 
-    background: var(--mist);
+    background: var(--light-gray);
 
     border-radius: 4px;
 
@@ -1040,7 +1057,7 @@ ol {
     padding: 16px;
 
     background: var(--charcoal);
-    color: var(--snow);
+    color: var(--white);
 
     border-radius: var(--radius);
 
@@ -1076,7 +1093,7 @@ ol {
 }
 
 .prose th {
-    background: rgba(221, 227, 230, 0.4);
+    background: var(--light-gray);
 }
 
 .prose hr {
@@ -1103,7 +1120,7 @@ ol {
     min-height: 44px;
     margin-top: var(--space-lg);
 
-    color: var(--accent);
+    color: var(--charcoal);
 
     font-family: var(--font-mono);
     font-size: 14px;
@@ -1119,7 +1136,7 @@ ol {
 
     border-top: var(--border);
 
-    color: var(--slate);
+    color: var(--charcoal-soft);
 
     font-size: 14px;
 }
@@ -1172,7 +1189,7 @@ ol {
 }
 
 .social-links a:hover {
-    color: var(--accent);
+    background: var(--lime);
 }
 
 .footer-bottom {

@@ -27,7 +27,7 @@ SOURCE = pathlib.Path(
 OUT = REPO / "projects" / "plasma-wave-workbench"
 
 HEAD = """<meta name="description" content="Plasma Wave Workbench: scales, assumptions, the CMA diagram, a 3D particle viewer and unit conversion over one shared plasma.">
-<meta name="theme-color" content="#1F6F86">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -37,8 +37,8 @@ HEAD = """<meta name="description" content="Plasma Wave Workbench: scales, assum
 """
 
 BAR = """<nav aria-label="Site" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;border-bottom:1px solid rgba(0,0,0,.08)">
-<a href="/projects/" style="color:#1F6F86;text-decoration:none;min-height:32px;display:inline-flex;align-items:center">← icebox. / projects</a>
-<span id="offline-status" style="color:#667483"></span>
+<a href="/projects/" style="color:#252A2E;text-decoration:underline;text-decoration-color:#A9D9E6;text-decoration-thickness:2px;text-underline-offset:3px;min-height:32px;display:inline-flex;align-items:center">← icebox. / projects</a>
+<span id="offline-status" style="color:#5C6268"></span>
 </nav>
 """
 
@@ -116,7 +116,7 @@ MANIFEST = {
     "scope": "./",
     "display": "standalone",
     "background_color": "#fafaf8",
-    "theme_color": "#1F6F86",
+    "theme_color": "#A9D9E6",
     "icons": [
         {"src": "/assets/icons/icon-180.png", "sizes": "180x180", "type": "image/png"},
         {"src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
