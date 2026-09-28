@@ -31,6 +31,25 @@ Defined once at the top of `style.css`. Keep to these five (tints of them are fi
 
 Ice Blue and Acid Lime are too light to be text on white — use them as backgrounds, underlines and highlights with Charcoal text on top.
 
+## Typography
+
+Sizes are `rem` tokens (`--fs-*`) at the top of `style.css`, so the visitor's browser font-size setting applies. Nothing is smaller than 13px.
+
+| Role | Face | Weight | Size |
+| --- | --- | --- | --- |
+| H1 | Inter / Noto Sans JP | 600 | 36–64px (`--fs-h1`) |
+| H2 | Inter / Noto Sans JP | 600 | 28–36px (`--fs-h2`) |
+| H3, card titles | Inter / Noto Sans JP | 600 | 20px |
+| Body | Inter / Noto Sans JP | 400 | 17px, line-height 1.75 (Japanese 1.85) |
+| Nav, buttons, links | Inter / Noto Sans JP | 500 | 14–15px |
+| Dates, years, tags, badges, numbers | IBM Plex Mono | 400–500 | 13–14px |
+| Code | IBM Plex Mono | 400 | 15px |
+
+- The face follows the nearest `lang` attribute: an English title on a Japanese page (`lang="en"`) is set in Inter.
+- Use mono only for the metadata in the table, not for buttons or links.
+- Don't add letter-spacing to body text or anything Japanese.
+- Articles are at most 680px wide (about 40 Japanese characters per line).
+
 ## Adding things
 
 Every list item is written once with `en` and `ja` text, and shows up on Home, the list page, and both languages. Lists are shown in file order — put the newest entry first.

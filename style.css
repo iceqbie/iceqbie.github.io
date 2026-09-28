@@ -18,14 +18,35 @@
     --line: rgba(37, 42, 46, 0.12);           /* borders, rules */
     --ice-soft: rgba(169, 217, 230, 0.35);    /* tags, badges */
 
-    /* Typography */
-    --font-sans: "Inter", "Noto Sans JP", sans-serif;
-    --font-jp: "Noto Sans JP", "Inter", sans-serif;
+    /* Typography
+       Inter for Latin, Noto Sans JP for Japanese (listed first on
+       Japanese pages so kana and Latin share one face), IBM Plex Mono
+       only for dates, years, tags, badges, numbers and code.
+       Sizes are rem so the visitor's browser font-size setting
+       applies; 13px (0.8125rem) is the smallest text on the site. */
+    --font-sans: "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-jp: "Noto Sans JP", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+    --fs-h1: clamp(2.25rem, 7vw, 4rem);         /* 36–64px */
+    --fs-h1-page: clamp(2rem, 5vw, 3rem);       /* 32–48px, sub-page titles */
+    --fs-h2: clamp(1.75rem, 4vw, 2.25rem);      /* 28–36px */
+    --fs-h3: 1.25rem;                           /* 20px */
+    --fs-lead: 1.25rem;                         /* 20px */
+    --fs-body: 1.0625rem;                       /* 17px */
+    --fs-small: 0.9375rem;                      /* 15px, summaries */
+    --fs-nav: 0.9375rem;                        /* 15px */
+    --fs-caption: 0.875rem;                     /* 14px */
+    --fs-meta: 0.8125rem;                       /* 13px, the minimum */
+    --fs-code: 0.9375rem;                       /* 15px */
+
+    --lh-body: 1.75;
+    --lh-ja: 1.85;
+    --lh-heading: 1.2;
 
     /* Layout */
     --content-width: 1100px;
-    --text-width: 720px;
+    --text-width: 680px;
     --side-padding: 32px;
 
     /* Spacing */
@@ -64,9 +85,8 @@ body {
     background: var(--white);
     color: var(--charcoal);
 
-    font-family: var(--font-sans);
-    font-size: 17px;
-    line-height: 1.75;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
 
     -webkit-font-smoothing: antialiased;
 }
@@ -191,7 +211,7 @@ ol {
 }
 
 .site-name {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
     letter-spacing: -0.02em;
 }
@@ -202,7 +222,7 @@ ol {
     align-items: center;
     gap: 4px;
 
-    font-size: 15px;
+    font-size: var(--fs-nav);
     font-weight: 500;
 }
 
@@ -231,11 +251,14 @@ ol {
     border-radius: 0;
 }
 
+.site-nav a:lang(en) {
+    letter-spacing: 0.04em;
+}
+
 .site-nav .lang-switch {
     margin-left: 8px;
 
-    font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-caption);
 
     border: var(--border);
 }
@@ -255,10 +278,10 @@ ol {
 
     margin-bottom: var(--space-lg);
 
-    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-size: var(--fs-h1);
     font-weight: 600;
-    line-height: 1.08;
-    letter-spacing: -0.045em;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .hero-links {
@@ -276,8 +299,7 @@ ol {
 
     color: var(--charcoal);
 
-    font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: var(--fs-nav);
 
     border: 1px solid var(--line);
     border-radius: var(--radius);
@@ -287,6 +309,7 @@ ol {
         border-color 160ms ease,
         background-color 160ms ease,
         color 160ms ease;
+    font-weight: 500;
 }
 
 .button:hover,
@@ -363,10 +386,10 @@ ol {
 .page-header h1 {
     margin-bottom: var(--space-sm);
 
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-size: var(--fs-h1-page);
     font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.045em;
+    line-height: var(--lh-heading);
+    letter-spacing: -0.02em;
 }
 
 .page-header p {
@@ -375,7 +398,7 @@ ol {
 
     color: var(--charcoal-soft);
 
-    font-size: 1.1rem;
+    font-size: 1.125rem;
 }
 
 
@@ -414,16 +437,17 @@ ol {
     border-radius: 99px;
 
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: var(--fs-caption);
     font-weight: 500;
 }
 
 .section-heading h2 {
     margin: 0;
 
-    font-size: 1.75rem;
-    font-weight: 500;
-    letter-spacing: -0.035em;
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: var(--lh-heading);
 }
 
 .section-more {
@@ -431,13 +455,13 @@ ol {
 
     color: var(--charcoal);
 
-    font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: var(--fs-caption);
 
     text-decoration: underline;
     text-decoration-color: var(--ice-blue);
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
+    font-weight: 500;
 }
 
 .section-more:hover {
@@ -448,8 +472,8 @@ ol {
 .sub-heading {
     margin: var(--space-lg) 0 var(--space-md);
 
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: var(--fs-h3);
+    font-weight: 600;
 }
 
 .list-empty {
@@ -473,7 +497,7 @@ ol {
 }
 
 .lead {
-    font-size: 1.25rem;
+    font-size: var(--fs-lead);
     line-height: 1.6;
 }
 
@@ -489,7 +513,7 @@ ol {
     margin: 0;
     padding-top: 4px;
 
-    font-size: 15px;
+    font-size: var(--fs-small);
 }
 
 .about-meta > div {
@@ -507,7 +531,7 @@ ol {
     color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-meta);
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
@@ -609,16 +633,16 @@ ol {
     color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-meta);
 }
 
 .card-title {
     margin: 0;
 
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: var(--fs-h3);
+    font-weight: 600;
     line-height: 1.4;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 /* The title link covers the whole card, so the card is one big
@@ -644,7 +668,7 @@ ol {
 
     color: var(--charcoal-soft);
 
-    font-size: 15.5px;
+    font-size: var(--fs-small);
 }
 
 .card .tags {
@@ -667,13 +691,13 @@ ol {
     border-radius: 99px;
 
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: var(--fs-meta);
 }
 
 .badge {
     display: inline-block;
 
-    padding: 1px 8px;
+    padding: 2px 9px;
 
     color: var(--charcoal);
     background: var(--ice-soft);
@@ -681,8 +705,7 @@ ol {
     border-radius: 99px;
 
     font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 1.7;
+    font-size: var(--fs-meta);
 }
 
 .badge-award {
@@ -693,7 +716,7 @@ ol {
     color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-meta);
 }
 
 
@@ -720,7 +743,7 @@ ol {
     color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: var(--fs-caption);
 }
 
 .publication-body {
@@ -730,8 +753,8 @@ ol {
 .publication-body h3 {
     margin-bottom: 6px;
 
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.125rem;
+    font-weight: 600;
     line-height: 1.45;
 }
 
@@ -739,7 +762,7 @@ ol {
     margin-bottom: var(--space-xs);
 
     color: var(--charcoal-soft);
-    font-size: 15px;
+    font-size: var(--fs-small);
 }
 
 .publication-links {
@@ -747,8 +770,7 @@ ol {
     flex-wrap: wrap;
     gap: 16px;
 
-    font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-caption);
 }
 
 .publication-links a {
@@ -791,7 +813,7 @@ ol {
     color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: var(--fs-caption);
 }
 
 .timeline-content {
@@ -804,8 +826,8 @@ ol {
 .timeline-content h3 {
     margin: 0;
 
-    font-size: 1.05rem;
-    font-weight: 500;
+    font-size: 1.125rem;
+    font-weight: 600;
     line-height: 1.5;
 }
 
@@ -813,7 +835,7 @@ ol {
     margin: 0;
 
     color: var(--charcoal-soft);
-    font-size: 15.5px;
+    font-size: var(--fs-small);
 }
 
 
@@ -843,8 +865,8 @@ ol {
 .unsplash-card-header h3 {
     margin: 4px 0 0;
 
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: var(--fs-h3);
+    font-weight: 600;
 }
 
 /* Horizontal strip (home) */
@@ -926,8 +948,7 @@ ol {
 
     color: var(--charcoal-soft);
 
-    font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-caption);
 }
 
 
@@ -940,7 +961,7 @@ ol {
     margin-inline: auto;
     padding-bottom: var(--space-xl);
 
-    font-size: 17px;
+    font-size: var(--fs-body);
     line-height: 1.9;
 }
 
@@ -950,32 +971,33 @@ ol {
     color: var(--charcoal-soft);
 
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-meta);
 }
 
 .prose h1 {
     margin-bottom: var(--space-sm);
 
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-size: var(--fs-h1-page);
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
 }
 
 .prose h2 {
     margin: 2.4em 0 0.8em;
     padding-bottom: 6px;
 
-    font-size: 1.5rem;
+    font-size: var(--fs-h2);
     font-weight: 600;
 
     border-bottom: var(--border);
+    line-height: var(--lh-heading);
 }
 
 .prose h3 {
     margin: 2em 0 0.6em;
 
-    font-size: 1.2rem;
+    font-size: var(--fs-h3);
     font-weight: 600;
 }
 
@@ -1021,7 +1043,7 @@ ol {
 
     color: var(--charcoal-soft);
 
-    font-size: 14px;
+    font-size: var(--fs-caption);
 }
 
 .prose blockquote,
@@ -1061,7 +1083,7 @@ ol {
 
     border-radius: var(--radius);
 
-    font-size: 14px;
+    font-size: var(--fs-code);
     line-height: 1.6;
 }
 
@@ -1080,7 +1102,7 @@ ol {
 
     border-collapse: collapse;
 
-    font-size: 15px;
+    font-size: var(--fs-small);
 }
 
 .prose th,
@@ -1122,8 +1144,8 @@ ol {
 
     color: var(--charcoal);
 
-    font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: var(--fs-caption);
+    font-weight: 500;
 }
 
 
@@ -1138,7 +1160,7 @@ ol {
 
     color: var(--charcoal-soft);
 
-    font-size: 14px;
+    font-size: var(--fs-caption);
 }
 
 .footer-contact {
@@ -1172,8 +1194,7 @@ ol {
     flex-wrap: wrap;
     gap: 4px 8px;
 
-    font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--fs-caption);
 }
 
 .social-links a {
@@ -1204,12 +1225,12 @@ ol {
 
     border-top: var(--border);
 
-    font-size: 13px;
+    font-size: var(--fs-caption);
 }
 
 .footer-mono {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: var(--fs-meta);
 }
 
 
@@ -1217,13 +1238,24 @@ ol {
    JAPANESE
    ========================================================= */
 
-:lang(ja) {
+/* The face follows the lang attribute of the nearest element that has
+   one, so an English title on a Japanese page is set in Inter and a
+   Japanese card on an English page in Noto Sans JP. :where() keeps this
+   at zero specificity, so class rules (mono metadata) always win. */
+:where(html) {
+    font-family: var(--font-sans);
+}
+
+:where([lang="ja"]) {
     font-family: var(--font-jp);
 }
 
+:where([lang="en"]) {
+    font-family: var(--font-sans);
+}
+
 html[lang="ja"] body {
-    font-family: var(--font-jp);
-    line-height: 1.85;
+    line-height: var(--lh-ja);
 }
 
 /* Japanese headings look heavy with the Latin negative tracking. */
@@ -1235,13 +1267,8 @@ html[lang="ja"] .card-title,
     letter-spacing: 0;
 }
 
-html[lang="ja"] .section-number,
-html[lang="ja"] .tags,
-html[lang="ja"] .publication-links,
-html[lang="ja"] .footer-mono,
-html[lang="ja"] .timeline-year,
-html[lang="ja"] .publication-year {
-    font-family: var(--font-mono);
+.prose:lang(en) {
+    max-width: min(var(--text-width), 68ch);
 }
 
 .prose:lang(ja) {
@@ -1302,9 +1329,6 @@ html[lang="ja"] .publication-year {
         --space-xxl: 72px;
     }
 
-    body {
-        font-size: 16.5px;
-    }
 
     /* Keep the header in the page flow on phones so the
        two-line nav doesn't cover content while scrolling. */
@@ -1312,9 +1336,6 @@ html[lang="ja"] .publication-year {
         position: relative;
     }
 
-    .site-nav {
-        font-size: 15px;
-    }
 
     .site-nav a {
         padding: 0 8px;
@@ -1325,12 +1346,9 @@ html[lang="ja"] .publication-year {
     }
 
     .hero h1 {
-        font-size: clamp(2.2rem, 11vw, 3rem);
+        font-size: clamp(2.25rem, 11vw, 3rem);
     }
 
-    .section-heading h2 {
-        font-size: 1.45rem;
-    }
 
     .section-more {
         margin-left: 0;
