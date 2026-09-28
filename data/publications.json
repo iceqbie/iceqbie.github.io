@@ -1,0 +1,28 @@
+[
+    {
+        "year": "2025",
+        "title": "On the Statistical Convergence of N-Body Simulations of the Solar System",
+        "journal": "The Open Journal of Astrophysics",
+        "links": [
+            { "label": "arXiv", "url": "https://arxiv.org/abs/2507.04987" },
+            { "label": "DOI", "url": "https://doi.org/10.33232/001c.154745" }
+        ]
+    },
+    {
+        "year": "2024",
+        "title": "Analysis of the Quality Assurance Results from the Initial Part of Production of the ATLAS18 ITk Strip Sensors",
+        "journal": "Nuclear Instruments and Methods in Physics Research Section A",
+        "links": [
+            { "label": "Paper", "url": "https://www.sciencedirect.com/science/article/pii/S0168900224003619" },
+            { "label": "DOI", "url": "https://doi.org/10.1016/j.nima.2024.169435" }
+        ]
+    },
+    {
+        "year": "2023",
+        "title": "Experimental Study and Empirical Modeling of Long Term Annealing of the ATLAS18 Strip Sensors",
+        "journal": "Proceedings of Science (Pixel 2022)",
+        "links": [
+            { "label": "DOI", "url": "https://doi.org/10.22323/1.420.0043" }
+        ]
+    }
+]

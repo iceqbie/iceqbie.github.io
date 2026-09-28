@@ -35,7 +35,7 @@ Every list item is written once with `en` and `ja` text, and shows up on Home, t
 }
 ```
 
-Leave `thumb` empty (`""`) to get the coloured placeholder.
+A project doesn't have to be an HTML page here: `url` can point to a GitHub repo, a PDF or any other page. Leave `thumb` empty (`""`) to get the coloured placeholder.
 
 **Plasma Wave Workbench** — developed in the private `self-study` repo. To update the copy here (it also regenerates the offline cache version):
 
@@ -65,6 +65,8 @@ Open it once with signal and it keeps working offline; on iPhone, Share → *Add
     "url": "/blog/2026-10-first-post/"
 }
 ```
+
+**Publication** — add to the top of `data/publications.json` (`year`, `title`, `journal`, `links`). Home shows the first three. No author lists — see Privacy.
 
 **Activity** — add to the top of `data/activities.json`. `type` is one of `award`, `talk`, `organizer`, `seminar`.
 

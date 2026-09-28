@@ -2,7 +2,7 @@
    LIST RENDERER
    Fills every <div data-list="..."> from /data/<name>.json.
 
-     data-list   projects | articles | activities | photos
+     data-list   projects | articles | activities | publications | photos
      data-limit  optional; show only the first N items
 
    Items are written once with { en, ja } fields; the page
@@ -28,6 +28,7 @@
                 projects: "Projects will appear here.",
                 articles: "Articles are on the way.",
                 activities: "Activities will appear here.",
+                publications: "Publications will appear here.",
                 photos: "Photos will appear here."
             },
             failed: "Couldn't load this list. Please reload the page."
@@ -45,6 +46,7 @@
                 projects: "プロジェクトはここに表示されます。",
                 articles: "記事は準備中です。",
                 activities: "活動はここに表示されます。",
+                publications: "論文はここに表示されます。",
                 photos: "写真はここに表示されます。"
             },
             failed: "一覧を読み込めませんでした。ページを再読み込みしてください。"
@@ -135,6 +137,23 @@
             </li>`;
     }
 
+    // Titles and journals are kept in English on both language pages.
+    function publicationRow(item) {
+        const links = (item.links || [])
+            .map((l) => `<a href="${escapeHtml(l.url)}"${linkAttrs(l.url)}>${escapeHtml(l.label)} ↗</a>`)
+            .join("");
+
+        return `
+            <li class="publication">
+                <span class="publication-year">${escapeHtml(item.year)}</span>
+                <div class="publication-body">
+                    <h3 lang="en">${escapeHtml(item.title)}</h3>
+                    <p class="journal" lang="en"><em>${escapeHtml(item.journal)}</em></p>
+                    ${links ? `<div class="publication-links">${links}</div>` : ""}
+                </div>
+            </li>`;
+    }
+
     function photoCard(item) {
         return `
             <a class="photo-card" href="${escapeHtml(item.page)}" target="_blank" rel="noopener noreferrer">
@@ -146,6 +165,7 @@
         projects: { item: projectCard, wrap: (html) => `<div class="card-grid">${html}</div>` },
         articles: { item: articleCard, wrap: (html) => `<div class="card-grid">${html}</div>` },
         activities: { item: activityRow, wrap: (html) => `<ol class="timeline">${html}</ol>` },
+        publications: { item: publicationRow, wrap: (html) => `<ol class="publication-list">${html}</ol>` },
         photos: { item: photoCard, wrap: (html) => html }
     };
 
