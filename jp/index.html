@@ -1,1110 +1,182 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>icebox. — (ice)^3（日本語）</title>
 
-    <title>icebox. — (ice)^3</title>
+    <meta name="description" content="宇宙プラズマ物理を学ぶ修士学生 (ice)^3 のポートフォリオ。">
+    <meta name="theme-color" content="#F8FAFA">
 
-    <meta
-        name="description"
-        content="研究・論文・学会発表・活動などを紹介する個人ウェブサイトです。"
-    >
+    <link rel="alternate" hreflang="en" href="https://iceqbie.github.io/">
+    <link rel="alternate" hreflang="ja" href="https://iceqbie.github.io/jp/">
+    <link rel="alternate" hreflang="x-default" href="https://iceqbie.github.io/">
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap"
         rel="stylesheet"
     >
 
     <!-- Main stylesheet -->
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/style.css">
+
+    <script src="/script.js" defer></script>
 </head>
-
-
 <body>
+
+    <a class="skip-link" href="#main">本文へ移動</a>
 
     <!-- =========================================
          HEADER / NAVIGATION
          ========================================= -->
     <header class="site-header">
-
         <div class="container header-inner">
 
-            <a href="./" class="site-name">
-                icebox.
-            </a>
+            <a href="/jp/" class="site-name">icebox.</a>
 
             <nav class="site-nav" aria-label="メインナビゲーション">
-
-                <a href="#about">概要</a>
-                <a href="#interests">キーワード</a>
-                <a href="#publications">論文</a>
-                <a href="#activities">活動</a>
-                <a href="#projects">Projects</a>
-                <a href="#articles">記事</a>
-                <a href="#contact">連絡先</a>
-
-                <span class="nav-divider">/</span>
-
-                <a href="../">English</a>
-
+                <a href="/jp/" aria-current="page">ホーム</a>
+                <a href="/jp/about/">プロフィール</a>
+                <a href="/jp/projects/">プロジェクト</a>
+                <a href="/jp/blog/">ブログ</a>
+                <a href="/jp/photos/">写真</a>
+                <a href="/" class="lang-switch" lang="en" hreflang="en">English</a>
             </nav>
 
         </div>
-
     </header>
 
+    <main id="main">
 
-    <main>
-
-        <!-- =========================================
-             HERO
-             ========================================= -->
         <section class="hero">
-
             <div class="container">
 
-                <p class="eyebrow">
-                    宇宙物理学 · 大学院生
-                </p>
+                <p class="eyebrow">宇宙プラズマ · 修士課程</p>
 
-                <h1 class="site-title">
-                    icebox.
-                </h1>
+                <h1 class="site-title">icebox.</h1>
 
-                <p class="hero-description">
-                    Keeping thoughts cool, ideas fresh, and memories frozen.    <!-- keep this in English -->
-                </p>
+                <p class="hero-description" lang="en">Keeping thoughts cool, ideas fresh, and memories frozen.</p>
+
+                <p class="hero-intro">東京大学の修士課程で、数値シミュレーションと機械学習を使って宇宙プラズマ物理を研究している (ice)^3 です。プロジェクト、記事、写真をまとめています。</p>
 
                 <div class="hero-links">
-
-                    <a
-                        href="../cv/CV.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        CV ↗
-                    </a>
-
-                    <a
-                        href="https://github.com/iceqbie"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        GitHub ↗
-                    </a>
-
-                    <a
-                        href="YOUR_GOOGLE_SCHOLAR_URL"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Google Scholar ↗
-                    </a>
-                    <a
-                        href="https://www.linkedin.com/in/mei-kanda/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        LinkedIn ↗
-                    </a>
-
+                    <a class="button button-primary" href="/jp/about/">プロフィール</a>
+                    <a class="button" href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a class="button" href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
                 </div>
 
             </div>
-
         </section>
 
-
-        <!-- =========================================
-             ABOUT
-             ========================================= -->
-        <section id="about" class="section">
-
+        <section id="projects" class="section" aria-labelledby="h-projects">
             <div class="container">
 
                 <div class="section-heading">
-
-                    <span class="section-number">
-                        01
-                    </span>
-
-                    <h2>
-                        概要
-                    </h2>
-
+                    <span class="section-number" aria-hidden="true">01</span>
+                    <h2 id="h-projects">プロジェクト</h2>
+                    <a class="section-more" href="/jp/projects/">すべて見る →</a>
                 </div>
 
-
-                <div class="about-grid">
-
-                    <div class="about-main">
-
-                        <p class="lead">
-                            宇宙プラズマ物理学と数値シミュレーションを
-                            専門とする大学院生です。
-                        </p>
-
-                        <p>
-                            理論的な解析と計算機シミュレーションを用いて、
-                            宇宙空間におけるプラズマの物理過程や、
-                            高エネルギー天体現象について研究しています。
-                        </p>
-
-                    </div>
-
-
-                    <aside class="about-meta">
-
-                        <div>
-
-                            <span class="meta-label">
-                                所在地
-                            </span>
-
-                            <span>
-                                日本
-                            </span>
-
-                        </div>
-
-
-                        <div>
-
-                            <span class="meta-label">
-                                専門分野
-                            </span>
-
-                            <span>
-                                宇宙プラズマ物理学
-                            </span>
-
-                        </div>
-
-
-                        <div>
-
-                            <span class="meta-label">
-                                所属
-                            </span>
-
-                            <span>
-                                大学院生・修士課程
-                            </span>
-
-                        </div>
-
-                    </aside>
-
+                <div data-list="projects" data-limit="3" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
                 </div>
 
             </div>
-
         </section>
 
-
-        <!-- =========================================
-             INTERESTS
-             ========================================= -->
-        <section id="interests" class="section section-tinted">
-
+        <section id="blog" class="section section-tinted" aria-labelledby="h-blog">
             <div class="container">
 
                 <div class="section-heading">
-
-                    <span class="section-number">
-                        02
-                    </span>
-
-                    <h2>
-                        キーワード
-                    </h2>
-
+                    <span class="section-number" aria-hidden="true">02</span>
+                    <h2 id="h-blog">ブログ</h2>
+                    <a class="section-more" href="/jp/blog/">すべての記事 →</a>
                 </div>
 
-
-                <div class="interests-grid">
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            01
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                数値シミュレーション
-                            </h3>
-
-                            <p>
-                                非線形なプラズマダイナミクスや
-                                宇宙物理学的な系を理解するための
-                                数値計算手法について研究しています。
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    Numerical
-                                </span>
-
-                                <span>
-                                    Simulation
-                                </span>
-
-                                <span>
-                                    Python
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            02
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                宇宙プラズマ
-                            </h3>
-
-                            <p>
-                                高エネルギー天体環境において生じる
-                                プラズマの物理過程について研究しています。
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    Astrophysics
-                                </span>
-
-                                <span>
-                                    Plasma Physics
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            03
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                機械学習 × プラズマ
-                            </h3>
-
-                            <p>
-                                データ駆動型のクロージャモデルは、
-                                現実的な計算コストで運動論的プラズマの
-                                振る舞いを再現できるか？
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    Machine Learning
-                                </span>
-
-                                <span>
-                                    Closure Models
-                                </span>
-
-                                <span>
-                                    Kinetic
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            04
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                磁気リコネクション
-                            </h3>
-
-                            <p>
-                                無衝突プラズマにおいて磁気エネルギーは
-                                どのように粒子加速へ変換されるのか？
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    Reconnection
-                                </span>
-
-                                <span>
-                                    Particle Acceleration
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            05
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                太陽系力学
-                            </h3>
-
-                            <p>
-                                惑星系の長期的な安定性とカオス的進化を
-                                決めるものは何か？
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    N-Body
-                                </span>
-
-                                <span>
-                                    Orbital Dynamics
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
+                <div data-list="articles" data-limit="3" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
                 </div>
 
             </div>
-
         </section>
 
-
-        <!-- =========================================
-             PUBLICATIONS
-             ========================================= -->
-        <section id="publications" class="section">
-
+        <section id="activity" class="section" aria-labelledby="h-activity">
             <div class="container">
 
                 <div class="section-heading">
-
-                    <span class="section-number">
-                        03
-                    </span>
-
-                    <h2>
-                        論文
-                    </h2>
-
+                    <span class="section-number" aria-hidden="true">03</span>
+                    <h2 id="h-activity">活動</h2>
+                    <a class="section-more" href="/jp/about/#activity">プロフィールへ →</a>
                 </div>
 
-
-                <div class="publication-list">
-
-
-                    <article class="publication">
-
-                        <div class="publication-year">
-                            2025
-                        </div>
-
-
-                        <div class="publication-body">
-
-                            <h3>
-                                On the Statistical Convergence of N-Body Simulations of the Solar System
-                            </h3>
-
-                            <p class="authors">
-                                H. Rein, G. Brown, M. Kanda
-                            </p>
-
-                            <p class="journal">
-                                <em>The Open Journal of Astrophysics</em>
-                            </p>
-
-
-                            <div class="publication-links">
-
-                                <a
-                                    href="https://arxiv.org/abs/2507.04987"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    arXiv ↗
-                                </a>
-
-                                <a
-                                    href="https://doi.org/10.33232/001c.154745"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    DOI ↗
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="publication">
-
-                        <div class="publication-year">
-                            2024
-                        </div>
-
-
-                        <div class="publication-body">
-
-                            <h3>
-                                Analysis of the Quality Assurance Results from the Initial Part of Production of the ATLAS18 ITk Strip Sensors
-                            </h3>
-
-                            <p class="authors">
-                                È. Bach et al.
-                            </p>
-
-                            <p class="journal">
-                                <em>Nuclear Instruments and Methods in Physics Research Section A</em>
-                            </p>
-
-
-                            <div class="publication-links">
-
-                                <a
-                                    href="https://www.sciencedirect.com/science/article/pii/S0168900224003619"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Paper ↗
-                                </a>
-
-                                <a
-                                    href="https://doi.org/10.1016/j.nima.2024.169435"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    DOI ↗
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="publication">
-
-                        <div class="publication-year">
-                            2023
-                        </div>
-
-
-                        <div class="publication-body">
-
-                            <h3>
-                                Experimental Study and Empirical Modeling of Long Term Annealing of the ATLAS18 Strip Sensors
-                            </h3>
-
-                            <p class="authors">
-                                R. Orr et al.
-                            </p>
-
-                            <p class="journal">
-                                <em>Proceedings of Science (Pixel 2022)</em>
-                            </p>
-
-
-                            <div class="publication-links">
-
-                                <a
-                                    href="https://doi.org/10.22323/1.420.0043"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Paper ↗
-                                </a>
-
-                                <a
-                                    href="https://doi.org/10.22323/1.420.0043"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    DOI ↗
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
+                <div data-list="activities" data-limit="5" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
                 </div>
 
             </div>
-
         </section>
 
-
-        <!-- =========================================
-             ACTIVITIES
-             ========================================= -->
-        <section id="activities" class="section section-tinted">
-
+        <section id="photos" class="section section-tinted" aria-labelledby="h-photos">
             <div class="container">
 
                 <div class="section-heading">
-
-                    <span class="section-number">
-                        04
-                    </span>
-
-                    <h2>
-                        活動
-                    </h2>
-
+                    <span class="section-number" aria-hidden="true">04</span>
+                    <h2 id="h-photos">写真</h2>
+                    <a class="section-more" href="/jp/photos/">ギャラリー →</a>
                 </div>
-
-
-                <div class="timeline">
-
-
-                    <article class="timeline-item">
-
-                        <div class="timeline-year">
-                            2026
-                        </div>
-
-
-                        <div class="timeline-content">
-
-                            <h3>
-                                JpGU-AGU Joint Meeting 2026
-                            </h3>
-
-                            <p>
-                                ポスター発表 —
-                                <em>Validation of machine-learning-based closure models for collisionless plasmas in the linear regime</em>
-                                — Mei Kanda, Takanobu Amano
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item">
-
-                        <div class="timeline-year">
-                            2026
-                        </div>
-
-
-                        <div class="timeline-content">
-
-                            <h3>
-                                優秀学生発表賞 (JpGU-AGU Joint Meeting 2026)
-                            </h3>
-
-                            <a
-                                    href="https://www.jpgu.org/ospa/2026meeting/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Link ↗
-                            </a>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item">
-
-                        <div class="timeline-year">
-                            2025
-                        </div>
-
-
-                        <div class="timeline-content">
-
-                            <h3>
-                                SGEPSS 秋季大会 2025
-                            </h3>
-
-                            <p>
-                                ポスター発表 —
-                                <em>Linear properties of machine-learning-based closure models for collisionless plasmas</em>
-                                — M. Kanda, T. Amano
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================================
-             PROJECTS
-             ========================================= -->
-        <section id="projects" class="section">
-
-            <div class="container">
-
-                <div class="section-heading">
-
-                    <span class="section-number">
-                        05
-                    </span>
-
-                    <h2>
-                        Projects
-                    </h2>
-
-                </div>
-
-
-                <div class="research-list">
-
-
-                    <article class="research-item">
-
-                        <div class="research-index">
-                            01
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                <a
-                                    href="https://camp.ase-lab.space/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    衛星データ解析ゼミ at Astrocamp (2025–2026; 企画者)
-                                </a>
-                            </h3>
-
-                            <p>
-                                Astrocamp での衛星データ解析ゼミの企画・運営。
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    Astrocamp
-                                </span>
-
-                                <span>
-                                    教育
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="research-item">
-
-                        <div class="research-index">
-                            02
-                        </div>
-
-
-                        <div class="research-content">
-
-                            <h3>
-                                <a
-                                    href="https://www.ase-lab.space/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    衛星データ解析ゼミ at ASE-Lab. (2022; 企画者)
-                                </a>
-                            </h3>
-
-                            <p>
-                                ASE-Lab. での衛星データ解析ゼミの企画・運営。
-                            </p>
-
-                            <div class="tags">
-
-                                <span>
-                                    ASE-Lab
-                                </span>
-
-                                <span>
-                                    教育
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================================
-             ARTICLES
-             ========================================= -->
-        <section id="articles" class="section">
-
-            <div class="container">
-
-                <div class="section-heading">
-
-                    <span class="section-number">
-                        06
-                    </span>
-
-                    <h2>
-                        記事
-                    </h2>
-
-                </div>
-
-                <!--
-                    記事の追加方法
-                    -------------
-                    1. Notion で記事のページを開きます。
-                    2. Share → Publish to web → Copy link で公開リンクを取得します。
-                    3. 下の記事カードブロックをコピーし、
-                       タイトル・日付・説明・href を公開リンクに置き換えます。
-                       訪問者が閲覧するには公開状態を維持してください。
-                -->
-
-                <div class="articles-grid">
-
-                    <article class="article-card">
-
-                        <span class="article-date">—</span>
-
-                        <h3>
-                            記事は近日公開予定
-                        </h3>
-
-                        <p>
-                            Notion で書いた記事がここに表示されます。
-                        </p>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================================
-             PHOTOGRAPHY
-             ========================================= -->
-        <section class="section">
-
-            <div class="container">
-
-                <div class="section-heading">
-
-                    <span class="section-number">
-                        07
-                    </span>
-
-                    <h2>
-                        Photography
-                    </h2>
-
-                </div>
-
 
                 <div class="unsplash-card">
 
                     <div class="unsplash-card-header">
-
                         <div>
-                            <span class="meta-label">
-                                PHOTOGRAPHY
-                            </span>
-
-                            <h3>
-                                @iceqbie
-                            </h3>
+                            <span class="meta-label">Unsplash</span>
+                            <h3>@iceqbie</h3>
                         </div>
-
                     </div>
 
-
-                    <div class="photo-grid">
-
-                        <a
-                            href="https://unsplash.com/photos/a-tree-with-white-flowers-and-green-leaves-QDzzZZHFz-U"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1712968015844-6d76311d9dd3?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="A tree with white flowers and green leaves"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/mount-fuji-at-sunset-over-the-ocean-8M4cD7uirUU"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1778073240307-7e9a6b8cae13?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Mount Fuji at sunset over the ocean in Hayama, Japan"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/5m6bXYsO8K4"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1655641720293-cb061274658c?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Toronto city skyline at sunset"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/pink-lotus-flower-with-green-leaves-WcjH20FnAF0"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1785930355684-08babeacb1f9?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="A pink lotus flower with a yellow center surrounded by large green leaves"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/snow-capped-mount-fuji-at-sunrise-over-the-ocean-vVNPhKwAJts"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520227076-e8e0f99f439f?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Snow-capped Mount Fuji at sunrise over the ocean"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/snow-capped-mountain-over-a-calm-sea-at-twilight-6tz-zyRX4TU"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520226907-1e6dbd36b09c?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Snow-capped mountain over a calm sea at twilight"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/snow-capped-mount-fuji-and-a-lighthouse-over-the-calm-ocean-Updo7ICSqFU"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520226905-12eba92116d4?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Snow-capped Mount Fuji and a lighthouse over the calm ocean"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/mount-fuji-with-snow-capped-peak-overlooking-the-ocean-at-twilight-VlQekFW7cx4"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520226907-6ae4511b928c?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Mount Fuji with snow-capped peak overlooking the ocean at twilight"
-                            >
-                        </a>
-
-                    </div>
-
+                <div class="photo-strip" data-list="photos" data-limit="8" aria-busy="true">
+                    <noscript><p class="list-empty">写真は <a class="text-link" href="https://unsplash.com/@iceqbie">Unsplash</a> で公開しています。</p></noscript>
+                </div>
 
                     <div class="unsplash-card-footer">
-
-                        <span>
-                            Selected photographs
-                        </span>
-
-                        <a
-                            href="https://unsplash.com/@iceqbie"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            View all photographs ↗
-                        </a>
-
+                        <span>撮影した写真から</span>
+                        <a class="text-link" href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ですべて見る ↗</a>
                     </div>
 
                 </div>
 
             </div>
-
         </section>
 
-
-        </main>
-
+    </main>
 
     <!-- =========================================
          FOOTER / CONTACT
          ========================================= -->
     <footer id="contact" class="site-footer">
-
-        <div class="container footer-inner">
+        <div class="container">
 
             <div class="footer-contact">
-
-                <a
-                    href="mailto:your.email@example.com"
-                    class="footer-email"
-                >
-                    your.email@example.com
-                </a>
-
                 <div class="social-links">
-
-                    <a
-                        href="https://github.com/iceqbie"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        GitHub ↗
-                    </a>
-
-                    <a
-                        href="https://x.com/iceqbie"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        X ↗
-                    </a>
-
-                    <a
-                        href="https://www.linkedin.com/in/mei-kanda/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        LinkedIn ↗
-                    </a>
-
-                    <a
-                        href="https://unsplash.com/@iceqbie"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Unsplash ↗
-                    </a>
-
+                    <a href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a href="https://x.com/iceqbie" target="_blank" rel="noopener noreferrer">X ↗</a>
+                    <a href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
                 </div>
-
             </div>
 
             <div class="footer-bottom">
-
-                <span>
-                    © 2026 Mei Kanda
-                </span>
-
-                <span class="footer-mono">
-                    Last updated: 2026-08-15
-                </span>
-
+                <span>© 2026 (ice)^3</span>
+                <span class="footer-mono">最終更新: 2026-09-28</span>
             </div>
 
         </div>
-
     </footer>
 
 </body>
-
 </html>

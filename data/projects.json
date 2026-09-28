@@ -1,0 +1,14 @@
+[
+    {
+        "slug": "plasma-wave-workbench",
+        "date": "2026-09",
+        "title": { "en": "Plasma Wave Workbench", "ja": "プラズマ波動ワークベンチ" },
+        "summary": {
+            "en": "One plasma, five views: scales, which waves survive which assumptions, the CMA diagram, a 3D particle viewer and unit conversion. Works offline once opened.",
+            "ja": "一つのプラズマを五つの視点で：特性スケール、仮定ごとに残る波、CMA 図、3D 粒子ビューア、単位換算。一度開けばオフラインでも使えます。"
+        },
+        "tags": ["Plasma Waves", "Interactive", "Offline"],
+        "url": "/projects/plasma-wave-workbench/",
+        "thumb": ""
+    }
+]

@@ -1,0 +1,3733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#fafaf8}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<meta name="description" content="Plasma Wave Workbench: scales, assumptions, the CMA diagram, a 3D particle viewer and unit conversion over one shared plasma.">
+<meta name="theme-color" content="#1F6F86">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Workbench">
+</head>
+<body>
+<nav aria-label="Site" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;border-bottom:1px solid rgba(0,0,0,.08)">
+<a href="/projects/" style="color:#1F6F86;text-decoration:none;min-height:32px;display:inline-flex;align-items:center">← icebox. / projects</a>
+<span id="offline-status" style="color:#667483"></span>
+</nav>
+<title>Plasma Wave Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* style.css — one visual system for every tab.
+ *
+ * Tokens are the union of the two published pages, so a ported section keeps the
+ * exact colours it had. Colour carries meaning and is not decorative:
+ *   --elec  electrons, cool blue      --ion   ions, warm orange
+ *   --both  both species, violet      --live  surviving / kept, green
+ */
+
+:root{
+  color-scheme: light;
+  --ground:#f2f4f8; --surface:#ffffff; --surface-2:#e9edf4;
+  --line:#ccd4e0; --line-soft:#e2e8f1;
+  --ink:#141a24; --ink-2:#4a5567; --ink-3:#77839a; --ink-4:#a3adbe;
+  --elec:#1f6fbf; --elec-soft:#dbeafb;
+  --ion:#b45518;  --ion-soft:#fbe8d8;
+  --both:#6a45bd; --both-soft:#e8e0fa;
+  --live:#1f7a53; --live-soft:#dcf1e7;
+  --dead:#8b93a3; --dead-soft:#eceff4;
+  --warn:#a56100;
+  --shadow:0 1px 2px rgba(18,26,40,.06), 0 6px 18px rgba(18,26,40,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0c1017; --surface:#141a24; --surface-2:#1c2430;
+    --line:#2d3746; --line-soft:#232c39;
+    --ink:#e6ebf3; --ink-2:#a9b4c6; --ink-3:#7d8ba1; --ink-4:#5d6a7e;
+    --elec:#66b4f5; --elec-soft:#14304b;
+    --ion:#f3994c;  --ion-soft:#3d2612;
+    --both:#ad8ff0; --both-soft:#2b2148;
+    --live:#5cc79a; --live-soft:#11362a;
+    --dead:#6d788a; --dead-soft:#1a212b;
+    --warn:#e0a54a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0c1017; --surface:#141a24; --surface-2:#1c2430;
+  --line:#2d3746; --line-soft:#232c39;
+  --ink:#e6ebf3; --ink-2:#a9b4c6; --ink-3:#7d8ba1; --ink-4:#5d6a7e;
+  --elec:#66b4f5; --elec-soft:#14304b;
+  --ion:#f3994c;  --ion-soft:#3d2612;
+  --both:#ad8ff0; --both-soft:#2b2148;
+  --live:#5cc79a; --live-soft:#11362a;
+  --dead:#6d788a; --dead-soft:#1a212b;
+  --warn:#e0a54a;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  font-size:15px; line-height:1.6; -webkit-text-size-adjust:100%;
+}
+.wrap{ max-width:1120px; margin:0 auto; padding-inline:16px; padding-block:24px 64px; }
+
+h1,h2,h3{ font-family:Spectral, Georgia, "Times New Roman", serif; font-weight:600;
+  text-wrap:balance; margin:0; letter-spacing:-.01em; }
+h1{ font-size:clamp(26px,5.2vw,40px); line-height:1.12; }
+h2{ font-size:clamp(19px,3.4vw,26px); line-height:1.2; }
+h3{ font-size:17px; line-height:1.3; }
+p{ margin:0; max-width:68ch; }
+.lede{ color:var(--ink-2); font-size:16.5px; margin-top:12px; }
+.eyebrow{ font-size:11.5px; font-weight:600; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-3); font-family:"IBM Plex Mono", ui-monospace, monospace; }
+.mono{ font-family:"IBM Plex Mono", ui-monospace, "SF Mono", monospace; font-variant-numeric:tabular-nums; }
+sup{font-size:.72em;line-height:0} sub{font-size:.72em;line-height:0}
+a{ color:var(--both); }
+button{ font:inherit; cursor:pointer; }
+:focus-visible{ outline:2px solid var(--both); outline-offset:2px; }
+
+header.top{ border-bottom:1px solid var(--line); padding-bottom:22px; }
+section{ margin-top:36px; }
+.sec-head{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.sec-head p{ color:var(--ink-2); font-size:14.5px; }
+.card{ background:var(--surface); border:1px solid var(--line-soft); border-radius:10px; box-shadow:var(--shadow); }
+.pad{ padding:18px; }
+
+/* ---------- persistent header: plasma + wave, on every tab ---------- */
+.hdr{ margin-top:18px; position:sticky; top:0; z-index:20;
+  background:var(--surface); border:1px solid var(--line-soft); border-radius:10px;
+  box-shadow:var(--shadow); }
+.hdr-bar{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; padding:10px 14px; }
+.hdr-bar .who{ font-size:13px; font-weight:600; }
+.hdr-bar .who span{ color:var(--ink-3); font-weight:400; }
+.hdr-toggle{ margin-left:auto; border:1px solid var(--line); background:var(--surface-2);
+  color:var(--ink-2); border-radius:7px; padding:4px 11px; font-size:12.5px; }
+.ratios{ display:flex; flex-wrap:wrap; gap:4px 8px; padding:0 14px 10px; }
+.rchip{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  font-size:11.6px; padding:2px 8px; border-radius:999px;
+  background:var(--surface-2); color:var(--ink-2); white-space:nowrap; }
+.rchip b{ color:var(--ink); font-weight:600; }
+.rchip.e{ background:var(--elec-soft); color:var(--elec); }
+.rchip.i{ background:var(--ion-soft); color:var(--ion); }
+.rchip.b{ background:var(--both-soft); color:var(--both); }
+.hdr-body{ border-top:1px solid var(--line-soft); padding:16px 14px; }
+.hdr[data-open="false"] .hdr-body{ display:none; }
+
+.selbar{ display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 10px;
+  padding:8px 14px; border-top:1px solid var(--line-soft); font-size:12.8px; color:var(--ink-2); }
+.selbar b{ color:var(--live); }
+.selbar button{ border:1px solid var(--line); background:var(--surface-2); color:var(--ink-3);
+  border-radius:6px; padding:2px 9px; font-size:11.8px; margin-left:auto; }
+
+/* ---------- tabs ---------- */
+.tabs{ display:flex; flex-wrap:wrap; gap:6px; margin-top:18px; border-bottom:1px solid var(--line); }
+.tabs button{ border:1px solid transparent; border-bottom:none; background:transparent;
+  color:var(--ink-3); border-radius:9px 9px 0 0; padding:8px 14px; font-size:14px; font-weight:500;
+  margin-bottom:-1px; transition:color .12s, background .12s, border-color .12s; }
+.tabs button:hover{ color:var(--ink); }
+.tabs button[aria-selected="true"]{ background:var(--surface); color:var(--ink);
+  border-color:var(--line-soft); border-bottom:1px solid var(--surface); font-weight:600; }
+.tabs button[disabled]{ opacity:.45; cursor:not-allowed; }
+.tabs button[disabled]:hover{ color:var(--ink-3); }
+.panel[hidden]{ display:none; }
+
+/* ---------- controls ---------- */
+.presets{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.chip{ background:var(--surface); color:var(--ink-2); border:1px solid var(--line);
+  border-radius:999px; padding:6px 13px; font-size:13.5px; font-weight:500;
+  transition:background .12s, color .12s, border-color .12s; }
+.chip:hover{ border-color:var(--ink-3); color:var(--ink); }
+.chip[aria-pressed="true"]{ background:var(--ink); color:var(--ground); border-color:var(--ink); }
+
+.sliders{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px 24px; }
+.sl label{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:2px; }
+.sl .nm{ font-size:13.5px; font-weight:600; color:var(--ink); }
+.sl .vl{ font-size:13.5px; color:var(--ink-2); }
+.sl .sub{ font-size:12px; color:var(--ink-3); margin-top:1px; }
+input[type=range]{ width:100%; accent-color:var(--both); margin:4px 0 0; }
+select{ font:inherit; font-size:13.5px; width:100%; padding:6px 8px; border-radius:7px;
+  border:1px solid var(--line); background:var(--surface-2); color:var(--ink); }
+
+/* ---------- ladders ---------- */
+.ladder-box{ padding:16px 14px 10px; overflow:hidden; }
+.ladder-box + .ladder-box{ margin-top:16px; }
+.ladder-title{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; margin:0 4px 4px; }
+.ladder-title h3{ font-family:"IBM Plex Sans",sans-serif; font-size:14px; font-weight:600; }
+.ladder-title .note{ font-size:12.5px; color:var(--ink-3); }
+svg.ladder{ display:block; width:100%; height:auto; }
+.key{ display:flex; flex-wrap:wrap; gap:6px 16px; margin:8px 4px 2px; font-size:12.5px; color:var(--ink-2); }
+.key span{ display:inline-flex; align-items:center; gap:6px; }
+.dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+
+/* ---------- probe ---------- */
+.probe-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+@media (max-width:640px){ .probe-grid{ grid-template-columns:1fr; } }
+.verdict{ border-radius:9px; padding:14px; border:1px solid var(--line-soft); }
+.verdict.e{ background:var(--elec-soft); }
+.verdict.i{ background:var(--ion-soft); }
+.verdict h4{ margin:0 0 3px; font-size:14px; font-weight:600;
+  font-family:"IBM Plex Sans",sans-serif; display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
+.verdict .state{ font-size:13px; font-weight:600; font-family:"IBM Plex Mono",monospace; }
+.verdict p{ font-size:13.5px; margin:6px 0 0; color:var(--ink); opacity:.92; }
+.quickset{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+.quickset .chip{ font-size:12.5px; padding:4px 11px; }
+
+/* ---------- orderings ---------- */
+.ord{ display:grid; gap:0; }
+.ord-row{ display:grid; grid-template-columns:minmax(150px,auto) minmax(76px,auto) 1fr;
+  gap:10px 16px; align-items:baseline; padding:13px 0; border-top:1px solid var(--line-soft); }
+.ord-row:first-child{ border-top:none; }
+.ord-row .rel{ font-size:14.5px; font-weight:500; }
+.ord-row .num{ font-size:13.5px; color:var(--ink-2); font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; }
+.ord-row .say{ font-size:13.5px; color:var(--ink-2); }
+.ord-row .say b{ color:var(--ink); font-weight:600; }
+@media (max-width:620px){ .ord-row{ grid-template-columns:1fr; gap:3px; padding:12px 0; } }
+
+/* ---------- wave cards (scales tab) ---------- */
+.waves{ display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:14px; }
+.wave{ padding:15px; display:flex; flex-direction:column; gap:9px; text-align:left;
+  background:var(--surface); border:1px solid var(--line-soft); border-radius:10px;
+  box-shadow:var(--shadow); transition:border-color .12s, box-shadow .12s; }
+button.wave{ width:100%; font:inherit; color:inherit; }
+button.wave:hover{ border-color:var(--both); }
+button.wave[aria-pressed="true"]{ border-color:var(--live); box-shadow:0 0 0 2px var(--live-soft), var(--shadow); }
+.wave .wh{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.wave .wh h3{ font-family:"IBM Plex Sans",sans-serif; font-size:15px; }
+.wave .tag{ font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; font-weight:600;
+  font-family:"IBM Plex Mono",monospace; padding:2px 7px; border-radius:4px; white-space:nowrap; }
+.tag.e{ background:var(--elec-soft); color:var(--elec); }
+.tag.i{ background:var(--ion-soft); color:var(--ion); }
+.tag.b{ background:var(--both-soft); color:var(--both); }
+.wave figure{ margin:0; background:var(--surface-2); border-radius:7px; padding:6px; }
+.wave svg{ display:block; width:100%; height:auto; }
+.wave .val{ font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink); }
+.wave dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:4px 10px; font-size:12.8px; }
+.wave dt{ color:var(--ink-3); }
+.wave dd{ margin:0; color:var(--ink-2); }
+.wave .cond{ font-size:12.3px; color:var(--ink-3); border-top:1px dashed var(--line); padding-top:8px; margin-top:auto; }
+
+/* ---------- read-out table ---------- */
+.tbl-scroll{ overflow-x:auto; }
+table.ro{ border-collapse:collapse; width:100%; font-size:13.5px; min-width:480px; }
+table.ro th, table.ro td{ text-align:left; padding:8px 12px; border-bottom:1px solid var(--line-soft); }
+table.ro th{ font-size:11.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); font-weight:600; }
+table.ro td.v{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
+table.ro td.s{ font-family:"IBM Plex Mono",monospace; white-space:nowrap; }
+table.ro tbody tr:hover{ background:var(--surface-2); }
+
+.gloss{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px 26px; }
+.gloss div{ font-size:13.8px; }
+.gloss b{ font-weight:600; }
+.gloss p{ color:var(--ink-2); margin-top:2px; font-size:13.4px; }
+.warnbar{ margin-top:14px; font-size:13.3px; color:var(--warn); }
+
+/* ---------- switchboard (assumptions tab) ---------- */
+.board{ display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:18px 24px; }
+.ctl .hd{ display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+.ctl .hd b{ font-size:13.5px; font-weight:600; }
+.ctl .hd span{ font-size:11.5px; color:var(--ink-3); font-family:"IBM Plex Mono",monospace; }
+.seg{ display:flex; flex-wrap:wrap; gap:5px; }
+.seg button{ border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+  border-radius:7px; padding:5px 11px; font-size:13px; font-weight:500;
+  transition:background .12s,color .12s,border-color .12s; }
+.seg button:hover{ border-color:var(--ink-3); color:var(--ink); }
+.seg button[aria-pressed="true"]{ background:var(--ink); color:var(--ground); border-color:var(--ink); }
+.ctl .exp{ font-size:12.3px; color:var(--ink-3); margin-top:6px; min-height:2.6em; }
+
+.tally{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 16px;
+  margin-top:18px; padding-top:16px; border-top:1px solid var(--line-soft); }
+.tally .big{ font-family:Spectral,serif; font-size:30px; font-weight:600; color:var(--live); line-height:1; }
+.tally .txt{ font-size:14px; color:var(--ink-2); }
+.tally .re{ margin-left:auto; }
+.tally .re button{ border:1px solid var(--line); background:var(--surface-2); color:var(--ink-2);
+  border-radius:7px; padding:5px 12px; font-size:12.5px; }
+
+/* ---------- surviving-wave cards ---------- */
+.live-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(262px,1fr)); gap:13px; }
+.wv{ padding:14px; display:flex; flex-direction:column; gap:7px; text-align:left;
+  border-left:3px solid var(--live);
+  background:var(--surface); border-top:1px solid var(--line-soft);
+  border-right:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+  border-radius:10px; box-shadow:var(--shadow); transition:box-shadow .12s, border-color .12s; }
+button.wv{ width:100%; font:inherit; color:inherit; }
+button.wv:hover{ border-right-color:var(--both); }
+button.wv[aria-pressed="true"]{ box-shadow:0 0 0 2px var(--live-soft), var(--shadow); }
+.wv .h{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.wv .h h3{ font-family:"IBM Plex Sans",sans-serif; font-size:15px; }
+.wv .pick{ font-size:10.5px; font-family:"IBM Plex Mono",monospace; color:var(--ink-4); white-space:nowrap; }
+.wv[aria-pressed="true"] .pick{ color:var(--live); }
+.wv .disp{ font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2);
+  background:var(--surface-2); padding:5px 8px; border-radius:6px; overflow-x:auto; white-space:nowrap; }
+.wv .why{ font-size:13.2px; color:var(--ink-2); }
+.wv .mods{ display:flex; flex-wrap:wrap; gap:4px; margin-top:auto; padding-top:6px; }
+.badge{ font-size:10.5px; letter-spacing:.05em; font-weight:600; font-family:"IBM Plex Mono",monospace;
+  padding:2px 6px; border-radius:4px; background:var(--surface-2); color:var(--ink-3); }
+.badge.on{ background:var(--both-soft); color:var(--both); }
+
+.dead-list{ display:grid; gap:0; }
+.dr{ display:grid; grid-template-columns:minmax(150px,200px) 1fr; gap:6px 16px;
+  padding:9px 0; border-top:1px solid var(--line-soft); align-items:baseline; }
+.dr:first-child{ border-top:none; }
+.dr .n{ font-size:13.6px; color:var(--ink-2); font-weight:500; }
+.dr .r{ font-size:13.2px; color:var(--ink-3); }
+.dr .r b{ color:var(--ink-2); font-weight:600; }
+@media (max-width:600px){ .dr{ grid-template-columns:1fr; gap:1px; } }
+
+/* ---------- matrix ---------- */
+.mx-scroll{ overflow-x:auto; }
+table.mx{ border-collapse:collapse; width:100%; min-width:840px; font-size:13px; }
+table.mx th, table.mx td{ padding:7px 9px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:middle; }
+table.mx thead th{ font-size:10.8px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--ink-3); font-weight:600; position:sticky; top:0; background:var(--surface); z-index:1;
+  border-bottom:1.5px solid var(--line); }
+table.mx td.nm{ font-weight:500; white-space:nowrap; }
+table.mx td.c{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); white-space:nowrap; }
+table.mx tbody tr.live{ background:var(--live-soft); }
+table.mx tbody tr.live td.nm{ color:var(--ink); font-weight:600; }
+table.mx tbody tr.dead td{ color:var(--dead); }
+table.mx tbody tr.dead td.c{ color:var(--dead); opacity:.75; }
+table.mx tbody tr.sel td.nm{ box-shadow:inset 3px 0 0 var(--both); }
+table.mx td .flag{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px;
+  background:var(--dead); vertical-align:middle; }
+table.mx tr.live td .flag{ background:var(--live); }
+.grp-row td{ background:var(--surface-2); font-family:"IBM Plex Mono",monospace; font-size:10.8px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); font-weight:600; }
+
+/* ---------- equations ---------- */
+.eqs{ display:grid; gap:2px; }
+.eqgrp{ margin-top:18px; }
+.eqgrp:first-child{ margin-top:0; }
+.eqgrp > .gh{ font-size:11.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--ink-3); font-family:"IBM Plex Mono",monospace; margin-bottom:9px; }
+.eq{ display:grid; grid-template-columns:104px 1fr; gap:14px; align-items:baseline;
+  padding:9px 0; border-top:1px solid var(--line-soft); }
+.eqgrp .eq:first-of-type{ border-top:none; }
+.eq .lbl{ font-size:12.3px; color:var(--ink-3); font-family:"IBM Plex Mono",monospace; padding-top:2px; }
+.eq .bd{ font-family:"IBM Plex Mono",monospace; font-size:14.5px; line-height:1.9; color:var(--ink); overflow-x:auto; }
+.eq .bd b{ font-weight:600; }
+.t{ padding:1px 3px; border-radius:4px; transition:opacity .15s, background .15s; }
+.t.on{ background:var(--both-soft); }
+.t.off{ opacity:.26; text-decoration:line-through; text-decoration-thickness:1px; }
+@media (max-width:620px){ .eq{ grid-template-columns:1fr; gap:2px; } .eq .bd{ font-size:13.5px; } }
+
+.reasons{ margin-top:16px; padding-top:14px; border-top:1px solid var(--line); display:grid; gap:8px; }
+.reasons .rr{ display:grid; grid-template-columns:minmax(0,auto) auto 1fr; gap:6px 10px; font-size:13.3px; align-items:baseline; }
+.reasons code.st{ font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); background:transparent; padding:1px 0; }
+.reasons .rr.keep code.st{ color:var(--live); background:transparent; }
+@media (max-width:620px){ .reasons .rr{ grid-template-columns:auto auto; } .reasons .rr span{ grid-column:1/-1; } }
+.reasons code{ font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2);
+  background:var(--surface-2); padding:1px 6px; border-radius:4px; white-space:nowrap; }
+.reasons .rr span{ color:var(--ink-2); }
+.reasons .rr.keep code{ background:var(--both-soft); color:var(--both); }
+
+/* ---------- current panel ---------- */
+.jrow{ display:grid; grid-template-columns:minmax(132px,170px) 1fr; gap:8px 16px;
+  padding:11px 0; border-top:1px solid var(--line-soft); }
+.jrow:first-of-type{ border-top:none; }
+.jrow .jn{ font-size:13.5px; font-weight:600; }
+.jrow .jf{ font-family:"IBM Plex Mono",monospace; font-size:12.4px; color:var(--ink-3); margin-top:2px; }
+.jrow .jd{ font-size:13.4px; color:var(--ink-2); }
+@media (max-width:600px){ .jrow{ grid-template-columns:1fr; gap:3px; } }
+.callout{ background:var(--both-soft); border-radius:9px; padding:14px 16px; margin-top:16px; }
+.callout p{ font-size:14px; color:var(--ink); max-width:none; }
+
+/* ---------- trade-off cards ---------- */
+.buys{ display:grid; grid-template-columns:repeat(auto-fit,minmax(272px,1fr)); gap:14px; }
+.buy{ padding:15px; }
+.buy h3{ font-family:"IBM Plex Sans",sans-serif; font-size:14.5px; margin-bottom:7px; }
+.buy p{ font-size:13.4px; color:var(--ink-2); }
+.buy .gain{ margin-top:8px; font-size:13px; color:var(--ink-2); }
+.buy .gain b{ color:var(--live); font-weight:600; }
+.buy .cost{ margin-top:5px; font-size:13px; color:var(--ink-3); }
+
+/* ---------- honest limits + footer ---------- */
+.limit{ border-left:3px solid var(--warn); }
+.limit p{ font-size:13.6px; color:var(--ink-2); }
+footer{ margin-top:48px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-3); font-size:13px; }
+footer p{ max-width:72ch; }
+footer p + p{ margin-top:10px; }
+
+@media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+
+/* ===========================================================================
+ * Phone. Measured with tools/phone.py at a true 390px viewport, which needs an
+ * iframe because headless Chrome will not give a window narrower than 500px.
+ * ========================================================================= */
+
+/* A grid item's automatic minimum size is its MIN-CONTENT size, not zero. So a
+ * wide child — a min-width table, an SVG with a viewBox — forces its track wider
+ * than the container and scrolls the whole page sideways. min-width:0 is the
+ * canonical remedy, and it is what lets the overflow-x:auto boxes inside
+ * actually do their job. This was costing 144px on the CMA tab. */
+.probe-grid > *, .sliders > *, .board > *, .live-grid > *,
+.waves > *, .buys > *, .gloss > *, .ord-row > *, .eq > *{ min-width:0; }
+
+/* An SVG with a viewBox has an intrinsic width, and will happily exceed its box. */
+.card svg{ max-width:100%; }
+
+@media (max-width:700px){
+  /* Apple asks for 44pt. Everything here was 30-39px, which on a moving train is
+     the difference between tapping a tab and tapping the one beside it. */
+  .tabs button, .chip, .seg button, .hdr-toggle,
+  .tally .re button, .selbar button{
+    min-height:44px; display:inline-flex; align-items:center;
+  }
+  .seg button{ min-width:56px; justify-content:center; }
+  .quickset .chip{ min-height:44px; }
+
+  /* Two sticky headers fight, and the matrix's slides under the page's.
+     On a small screen the page header wins. */
+  table.mx thead th{ position:static; }
+
+  /* The ratio strip is 15 nowrap chips: ~6 rows and ~200px of permanently sticky
+     header, about a quarter of the screen. Show the four worth glancing at
+     mid-scroll and put the rest behind a tap. */
+  /* Keep the bar to ONE row: let the summary ellipsis rather than pushing the
+     toggle onto a second line. That alone was 93px of a 156px header. */
+  .hdr-bar{ flex-wrap:nowrap; padding:6px 12px; gap:8px; }
+  .hdr-bar .who{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  /* Scroll the chips sideways instead of wrapping them. Four chips wrapped to two
+     rows; one scrollable row is both shorter and the familiar mobile pattern. */
+  .ratios{ flex-wrap:nowrap; overflow-x:auto; padding:0 12px 8px; scrollbar-width:none; }
+  .ratios::-webkit-scrollbar{ display:none; }
+  .ratios[data-expanded="false"] .rchip:nth-child(n+5){ display:none; }
+  .ratios .more{ font-family:"IBM Plex Mono",monospace; font-size:11.6px;
+    padding:2px 10px; border-radius:999px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink-3); min-height:0; }
+}
+@media (min-width:701px){
+  /* No "more" button on a wide screen: every chip already fits. */
+  .ratios .more{ display:none; }
+}
+
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">Space plasma · scales, waves and assumptions</div>
+  <h1>Plasma Wave Workbench</h1>
+  <p class="lede">Set a plasma once, and every tab answers a different question about it.
+  <b>Scales</b> puts every frequency and length on a log axis, so you can see which orderings hold.
+  <b>Assumptions</b> turns nine switches and shows which of 28 waves survive, which died, and exactly
+  which term in the equations switched off to kill them. Selecting a wave in either tab carries it to
+  the other.</p>
+</header>
+
+<div id="app"></div>
+
+<footer>
+  <p><b>Formulas are SI, non-relativistic, and quasineutral</b> (n<sub>e</sub> = Z n<sub>i</sub>).
+  The wave frequencies are the standard cold-plasma limits, except the ion-acoustic speed,
+  which uses c<sub>s</sub> = &radic;((T<sub>e</sub> + 3T<sub>i</sub>)/m<sub>i</sub>).
+  Lower hybrid uses &omega;<sub>LH</sub><sup>&minus;2</sup> = (&Omega;<sub>e</sub>&Omega;<sub>i</sub>)<sup>&minus;1</sup> + &omega;<sub>pi</sub><sup>&minus;2</sup>,
+  not the geometric-mean shortcut &mdash; the shortcut is wrong whenever &omega;<sub>pe</sub> is not
+  much larger than &Omega;<sub>e</sub>. Thermal speeds are &radic;(T/m) with T in energy units.
+  Every number here is reproduced by an independent Python implementation and checked against the
+  NRL Plasma Formulary.</p>
+  <p>Real plasmas add drifts, anisotropy and more than one ion species, and warm corrections shift
+  these numbers &mdash; treat the ladder as the order of magnitude, which is what it is for.
+  Dispersion relations are shown in their standard limits; a mode listed here as separate can be one
+  branch of a continuous surface in (&omega;, k, &theta;) space. Treat the matrix as the sorting rule
+  it is, then check any specific claim in Chen ch. 4&ndash;7, Gurnett &amp; Bhattacharjee ch. 4&ndash;9,
+  or Stix for the cold-plasma modes.</p>
+  <p>Phase 1 of the Workbench: the Scales and Assumptions tabs, merged from the two earlier pages.
+  Units, CMA and the 3D viewer follow.</p>
+</footer>
+
+</div>
+
+<script type="module">
+"use strict";
+
+/* ---- physics.js ---- */
+const __m_physics = (() => {
+/* physics.js — pure plasma physics. No DOM, no globals, no formatting.
+ *
+ * Every formula here matches docs/physics.md and is checked against
+ * tools/check_params.py by test/physics.test.mjs. If this file and physics.md
+ * disagree, find out which is wrong — do not silently pick one.
+ *
+ * SI throughout. Temperatures arrive in eV. n is the ELECTRON density; n_i = n/Z.
+ * Thermal speed is v_t = sqrt(T/m), with no factor of 2.
+ */
+
+const E = 1.602176634e-19;
+const ME = 9.1093837015e-31;
+const MP = 1.67262192369e-27;
+const EPS0 = 8.8541878128e-12;
+const MU0 = 1.25663706212e-6;
+const C = 299792458;
+
+/** Real proton/electron mass ratio, used as the default and by the mass-ratio toggle. */
+const REAL_MASS_RATIO = MP / ME;
+
+const SPECIES = [
+  { id: "H",    label: "H⁺  hydrogen (protons)",      A: 1,       Z: 1 },
+  { id: "He",   label: "He²⁺  alpha particles",       A: 4,       Z: 2 },
+  { id: "O",    label: "O⁺  oxygen (ionosphere)",     A: 16,      Z: 1 },
+  { id: "pair", label: "e⁺  positrons (pair plasma)", A: ME / MP, Z: 1 },
+];
+
+/** Must stay in step with PRESETS in tools/check_params.py. */
+const PRESETS = [
+  { n: "Solar wind, 1 AU",    B: 5e-9,  d: 5e6,  te: 12,  ti: 10,   sp: "H",    L: 1e8 },
+  { n: "Magnetosheath",       B: 2e-8,  d: 2e7,  te: 30,  ti: 150,  sp: "H",    L: 1e7 },
+  { n: "Magnetotail sheet",   B: 2e-8,  d: 3e5,  te: 600, ti: 4000, sp: "H",    L: 1e7 },
+  { n: "Solar corona",        B: 1e-2,  d: 1e15, te: 100, ti: 100,  sp: "H",    L: 1e7 },
+  { n: "Ionosphere, F layer", B: 3e-5,  d: 1e12, te: 0.2, ti: 0.1,  sp: "O",    L: 1e5 },
+  { n: "Pulsar pair plasma",  B: 1e-4,  d: 1e13, te: 1e4, ti: 1e4,  sp: "pair", L: 1e4 },
+];
+
+const speciesById = (id) => SPECIES.find((s) => s.id === id) || SPECIES[0];
+
+/**
+ * Every characteristic frequency, length and speed of a plasma.
+ *
+ * @param {object} p  { B, n, Te, Ti, species, L, massRatio }
+ *   massRatio: null for the real ion mass, or a number m_i/m_e (PIC runs use 100 or 25).
+ *   Overriding it keeps Z and changes only the ion mass — which is what a reduced-mass-ratio
+ *   run actually does, and why every ion scale moves together.
+ */
+function derive(p) {
+  const sp = speciesById(p.species);
+  const { B, n, Te, Ti } = p;
+  const L = p.L;
+  const Z = sp.Z;
+  const mi = p.massRatio == null ? sp.A * MP : p.massRatio * ME;
+  const ni = n / Z;
+
+  const wpe = Math.sqrt((n * E * E) / (EPS0 * ME));
+  const wpi = Math.sqrt((n * Z * E * E) / (EPS0 * mi));
+  const Oe = (E * B) / ME;
+  const Oi = (Z * E * B) / mi;
+  const wUH = Math.hypot(wpe, Oe);
+  // Full hybrid form, NOT the geometric-mean shortcut: the shortcut is wrong
+  // wherever omega_pi < sqrt(Oe Oi), i.e. in a tenuous plasma.
+  const wLH = 1 / Math.sqrt(1 / (Oe * Oi) + 1 / (wpi * wpi));
+  const vte = Math.sqrt((Te * E) / ME);
+  const vti = Math.sqrt((Ti * E) / mi);
+  const vA = B / Math.sqrt(MU0 * ni * mi);
+  const cs = Math.sqrt(((Te + 3 * Ti) * E) / mi);
+  const lD = Math.sqrt((EPS0 * Te * E) / (n * E * E));
+  const de = C / wpe;
+  const di = C / wpi;
+  const rho_e = vte / Oe;
+  const rho_i = vti / Oi;
+  const beta = (2 * MU0 * n * (Te + Ti / Z) * E) / (B * B);
+  const betai = (2 * MU0 * ni * Ti * E) / (B * B);
+  const ND = (4 / 3) * Math.PI * n * lD * lD * lD;
+  const vms = Math.sqrt(vA * vA + cs * cs);
+
+  return {
+    sp, B, n, Te, Ti, L, mi, Z, ni,
+    wpe, wpi, Oe, Oi, wUH, wLH,
+    vte, vti, vA, cs, vms,
+    lD, de, di, rho_e, rho_i,
+    beta, betai, ND,
+    massRatioUsed: mi / ME,
+  };
+}
+
+/* ---------------------------------------------------------------------------
+ * Identities from docs/physics.md. They follow from the definitions, so any
+ * code that breaks one has a bug. Exported so the tests and the page can both
+ * use them — a page that can check itself is worth more than one that cannot.
+ * ------------------------------------------------------------------------- */
+function identities(s) {
+  return [
+    { id: "di/de = sqrt(mi/(Z me))", got: s.di / s.de,       want: Math.sqrt(s.mi / (s.Z * ME)) },
+    { id: "vA/c = Omega_i/omega_pi", got: s.vA / C,          want: s.Oi / s.wpi },
+    { id: "lambda_D * omega_pe = v_te", got: s.lD * s.wpe,   want: s.vte },
+    { id: "d_i * Omega_i = v_A",     got: s.di * s.Oi,       want: s.vA },
+    { id: "d_e * omega_pe = c",      got: s.de * s.wpe,      want: C },
+    { id: "rho_i/d_i = v_ti/v_A",    got: s.rho_i / s.di,    want: s.vti / s.vA },
+  ];
+}
+
+/** Largest relative error across all identities. Should be ~1e-16. */
+function identityError(s) {
+  return identities(s).reduce(
+    (worst, k) => Math.max(worst, Math.abs(k.got - k.want) / Math.abs(k.want)),
+    0,
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * Which species can follow a wave of angular frequency omega.
+ * The single most useful habit on the whole page: compare omega with Omega_s.
+ * ------------------------------------------------------------------------- */
+function regimeOf(ratio) {
+  if (ratio < 0.3) return "magnetized";
+  if (ratio > 3) return "unmagnetized";
+  return "resonant";
+}
+
+/** Can the plasma still screen a field at this frequency? */
+function screening(w, s) {
+  if (w < s.wpi) return "both";
+  if (w < s.wpe) return "electrons";
+  return "neither";
+}
+
+/** True where the non-relativistic, weakly-coupled formulas above stop being trustworthy. */
+function outOfRange(s) {
+  return s.vA > 0.3 * C || s.vte > 0.3 * C || s.ND < 10;
+}
+
+/* ===========================================================================
+ * Cold-plasma dispersion — the CMA tab.
+ *
+ * Stix parameters with SIGNED cyclotron frequencies: Omega_s = q_s B / m_s, so
+ * the electron one is NEGATIVE. That sign is the whole reason R and L differ,
+ * and therefore the reason the whistler is right-handed and the ion-cyclotron
+ * wave left-handed. derive() returns magnitudes, so the sign is applied here.
+ * ========================================================================= */
+
+/** Stix R, L, P, S, D at angular frequency `w`. Two species: electrons and ions. */
+function stix(s, w) {
+  const Oe = -s.Oe;          // electrons carry charge -e, so Omega_e < 0
+  const Oi = s.Oi;
+  const pe = (s.wpe * s.wpe) / (w * w);
+  const pi = (s.wpi * s.wpi) / (w * w);
+  const R = 1 - pe / (1 + Oe / w) - pi / (1 + Oi / w);
+  const L = 1 - pe / (1 - Oe / w) - pi / (1 - Oi / w);
+  const P = 1 - pe - pi;
+  return { R, L, P, S: (R + L) / 2, D: (R - L) / 2 };
+}
+
+/**
+ * Refractive index squared for both roots at angle `th` (radians) to B0.
+ *
+ *   A n^4 - B n^2 + C = 0,  A = S sin^2 + P cos^2,
+ *   B = RL sin^2 + PS(1 + cos^2),  C = PRL
+ *
+ * Returns the two roots. Either may be negative, which means evanescent — that
+ * is information, not a failure, so they are returned rather than filtered.
+ */
+function dispersion(s, w, th) {
+  return dispersionFrom(stix(s, w), th);
+}
+
+/**
+ * The same solve, from Stix parameters alone. The CMA tab needs this: a point in
+ * the plane fixes R, L, P, S without naming a plasma or a frequency, so the wave
+ * normal surface there can be computed rather than drawn from memory.
+ */
+function dispersionFrom({ R, L, P, S, D }, th) {
+  const si = Math.sin(th), co = Math.cos(th);
+  const s2 = si * si, c2 = co * co;
+  const A = S * s2 + P * c2;
+  const B = R * L * s2 + P * S * (1 + c2);
+  const Cq = P * R * L;
+  // F^2 = (RL - PS)^2 sin^4 + 4 P^2 D^2 cos^2, which is >= 0 identically: the
+  // cold-plasma roots are always real. Clamp only against round-off.
+  const F = Math.sqrt(Math.max(0, (R * L - P * S) ** 2 * s2 * s2 + 4 * P * P * D * D * c2));
+
+  if (Math.abs(A) < 1e-12 * Math.max(1, Math.abs(B))) {
+    // A -> 0: one root runs off to infinity (the resonance cone), the other is finite.
+    return { n2: [Cq / B, Infinity], A, B, C: Cq, R, L, P, S, D };
+  }
+  return { n2: [(B - F) / (2 * A), (B + F) / (2 * A)], A, B, C: Cq, R, L, P, S, D };
+}
+
+/** Phase speed v_phi = c/n for each propagating root; null where evanescent. */
+function phaseSpeeds(s, w, th) {
+  return dispersion(s, w, th).n2.map((n2) =>
+    n2 > 0 && isFinite(n2) ? C / Math.sqrt(n2) : null);
+}
+
+/* ---------------------------------------------------------------------------
+ * The CMA plane (Stix two-species): abscissa X = (w_pe^2 + w_pi^2)/w^2,
+ * ordinate Y = |Omega_e| Omega_i / w^2.
+ *
+ * Writing mu = m_i/(Z m_e), every boundary is LINEAR in X at fixed Y, so the
+ * curves below are exact rather than traced numerically:
+ *     w_pe^2/w^2 = X mu/(mu+1)      |Omega_e|/w = sqrt(mu Y)
+ *     w_pi^2/w^2 = X/(mu+1)          Omega_i /w = sqrt(Y/mu)
+ * ------------------------------------------------------------------------- */
+
+/** mu = m_i / (Z m_e): the mass ratio that sets the whole CMA layout. */
+const cmaMu = (s) => s.mi / (s.Z * ME);
+
+/** Where the current plasma and probe frequency sit in the CMA plane. */
+function cmaPoint(s, w) {
+  return {
+    X: (s.wpe * s.wpe + s.wpi * s.wpi) / (w * w),
+    Y: (s.Oe * s.Oi) / (w * w),
+  };
+}
+
+/**
+ * The X at which each boundary crosses a given Y. Returns null where the
+ * boundary does not exist at that Y (a vanishing or negative denominator).
+ *
+ *   P = 0  is X = 1 exactly, independent of Y — a vertical line.
+ *   w = |Omega_e| is Y = 1/mu, w = Omega_i is Y = mu — horizontal lines.
+ */
+function cmaBoundaryX(kind, Y, mu) {
+  if (kind === "P") return 1;
+  const a = Math.sqrt(mu * Y);   // |Omega_e|/w
+  const b = Math.sqrt(Y / mu);   // Omega_i /w
+  const fe = mu / (mu + 1), fi = 1 / (mu + 1);
+  let denom;
+  if (kind === "R") denom = fe / (1 - a) + fi / (1 + b);
+  else if (kind === "L") denom = fe / (1 + a) + fi / (1 - b);
+  else if (kind === "S") denom = fe / (1 - a * a) + fi / (1 - b * b);
+  else throw new Error("unknown CMA boundary " + kind);
+  if (!isFinite(denom) || Math.abs(denom) < 1e-300) return null;
+  const X = 1 / denom;
+  return X > 0 && isFinite(X) ? X : null;
+}
+
+/**
+ * Which principal modes propagate at a point in the plane. This is what makes
+ * one region different from its neighbour, and it is computed from R, L, P, S
+ * rather than read off a remembered picture.
+ *
+ *   theta = 0  : n^2 = R (R-wave) and n^2 = L (L-wave)
+ *   theta = 90 : n^2 = P (O-mode) and n^2 = RL/S (X-mode)
+ */
+function cmaSignature(X, Y, mu) {
+  const a = Math.sqrt(mu * Y), b = Math.sqrt(Y / mu);
+  const fe = mu / (mu + 1), fi = 1 / (mu + 1);
+  const pe = X * fe, pi = X * fi;
+  const R = 1 - pe / (1 - a) - pi / (1 + b);
+  const L = 1 - pe / (1 + a) - pi / (1 - b);
+  const P = 1 - X;
+  const S = (R + L) / 2;
+  const XM = S === 0 ? Infinity : (R * L) / S;
+  const bit = (v) => (v > 0 ? 1 : 0);
+  // The four signs say WHICH principal modes propagate. They are not enough on
+  // their own: two disconnected regions can share them. Add the two facts that
+  // fix the SHAPE of the wave normal surface — whether a resonance cone exists
+  // (tan^2 theta = -P/S > 0), and whether the O surface lies inside or outside
+  // the X surface at 90 degrees.
+  const cone = S !== 0 ? bit(-P / S) : 0;
+  const order = bit(P - XM);
+  return {
+    R, L, P, S, XM,
+    cone: cone === 1,
+    key: `${bit(R)}${bit(L)}${bit(P)}${bit(XM)}${cone}${order}`,
+    /** how many of the four principal modes propagate here */
+    count: bit(R) + bit(L) + bit(P) + bit(XM),
+  };
+}
+
+/* ===========================================================================
+ * Boris pusher — the 3D tab, and the reference for build project 2.
+ * ========================================================================= */
+
+const cross = (a, b) => [
+  a[1] * b[2] - a[2] * b[1],
+  a[2] * b[0] - a[0] * b[2],
+  a[0] * b[1] - a[1] * b[0],
+];
+const norm = (v) => Math.hypot(v[0], v[1], v[2]);
+
+/**
+ * One Boris step. Advances v by dt and then x by dt.
+ *
+ * The middle stage is an exact rotation, so in a pure magnetic field |v| is
+ * conserved to round-off FOR ANY dt — that is the property the whole scheme
+ * exists for, and what separates it from RK4 on the same problem. The gyro
+ * PHASE is still wrong at large dt, so keep |Omega| dt <~ 0.1-0.2 for a
+ * faithful orbit.
+ *
+ * @param {number[]} x position
+ * @param {number[]} v velocity
+ * @param {number[]} E electric field
+ * @param {number[]} B magnetic field
+ * @param {number} qm  q/m for this species (negative for electrons)
+ * @param {number} dt
+ */
+function borisStep(x, v, E, B, qm, dt) {
+  const h = (qm * dt) / 2;
+  const vm = [v[0] + h * E[0], v[1] + h * E[1], v[2] + h * E[2]];
+  const t = [h * B[0], h * B[1], h * B[2]];
+  const t2 = t[0] * t[0] + t[1] * t[1] + t[2] * t[2];
+  const sv = [(2 * t[0]) / (1 + t2), (2 * t[1]) / (1 + t2), (2 * t[2]) / (1 + t2)];
+  const vp = [vm[0], vm[1], vm[2]];
+  const vmt = cross(vm, t);
+  vp[0] += vmt[0]; vp[1] += vmt[1]; vp[2] += vmt[2];
+  const vps = cross(vp, sv);
+  const vplus = [vm[0] + vps[0], vm[1] + vps[1], vm[2] + vps[2]];
+  const vn = [vplus[0] + h * E[0], vplus[1] + h * E[1], vplus[2] + h * E[2]];
+  return { x: [x[0] + dt * vn[0], x[1] + dt * vn[1], x[2] + dt * vn[2]], v: vn };
+}
+
+/** An explicit RK4 on the same Lorentz force, for the comparison in project 2. */
+function rk4Step(x, v, E, B, qm, dt) {
+  const acc = (vv) => {
+    const c = cross(vv, B);
+    return [qm * (E[0] + c[0]), qm * (E[1] + c[1]), qm * (E[2] + c[2])];
+  };
+  const add = (a, b, k) => [a[0] + k * b[0], a[1] + k * b[1], a[2] + k * b[2]];
+  const k1v = acc(v), k1x = v;
+  const k2v = acc(add(v, k1v, dt / 2)), k2x = add(v, k1v, dt / 2);
+  const k3v = acc(add(v, k2v, dt / 2)), k3x = add(v, k2v, dt / 2);
+  const k4v = acc(add(v, k3v, dt)), k4x = add(v, k3v, dt);
+  const comb = (a, b, c, d) => [0, 1, 2].map((i) => (a[i] + 2 * b[i] + 2 * c[i] + d[i]) / 6);
+  const dv = comb(k1v, k2v, k3v, k4v), dx = comb(k1x, k2x, k3x, k4x);
+  return { x: add(x, dx, dt), v: add(v, dv, dt) };
+}
+
+/**
+ * Sense of gyration about B = B z-hat, viewed looking DOWN from +z.
+ *
+ * F = q v x B. Take an ion (q > 0) moving along +x: v x B = vB(x-hat x z-hat)
+ * = -vB y-hat, so it is pushed toward -y and turns clockwise. Electrons, with
+ * q < 0, turn the other way. Equivalently the rotation vector is -qB/m: ions
+ * are LEFT-handed about B, electrons RIGHT-handed — which is why the ion
+ * cyclotron wave is L-mode and the whistler R-mode. Each turns with the
+ * species it resonates with.
+ *
+ * Any figure using this must state the viewing direction next to the arrow.
+ */
+function gyroSense(charge) {
+  return charge > 0
+    ? { sense: "clockwise", handed: "left-handed about B", sign: -1 }
+    : { sense: "anticlockwise", handed: "right-handed about B", sign: +1 };
+}
+
+/** Guiding-centre drifts, each returned separately so one trajectory can be decomposed. */
+const drifts = {
+  /** E x B / B^2 — the one drift that is the same for both species, so it carries no current. */
+  exb: (E, B) => {
+    const b2 = B[0] * B[0] + B[1] * B[1] + B[2] * B[2];
+    const c = cross(E, B);
+    return [c[0] / b2, c[1] / b2, c[2] / b2];
+  },
+  /** (m v_perp^2 / 2qB) (B x grad B)/B^2. Charge-dependent, so it carries current. */
+  gradB: (vperp, m, q, B, gradB) => {
+    const Bm = norm(B), b2 = Bm * Bm;
+    const c = cross(B, gradB);
+    const k = (m * vperp * vperp) / (2 * q * Bm * b2);
+    return [k * c[0], k * c[1], k * c[2]];
+  },
+  /** (m v_par^2 / qB) (B x kappa)/B, kappa = (b.grad)b. Charge-dependent. */
+  curvature: (vpar, m, q, B, kappa) => {
+    const Bm = norm(B);
+    const c = cross(B, kappa);
+    const k = (m * vpar * vpar) / (q * Bm * Bm);
+    return [k * c[0], k * c[1], k * c[2]];
+  },
+  /** (m/qB^2) dE_perp/dt — only while the perpendicular field is CHANGING. */
+  polarization: (dEdt, m, q, B) => {
+    const b2 = B[0] * B[0] + B[1] * B[1] + B[2] * B[2];
+    const k = m / (q * b2);
+    return [k * dEdt[0], k * dEdt[1], k * dEdt[2]];
+  },
+};
+
+/* ===========================================================================
+ * Normalizations — the Units tab.
+ * Each convention picks a length and a frequency whose product is its speed
+ * unit. That consistency is the reason the three belong together, and the
+ * `check` field is the identity that proves it.
+ * ========================================================================= */
+const CONVENTIONS = [
+  { id: "mhd", name: "Ideal MHD",
+    time: (s) => s.L / s.vA, timeLabel: "L / v_A",
+    len: (s) => s.L, lenLabel: "system size L",
+    speed: (s) => s.vA, speedLabel: "v_A",
+    checkLabel: "L · (v_A/L) = v_A",
+    identity: (s) => ({ got: s.L * (s.vA / s.L), want: s.vA }),
+    why: "Ideal MHD has no intrinsic length. Only v_A and the system size matter, so results rescale to any L." },
+
+  { id: "hall", name: "Hall MHD / hybrid",
+    time: (s) => 1 / s.Oi, timeLabel: "1/Ω_i",
+    len: (s) => s.di, lenLabel: "d_i",
+    speed: (s) => s.vA, speedLabel: "v_A",
+    checkLabel: "d_i Ω_i = v_A",
+    identity: (s) => ({ got: s.di * s.Oi, want: s.vA }),
+    why: "Ions decouple from the field at d_i. Choosing d_i as the unit says \u201cthe ion scale is the physics here\u201d." },
+
+  { id: "espic", name: "Electrostatic PIC",
+    time: (s) => 1 / s.wpe, timeLabel: "1/ω_pe",
+    len: (s) => s.lD, lenLabel: "λ_D",
+    speed: (s) => s.vte, speedLabel: "v_te",
+    checkLabel: "λ_D ω_pe = v_te",
+    identity: (s) => ({ got: s.lD * s.wpe, want: s.vte }),
+    why: "An explicit PIC code needs ω_pe Δt < 2 and cells of order λ_D, so these are its natural step and grid. kλ_D ≈ 0.3 is also where Landau damping of Langmuir waves becomes strong." },
+
+  { id: "empic", name: "Electromagnetic PIC",
+    time: (s) => 1 / s.wpe, timeLabel: "1/ω_pe",
+    len: (s) => s.de, lenLabel: "d_e",
+    speed: () => C, speedLabel: "c",
+    checkLabel: "d_e ω_pe = c",
+    identity: (s) => ({ got: s.de * s.wpe, want: C }),
+    why: "Light is in the system, so c is the speed unit and d_e (skin depth) the length that goes with it." },
+
+  // Gyrokinetic is the odd one out, and deliberately so: it has TWO length units.
+  // Across B the pair is (rho_i, 1/Omega_i); along B it is (L, L/v_ti). Both give
+  // v_ti, which is why the ordering is consistent — but you cannot collapse it to
+  // one length over one time the way the others collapse.
+  { id: "gk", name: "Gyrokinetic",
+    time: (s) => s.L / s.vti, timeLabel: "L / v_ti",
+    len: (s) => s.rho_i, lenLabel: "ρ_i across B, L along",
+    lenPar: (s) => s.L, lenParLabel: "L along B",
+    anisotropic: true,
+    speed: (s) => s.vti, speedLabel: "v_ti",
+    checkLabel: "ρ_i Ω_i = v_ti  (across B)   and   L · (v_ti/L) = v_ti  (along)",
+    identity: (s) => ({ got: s.rho_i * s.Oi, want: s.vti }),
+    why: "Orders k⊥ρ_i ~ 1 while ω/Ω_i ~ ρ_i/L ≪ 1: keeps finite-Larmor-radius physics and averages the gyration away. The two length units are the ordering itself — perpendicular structure at the gyroradius, parallel structure at the system size." },
+];
+
+return { C, CONVENTIONS, E, EPS0, ME, MP, MU0, PRESETS, REAL_MASS_RATIO, SPECIES, borisStep, cmaBoundaryX, cmaMu, cmaPoint, cmaSignature, derive, dispersion, dispersionFrom, drifts, gyroSense, identities, identityError, norm, outOfRange, phaseSpeeds, regimeOf, rk4Step, screening, speciesById, stix };
+})();
+
+/* ---- format.js ---- */
+const __m_format = (() => {
+/* format.js — turning numbers into readable strings. Pure; no DOM.
+ *
+ * Separate from physics.js so the physics stays testable as physics, and so a
+ * change to how a number *looks* can never change what it *is*.
+ */
+
+const SUP = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
+
+/** "−12" → "⁻¹²", for exponents written inline. */
+const sup = (s) => String(s).split("").map((c) => SUP[c] || c).join("");
+
+/** Three significant figures, switching to ×10ⁿ outside 10⁻² … 10³. */
+function sci(x, sig = 3) {
+  if (!isFinite(x) || x === 0) return "0";
+  const ex = Math.floor(Math.log10(Math.abs(x)));
+  const m = x / Math.pow(10, ex);
+  if (ex >= -2 && ex <= 3) {
+    const v = Math.abs(x);
+    const dp = v >= 100 ? 0 : v >= 10 ? 1 : v >= 1 ? 2 : 3;
+    return x.toFixed(dp);
+  }
+  return m.toFixed(sig - 1) + "× 10" + sup(ex);
+}
+
+function fmtB(B) {
+  if (B < 1e-9) return sci(B * 1e12) + " pT";
+  if (B < 1e-6) return sci(B * 1e9) + " nT";
+  if (B < 1e-3) return sci(B * 1e6) + " µT";
+  return sci(B * 1e4) + " G";
+}
+
+const fmtN = (n) => sci(n) + " m⁻³  (" + sci(n * 1e-6) + " cm⁻³)";
+
+function fmtT(t) {
+  if (t < 1e3) return sci(t) + " eV";
+  if (t < 1e6) return sci(t / 1e3) + " keV";
+  return sci(t / 1e6) + " MeV";
+}
+
+function fmtLen(x) {
+  let extra = "";
+  if (x >= 6.371e6) extra = " (" + sci(x / 6.371e6) + " Rₑ)";
+  else if (x >= 1e3) extra = " (" + sci(x / 1e3) + " km)";
+  else if (x < 1e-3) extra = " (" + sci(x * 1e6) + " µm)";
+  return sci(x) + " m" + extra;
+}
+
+const fmtFreq = (w) => sci(w) + " rad/s  (" + sci(w / (2 * Math.PI)) + " Hz)";
+
+function fmtSpd(v, C = 299792458) {
+  if (v >= 1e6) return sci(v / 1e3) + " km/s  (" + (v / C).toFixed(4) + " c)";
+  return sci(v / 1e3) + " km/s";
+}
+
+/** Escape for insertion into innerHTML. Labels come from our own data, but be safe. */
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+return { esc, fmtB, fmtFreq, fmtLen, fmtN, fmtSpd, fmtT, sci, sup };
+})();
+
+/* ---- state.js ---- */
+const __m_state = (() => {
+const { PRESETS, derive } = __m_physics;
+/* state.js — the one shared state, and the subscribe/notify that ties the tabs together.
+ *
+ * Everything on the page is derived from this object. Selecting a mode in the
+ * assumptions tab sets omega and theta here, and every other tab re-renders from
+ * the change — that cross-link is the whole reason the pages were merged.
+ *
+ * No persistence: May declined localStorage for the Workbench (docs/plan.md).
+ */
+
+
+const p0 = PRESETS[0];
+
+const state = {
+  plasma: {
+    B: p0.B,
+    n: p0.d,
+    Te: p0.te,
+    Ti: p0.ti,
+    species: p0.sp,
+    L: p0.L,
+    /** null = the real ion mass. A number means m_i/m_e, as a reduced-mass-ratio PIC run uses. */
+    massRatio: null,
+  },
+  wave: {
+    /** angular frequency, rad/s */
+    omega: 1,
+    /** "par" | "obl" | "perp" — the angle of k to B0, shared with the assumptions tab */
+    theta: "obl",
+    /** id of the selected mode, or null */
+    selectedMode: null,
+  },
+  /** which tab is showing */
+  tab: "scales",
+  /** the nine assumption switches */
+  assume: {
+    b0: "finite", T: "warm", uni: "homog", pert: "em", theta: "obl",
+    model: "mhd", free: "none", coll: false, rel: false,
+  },
+};
+
+/** The assumption defaults, so "reset to warm ideal MHD" has something to reset to. */
+const ASSUME_DEFAULTS = { ...state.assume };
+
+const subscribers = [];
+
+/** Register a render function. Returns an unsubscribe. */
+function subscribe(fn) {
+  subscribers.push(fn);
+  return () => {
+    const i = subscribers.indexOf(fn);
+    if (i >= 0) subscribers.splice(i, 1);
+  };
+}
+
+let depth = 0;
+
+/** Re-render everything. `reason` lets a tab skip work it knows cannot have changed. */
+function notify(reason = "any") {
+  if (depth > 0) return; // a subscriber changed state; let the outer call finish
+  depth++;
+  try {
+    for (const fn of subscribers) fn(state, reason);
+  } finally {
+    depth--;
+  }
+}
+
+/** Current derived plasma parameters. Recomputed on demand — it is microseconds. */
+const params = () => derive(state.plasma);
+
+/** Apply one of the presets, and put the probe somewhere useful for it. */
+function applyPreset(preset) {
+  Object.assign(state.plasma, {
+    B: preset.B, n: preset.d, Te: preset.te, Ti: preset.ti,
+    species: preset.sp, L: preset.L,
+  });
+  const s = params();
+  // Geometric mean of Omega_i and omega_pe: near the middle of the ladder on a log
+  // axis, so the probe starts somewhere interesting whatever the plasma.
+  state.wave.omega = Math.sqrt(s.Oi * s.wpe);
+  state.wave.selectedMode = null;
+  state.presetName = preset.n;
+  notify("preset");
+}
+
+/** Set the plasma from a slider. Clears the preset highlight, since it is no longer that plasma. */
+function setPlasma(patch) {
+  Object.assign(state.plasma, patch);
+  state.presetName = null;
+  notify("plasma");
+}
+
+function setOmega(w) {
+  state.wave.omega = w;
+  notify("wave");
+}
+
+function setAssume(key, value) {
+  state.assume[key] = value;
+  // The angle lives in both places: it is an assumption in tab 2 and a property of
+  // the selected wave everywhere else. Keep the two in step rather than duplicating.
+  if (key === "theta") state.wave.theta = value;
+  notify("assume");
+}
+
+function resetAssume() {
+  Object.assign(state.assume, ASSUME_DEFAULTS);
+  state.wave.theta = ASSUME_DEFAULTS.theta;
+  notify("assume");
+}
+
+/**
+ * Select a named mode. This is the cross-link: it sets omega and theta from the
+ * mode, so the probe, the ladders and the switchboard all move together.
+ *
+ * @param {string|null} id   mode name, or null to clear
+ * @param {object|null} mode the mode record (needs .omega(s) and .th), or null
+ */
+function selectMode(id, mode) {
+  state.wave.selectedMode = id;
+  if (mode) {
+    if (typeof mode.omega === "function") {
+      const w = mode.omega(params());
+      if (isFinite(w) && w > 0) state.wave.omega = w;
+    }
+    // Move to an angle the mode actually exists at, if the current one is not allowed.
+    if (Array.isArray(mode.th) && !mode.th.includes(state.wave.theta)) {
+      state.wave.theta = mode.th[0];
+      state.assume.theta = mode.th[0];
+    }
+  }
+  notify("mode");
+}
+
+return { ASSUME_DEFAULTS, applyPreset, notify, params, resetAssume, selectMode, setAssume, setOmega, setPlasma, state, subscribe };
+})();
+
+/* ---- tab-scales.js ---- */
+const __m_tab_scales = (() => {
+const { C } = __m_physics;
+const { sci, sup, fmtLen, fmtFreq, fmtSpd, esc } = __m_format;
+const { state, params, setOmega, selectMode } = __m_state;
+/* tab-scales.js — ported from published/plasma-scale-ladder.html.
+ *
+ * Sections 2-8 of the original live here. Section 1 (the sliders) moved into the
+ * persistent header, because every tab needs them now.
+ *
+ * New: the eight wave cards are buttons. Clicking one selects that mode for the
+ * whole app, which moves the probe and highlights the matching row in the matrix.
+ */
+
+
+const id = "scales";
+const label = "Scales";
+
+const html = `
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">2 · The two ladders</div>
+    <h2>Where everything sits</h2>
+    <p>Both axes are logarithmic: one step to the right means ten times larger.
+    <b>Distance along the axis is a ratio.</b> When two marks are three steps apart,
+    one quantity is a thousand times the other — and that is exactly what an ordering
+    like &Omega;<sub>i</sub> &laquo; &omega;<sub>pi</sub> is saying.</p>
+  </div>
+
+  <div class="card ladder-box">
+    <div class="ladder-title">
+      <h3>Frequency ladder &mdash; rad s<sup>&minus;1</sup></h3>
+      <span class="note">angular frequency &omega; = 2&pi;f. A talk may quote either; check which.</span>
+    </div>
+    <svg class="ladder" id="freqLadder" role="img" aria-label="Logarithmic ladder of plasma frequencies"></svg>
+    <div class="key">
+      <span><i class="dot" style="background:var(--elec)"></i> electron quantity</span>
+      <span><i class="dot" style="background:var(--ion)"></i> ion quantity</span>
+      <span><i class="dot" style="background:var(--both)"></i> both species together</span>
+    </div>
+  </div>
+
+  <div class="card ladder-box">
+    <div class="ladder-title">
+      <h3>Length ladder &mdash; metres</h3>
+      <span class="note">the grid spacing a simulation needs is set by the smallest length it must resolve.</span>
+    </div>
+    <svg class="ladder" id="lenLadder" role="img" aria-label="Logarithmic ladder of plasma lengths"></svg>
+    <div class="key">
+      <span><i class="dot" style="background:var(--elec)"></i> electron quantity</span>
+      <span><i class="dot" style="background:var(--ion)"></i> ion quantity</span>
+      <span><i class="dot" style="background:var(--ink-3)"></i> your structure L</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">3 · The probe</div>
+    <h2>Pick a wave frequency and ask who can follow it</h2>
+    <p>This is the habit worth building. A wave arrives with some frequency &omega;.
+    Compare &omega; to each species' cyclotron frequency &Omega;<sub>s</sub>, and you know
+    immediately whether that species feels the magnetic field during the wave, or ignores it.
+    Nearly every "assumption" in a plasma paper is one of these comparisons.
+    The &omega; slider is in the header, so it follows you between tabs.</p>
+  </div>
+
+  <div class="card pad">
+    <div class="quickset" id="quickset"></div>
+    <div class="probe-grid">
+      <div class="verdict e">
+        <h4><span>Electrons</span><span class="state" id="eState"></span></h4>
+        <div class="mono" style="font-size:12.8px;color:var(--ink-2)" id="eRatio"></div>
+        <p id="eSay"></p>
+      </div>
+      <div class="verdict i">
+        <h4><span>Ions</span><span class="state" id="iState"></span></h4>
+        <div class="mono" style="font-size:12.8px;color:var(--ink-2)" id="iRatio"></div>
+        <p id="iSay"></p>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13.5px;color:var(--ink-2)" id="collective"></p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">4 · The orderings</div>
+    <h2>What each inequality is actually telling you</h2>
+    <p>These are the sentences a speaker says fast and does not explain. Each one is a ratio
+    of two numbers from the ladders above.</p>
+  </div>
+  <div class="card pad"><div class="ord" id="ord"></div></div>
+  <div class="warnbar" id="warnbar" hidden></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">5 · The wave zoo</div>
+    <h2>Eight waves, and the one question that sorts them</h2>
+    <p>For any wave, ask three things: <b>who moves</b>, <b>what pushes back</b>, and
+    <b>which way it travels relative to B</b>. The answers are the whole classification.
+    Values update with your sliders. <b>Click a card</b> to make it the selected mode:
+    the probe jumps to its frequency and the assumptions tab highlights its row.</p>
+  </div>
+  <div class="waves" id="waves"></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">6 · Read-out</div>
+    <h2>Every number at once</h2>
+  </div>
+  <div class="card"><div class="tbl-scroll"><table class="ro">
+    <thead><tr><th>Symbol</th><th>Value</th><th>Also</th><th>What it is</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">7 · Plain words</div>
+    <h2>The terms used above</h2>
+  </div>
+  <div class="card pad"><div class="gloss">
+    <div><b>Cyclotron frequency &Omega;<sub>s</sub> = |q|B/m</b>
+      <p>How many times per second a particle circles around a magnetic field line. Light particles circle fast.</p></div>
+    <div><b>Plasma frequency &omega;<sub>ps</sub></b>
+      <p>How fast a species can rush in to cancel an electric field. It grows with density.</p></div>
+    <div><b>Magnetized</b>
+      <p>The particle completes many circles before anything changes. It cannot travel across <b>B</b> freely.</p></div>
+    <div><b>Unmagnetized</b>
+      <p>Things change faster than the particle can complete one circle. The field does not get to act, so the particle moves in a nearly straight line.</p></div>
+    <div><b>Debye length &lambda;<sub>D</sub></b>
+      <p>How far an electric charge is felt before the plasma hides it. Shorter than this, the plasma is not neutral.</p></div>
+    <div><b>Inertial length d<sub>s</sub> = c/&omega;<sub>ps</sub></b>
+      <p>The size below which a species stops moving with the magnetic field and starts slipping through it. d<sub>i</sub> is where fluid models begin to fail.</p></div>
+    <div><b>Gyroradius &rho;<sub>s</sub></b>
+      <p>The radius of the circle a typical particle makes. Structures thinner than &rho;<sub>i</sub> look different to an ion than a fluid model says.</p></div>
+    <div><b>Plasma beta &beta;</b>
+      <p>Thermal pressure divided by magnetic pressure. Below 1, the field is in charge of the motion. Above 1, the gas is.</p></div>
+    <div><b>Alfvén speed v<sub>A</sub></b>
+      <p>The speed at which a kink travels along a magnetic field line, like a wave on a plucked string.</p></div>
+    <div><b>Electrostatic vs electromagnetic</b>
+      <p>Electrostatic: only the electric field oscillates, particles move along <b>k</b>. Electromagnetic: the magnetic field oscillates too.</p></div>
+  </div></div>
+</section>
+`;
+
+/* ---------- ladder renderer ---------- */
+const measurer = document.createElement("canvas").getContext("2d");
+const textW = (t, size) => {
+  measurer.font = size + "px 'IBM Plex Mono', monospace";
+  return measurer.measureText(t).width;
+};
+
+function drawLadder(svg, marks) {
+  const W = Math.max(320, svg.clientWidth || svg.parentNode.clientWidth - 28);
+  const padL = 14, padR = 14;
+  const vals = marks.map((m) => Math.log10(m.v)).filter(isFinite);
+  if (!vals.length) return;
+  let lo = Math.floor(Math.min(...vals)) - 0.6, hi = Math.ceil(Math.max(...vals)) + 0.6;
+  if (hi - lo < 2) { lo -= 1; hi += 1; }
+  const x = (v) => padL + ((Math.log10(v) - lo) / (hi - lo)) * (W - padL - padR);
+
+  const ROWH = 17, ROWS = 4;
+  const rowEnd = new Array(ROWS).fill(-1e9);
+  const placed = [];
+  for (const m of marks.slice().sort((a, b) => a.v - b.v)) {
+    const w = textW(m.label, 12.5) + 8;
+    const cx = x(m.v);
+    let r = 0;
+    for (; r < ROWS; r++) if (cx - w / 2 > rowEnd[r] + 6) break;
+    if (r === ROWS) r = ROWS - 1;
+    rowEnd[r] = Math.max(rowEnd[r], cx + w / 2);
+    placed.push({ ...m, cx, row: r, w });
+  }
+  const maxRow = Math.max(0, ...placed.map((p) => p.row));
+  const axisY = 28 + (maxRow + 1) * ROWH;
+  const H = axisY + 40;
+
+  let s = "";
+  for (let d = Math.ceil(lo); d <= Math.floor(hi); d++) {
+    const px = x(Math.pow(10, d));
+    if (px < padL - 1 || px > W - padR + 1) continue;
+    s += `<line x1="${px}" y1="${axisY}" x2="${px}" y2="${axisY + 6}" stroke="var(--line)" stroke-width="1"/>`;
+    s += `<text x="${px}" y="${axisY + 20}" font-size="10.5" fill="var(--ink-3)" text-anchor="middle" font-family="IBM Plex Mono, monospace">10${esc(sup(d))}</text>`;
+  }
+  s += `<line x1="${padL}" y1="${axisY}" x2="${W - padR}" y2="${axisY}" stroke="var(--line)" stroke-width="1.5"/>`;
+  for (const p of placed) {
+    const ly = 28 + p.row * ROWH;
+    s += `<line x1="${p.cx}" y1="${ly + 3}" x2="${p.cx}" y2="${axisY}" stroke="${p.color}" stroke-width="1.2" opacity=".55"/>`;
+    s += `<circle cx="${p.cx}" cy="${axisY}" r="4" fill="${p.color}"/>`;
+    let anchor = "middle", tx = p.cx;
+    if (p.cx - p.w / 2 < padL) { anchor = "start"; tx = padL; }
+    else if (p.cx + p.w / 2 > W - padR) { anchor = "end"; tx = W - padR; }
+    s += `<text x="${tx}" y="${ly}" font-size="12.5" fill="${p.color}" text-anchor="${anchor}" font-family="IBM Plex Mono, monospace">${esc(p.label)}</text>`;
+  }
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("height", H);
+  svg.innerHTML = s;
+}
+
+/* ---------- the eight wave cards ----------
+ * `mode` is the matching row name in the assumptions tab, so selecting here
+ * highlights there. `omega` is a frequency genuinely characteristic of the mode —
+ * a resonance, a cut-off, or the stated edge of its band. Where a mode has no
+ * single frequency without k, the note says which of those this is.
+ */
+function waveList(s) {
+  return [
+    { name: "Langmuir wave", mode: "Langmuir wave", tag: "electrons", cls: "e",
+      omega: s.wpe, onote: "its own oscillation frequency",
+      val: "ω ≃ ω_pe = " + sci(s.wpe) + " rad/s",
+      who: "Electrons slosh back and forth.",
+      back: "The electric field of the charge they leave behind.",
+      dir: "Along k; B does not enter (when ω_pe ≫ Ω_e).",
+      cond: "Warm correction: ω² = ω_pe² + 3k²v_te² (Bohm–Gross).",
+      fig: `<path d="M8 32 q18 -16 36 0 q18 16 36 0 q18 -16 36 0 q18 16 36 0" fill="none" stroke="var(--elec)" stroke-width="2"/>
+         <g fill="var(--ion)" opacity=".55"><circle cx="30" cy="54" r="4"/><circle cx="90" cy="54" r="4"/><circle cx="150" cy="54" r="4"/></g>
+         <text x="8" y="72" font-size="9.5" fill="var(--ink-3)" font-family="monospace">ions stay frozen</text>` },
+
+    { name: "Upper hybrid", mode: "Upper hybrid", tag: "electrons", cls: "e",
+      omega: s.wUH, onote: "the resonance",
+      val: "ω_UH = " + sci(s.wUH) + " rad/s",
+      who: "Electrons, again alone.",
+      back: "Electric field plus the magnetic force bending their path.",
+      dir: "Across B (k ⊥ B).",
+      cond: "ω_UH² = ω_pe² + Ω_e² — it is Langmuir with the field added in quadrature.",
+      fig: `<circle cx="50" cy="36" r="19" fill="none" stroke="var(--elec)" stroke-width="1.6" stroke-dasharray="3 3"/>
+         <path d="M31 36 q19 -12 38 0" fill="none" stroke="var(--elec)" stroke-width="2"/>
+         <circle cx="69" cy="36" r="3.5" fill="var(--elec)"/>
+         <text x="84" y="33" font-size="9.5" fill="var(--ink-3)" font-family="monospace">gyration +</text>
+         <text x="84" y="45" font-size="9.5" fill="var(--ink-3)" font-family="monospace">oscillation</text>` },
+
+    { name: "Lower hybrid", mode: "Lower hybrid", tag: "both", cls: "b",
+      omega: s.wLH, onote: "the resonance",
+      val: "ω_LH = " + sci(s.wLH) + " rad/s",
+      who: "Ions across B, electrons only along B.",
+      back: "Electric field that the electrons cannot cancel sideways.",
+      dir: "Almost exactly across B.",
+      cond: "Lives only in the window Ω_i ≪ ω ≪ Ω_e.",
+      fig: `<line x1="8" y1="22" x2="172" y2="22" stroke="var(--ink-3)" stroke-width="1" opacity=".6"/>
+         <path d="M28 22 q6 -8 12 0 q6 8 12 0 q6 -8 12 0" fill="none" stroke="var(--elec)" stroke-width="1.7"/>
+         <line x1="112" y1="58" x2="112" y2="30" stroke="var(--ion)" stroke-width="2"/>
+         <circle cx="112" cy="58" r="4.2" fill="var(--ion)"/>
+         <text x="8" y="72" font-size="9.5" fill="var(--ink-3)" font-family="monospace">e on the line, ion across</text>` },
+
+    { name: "Whistler", mode: "Whistler / R-mode", tag: "electrons", cls: "e",
+      omega: Math.sqrt(s.Oe * s.Oi), onote: "the middle of its band on a log axis, not a resonance",
+      val: "Ω_i ≪ ω &lt; Ω_e = " + sci(s.Oe) + " rad/s",
+      who: "Electrons carry the current; ions are a still background.",
+      back: "Field-line tension, but only electrons are attached to the line.",
+      dir: "Mostly along B. Right-hand circular polarization.",
+      cond: "ω ≃ k² d_e² Ω_e cosθ. Faster at higher ω — that is the falling tone it is named for.",
+      fig: `<path d="M8 32 q11 -15 22 0 q11 15 22 0 q9 -13 18 0 q9 13 18 0 q8 -11 16 0 q8 11 16 0"
+              fill="none" stroke="var(--elec)" stroke-width="2"/>
+         <line x1="8" y1="54" x2="172" y2="54" stroke="var(--ink-3)" stroke-width="1" opacity=".5"/>
+         <text x="164" y="50" font-size="9.5" fill="var(--ink-3)" font-family="monospace">B</text>
+         <text x="8" y="72" font-size="9.5" fill="var(--ink-3)" font-family="monospace">short waves run faster</text>` },
+
+    { name: "Ion cyclotron", mode: "EMIC / L-mode", tag: "ions", cls: "i",
+      omega: s.Oi, onote: "the resonance it approaches",
+      val: "Ω_i = " + sci(s.Oi) + " rad/s",
+      who: "Ions, turning on their own gyro-orbit.",
+      back: "The magnetic force itself, in step with the wave.",
+      dir: "Along B. Left-hand circular — the same sense an ion turns.",
+      cond: "At ω → Ω_i the wave and the orbit stay in phase: resonance, and strong ion heating.",
+      fig: `<circle cx="48" cy="36" r="19" fill="none" stroke="var(--ion)" stroke-width="2"/>
+         <path d="M67 36 a19 19 0 0 1 -6 14" fill="none" stroke="var(--ion)" stroke-width="2.6"/>
+         <circle cx="67" cy="36" r="4.5" fill="var(--ion)"/>
+         <text x="84" y="33" font-size="9.5" fill="var(--ink-3)" font-family="monospace">wave turns</text>
+         <text x="84" y="45" font-size="9.5" fill="var(--ink-3)" font-family="monospace">with the ion</text>` },
+
+    { name: "Ion acoustic", mode: "Ion acoustic", tag: "ions", cls: "i",
+      omega: s.wpi, onote: "the ceiling its branch rises to as kλ_D grows",
+      val: "c_s = " + fmtSpd(s.cs, C),
+      who: "Ions provide the mass that has to be pushed.",
+      back: "Electron pressure. The light electrons supply the springiness.",
+      dir: "Along B (or anywhere, if B is weak).",
+      cond: "Needs T_e ≳ T_i, otherwise ions absorb it (Landau damping) before it travels.",
+      fig: `<g fill="var(--ion)">
+           <circle cx="16" cy="32" r="3"/><circle cx="28" cy="32" r="3"/><circle cx="44" cy="32" r="3"/>
+           <circle cx="64" cy="32" r="3"/><circle cx="73" cy="32" r="3"/><circle cx="81" cy="32" r="3"/>
+           <circle cx="89" cy="32" r="3"/><circle cx="108" cy="32" r="3"/><circle cx="124" cy="32" r="3"/>
+           <circle cx="144" cy="32" r="3"/><circle cx="153" cy="32" r="3"/><circle cx="161" cy="32" r="3"/>
+         </g>
+         <path d="M120 52 L158 52" stroke="var(--ion)" stroke-width="2" marker-end="url(#ar-i)"/>
+         <text x="8" y="72" font-size="9.5" fill="var(--ink-3)" font-family="monospace">squeeze and spread</text>
+         <defs><marker id="ar-i" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+           <path d="M0 0 L8 4 L0 8 z" fill="var(--ion)"/></marker></defs>` },
+
+    { name: "Shear Alfvén", mode: "Shear Alfvén", tag: "both", cls: "b",
+      omega: s.Oi, onote: "where it stops being an MHD wave, not a resonance",
+      val: "v_A = " + fmtSpd(s.vA, C),
+      who: "Ions ride sideways; electrons follow to keep the current going.",
+      back: "Tension in the magnetic field line, exactly like a guitar string.",
+      dir: "Along B. The motion is across B.",
+      cond: "Valid above the ion scales. Below d_i it splits into whistler and ion cyclotron branches.",
+      fig: `<path d="M8 36 q41 -22 82 0 q41 22 82 0" fill="none" stroke="var(--both)" stroke-width="2"/>
+         <line x1="8" y1="36" x2="172" y2="36" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>
+         <line x1="49" y1="26" x2="49" y2="14" stroke="var(--both)" stroke-width="1.6" marker-end="url(#ar-b)"/>
+         <line x1="131" y1="46" x2="131" y2="58" stroke="var(--both)" stroke-width="1.6" marker-end="url(#ar-b)"/>
+         <text x="8" y="74" font-size="9.5" fill="var(--ink-3)" font-family="monospace">a plucked field line</text>
+         <defs><marker id="ar-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+           <path d="M0 0 L8 4 L0 8 z" fill="var(--both)"/></marker></defs>` },
+
+    { name: "Fast magnetosonic", mode: "Fast magnetosonic", tag: "both", cls: "b",
+      omega: s.Oi, onote: "where it hands over to the whistler branch, not a resonance",
+      val: "√(v_A² + c_s²) = " + fmtSpd(s.vms, C),
+      who: "The whole plasma, moving as one fluid.",
+      back: "Magnetic pressure and thermal pressure added together.",
+      dir: "Across B — it is the only one that crosses field lines freely.",
+      cond: "This is the fastest signal in MHD, so it sets the timestep an MHD code can take.",
+      fig: `<g stroke="var(--both)" stroke-width="1.6">
+           <line x1="18" y1="14" x2="18" y2="52"/><line x1="30" y1="14" x2="30" y2="52"/>
+           <line x1="40" y1="14" x2="40" y2="52"/><line x1="74" y1="14" x2="74" y2="52"/>
+           <line x1="110" y1="14" x2="110" y2="52"/><line x1="120" y1="14" x2="120" y2="52"/>
+           <line x1="130" y1="14" x2="130" y2="52"/>
+         </g>
+         <path d="M140 33 L168 33" stroke="var(--both)" stroke-width="2" marker-end="url(#ar-b2)"/>
+         <text x="8" y="72" font-size="9.5" fill="var(--ink-3)" font-family="monospace">field lines bunch up</text>
+         <defs><marker id="ar-b2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+           <path d="M0 0 L8 4 L0 8 z" fill="var(--both)"/></marker></defs>` },
+  ];
+}
+
+/* ---------- probe wording ---------- */
+function regime(ratio, who, other) {
+  if (ratio < 0.3) return { state: "magnetized",
+    say: `The wave is slow compared with the gyration. ${who} complete many full circles during one wave period, so the magnetic field has time to turn them. They cannot move across <b>B</b> at all — only along the field line, plus the slow E×B drift. Their magnetic moment µ is conserved.` };
+  if (ratio > 3) return { state: "unmagnetized",
+    say: `The wave is fast compared with the gyration. The wave is over before ${who.toLowerCase()} finish one circle, so the magnetic field never gets to act. They respond in a straight line, exactly as if <b>B</b> were switched off.` };
+  return { state: "resonant",
+    say: `&omega; is close to Ω, so the wave turns in step with the gyration. A ${other} sees a steady push in the same direction every orbit and gains energy fast. This is cyclotron resonance — one of the ways a collisionless plasma heats itself.` };
+}
+
+const $ = (id) => document.getElementById(id);
+
+function init() {
+  $("quickset").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (b) setOmega(Math.pow(10, +b.dataset.w));
+  });
+  $("waves").addEventListener("click", (e) => {
+    const b = e.target.closest("button.wave");
+    if (!b) return;
+    const w = waveList(params()).find((x) => x.name === b.dataset.name);
+    if (!w) return;
+    if (state.wave.selectedMode === w.mode) selectMode(null, null);
+    else selectMode(w.mode, { omega: () => w.omega });
+  });
+  let rt;
+  addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => render(), 120); });
+}
+
+function render() {
+  const s = params();
+
+  drawLadder($("freqLadder"), [
+    { label: "Ω_i",  v: s.Oi,  color: "var(--ion)" },
+    { label: "ω_pi", v: s.wpi, color: "var(--ion)" },
+    { label: "ω_LH", v: s.wLH, color: "var(--both)" },
+    { label: "Ω_e",  v: s.Oe,  color: "var(--elec)" },
+    { label: "ω_pe", v: s.wpe, color: "var(--elec)" },
+    { label: "ω_UH", v: s.wUH, color: "var(--elec)" },
+    { label: "ω probe", v: state.wave.omega, color: "var(--ink-3)" },
+  ]);
+
+  drawLadder($("lenLadder"), [
+    { label: "λ_D", v: s.lD,    color: "var(--elec)" },
+    { label: "ρ_e", v: s.rho_e, color: "var(--elec)" },
+    { label: "d_e", v: s.de,    color: "var(--elec)" },
+    { label: "ρ_i", v: s.rho_i, color: "var(--ion)" },
+    { label: "d_i", v: s.di,    color: "var(--ion)" },
+    { label: "L",   v: s.L,     color: "var(--ink-3)" },
+  ]);
+
+  /* probe */
+  const w = state.wave.omega;
+  const re = w / s.Oe, ri = w / s.Oi;
+  const ge = regime(re, "Electrons", "gyrating electron");
+  const gi = regime(ri, "Ions", "gyrating ion");
+  $("eState").textContent = ge.state; $("eSay").innerHTML = ge.say;
+  $("iState").textContent = gi.state; $("iSay").innerHTML = gi.say;
+  $("eRatio").textContent = "ω/Ω_e = " + sci(re);
+  $("iRatio").textContent = "ω/Ω_i = " + sci(ri);
+
+  let coll;
+  if (w < s.wpi) coll = `<b>ω &lt; ω_pi &lt; ω_pe.</b> Both species are fast enough to rush in and cancel any charge build-up. The plasma stays neutral, and a fluid picture (MHD) is a reasonable starting point at this frequency.`;
+  else if (w < s.wpe) coll = `<b>ω_pi &lt; ω &lt; ω_pe.</b> Electrons can still screen the field, ions cannot keep up. Charge separation on ion scales is now possible — this is where Hall physics and lower-hybrid waves live.`;
+  else coll = `<b>ω &gt; ω_pe.</b> Not even the electrons can respond in time. The plasma no longer screens, and light passes through it: this is why ω_pe is the radio cut-off of the ionosphere.`;
+  $("collective").innerHTML = coll;
+
+  const qs = [["Ω_i", s.Oi], ["ω_LH", s.wLH], ["Ω_e", s.Oe], ["ω_pi", s.wpi], ["ω_pe", s.wpe]];
+  $("quickset").innerHTML = qs.map((q) =>
+    `<button class="chip" type="button" data-w="${Math.log10(q[1])}">set ω = ${q[0]}</button>`).join("");
+
+  /* orderings */
+  const rows = [
+    { rel: "Ω_i vs ω_pi", num: "Ω_i/ω_pi = " + sci(s.Oi / s.wpi),
+      say: s.Oi / s.wpi < 0.1
+        ? `<b>Ω_i ≪ ω_pi.</b> Ions screen charge far faster than they gyrate. Equivalently v_A ≪ c, so the plasma is non-relativistic and the displacement current can be dropped. Almost every space plasma is here.`
+        : `<b>Ω_i is not small</b> compared with ω_pi, so v_A/c = ${sci(s.Oi / s.wpi)} is not small either. Relativistic effects and the displacement current start to matter.` },
+    { rel: "ω_pe vs Ω_e", num: "ω_pe/Ω_e = " + sci(s.wpe / s.Oe),
+      say: s.wpe / s.Oe > 1
+        ? `<b>Density wins.</b> An electron is pulled back by charge separation before it curls around <b>B</b>. Langmuir waves are close to pure ω_pe and the field barely shifts them.`
+        : `<b>The field wins.</b> Ω_e &gt; ω_pe, a strongly magnetized regime you see near neutron stars. The "electron plasma oscillation" is now really an upper-hybrid oscillation.` },
+    { rel: "ω_LH vs √(Ω_eΩ_i)", num: "ω_LH/√(Ω_eΩ_i) = " + sci(s.wLH / Math.sqrt(s.Oe * s.Oi)),
+      say: s.wLH / Math.sqrt(s.Oe * s.Oi) > 0.9
+        ? `<b>Dense limit.</b> ω_LH ≃ √(Ω_eΩ_i), the geometric mean of the two cyclotron frequencies — literally halfway between them on the ladder. That is why it is called <i>hybrid</i>. The condition is ω_pe ≫ Ω_e, which is a statement about the field as much as the density.`
+        : `<b>Tenuous limit.</b> ω_pi is the smaller term, so ω_LH → ω_pi instead. The hybrid formula matters: the geometric-mean answer would be wrong here.` },
+    { rel: "plasma beta β", num: "β = " + sci(s.beta),
+      say: s.beta < 0.1 ? `<b>Low β.</b> Magnetic pressure dominates. The field decides how the plasma moves, not the other way round; field lines are stiff.`
+        : s.beta > 3 ? `<b>High β.</b> Thermal pressure dominates. The plasma pushes the field around, and pressure-anisotropy instabilities (firehose, mirror) become easy to excite.`
+        : `<b>β ≈ 1.</b> Neither wins. v_A and c_s are comparable, so the MHD wave modes are hard to separate and energy moves between them easily.` },
+    { rel: "ρ_i vs d_i", num: "ρ_i/d_i = " + sci(s.rho_i / s.di),
+      say: `This ratio is √(β_i/2) and nothing else — a useful check. Whichever is larger is the scale at which ions stop behaving like a fluid, and that is the scale a hybrid or kinetic model must resolve.` },
+    { rel: "L vs d_i", num: "L/d_i = " + sci(s.L / s.di),
+      say: s.L / s.di > 100
+        ? `<b>L ≫ d_i.</b> Your structure is far bigger than the ion scale, so ions and field move together. A single-fluid MHD description is defensible.`
+        : s.L / s.di > 3
+        ? `<b>L is only ${sci(s.L / s.di)}× d_i.</b> Ions start to slip through the field across the structure. Hall MHD or a hybrid model, and the answer may depend on which you pick.`
+        : `<b>L ≲ d_i.</b> The structure is at or below the ion scale. Ions are no longer tied to field lines here — a fluid model cannot represent what happens, whatever resolution you give it.` },
+    { rel: "L vs λ_D", num: "L/λ_D = " + sci(s.L / s.lD),
+      say: `An explicit particle-in-cell code must put grid cells inside λ_D, so it needs of order ${sci(s.L / s.lD)} cells across L in one dimension. This single number is why full-kinetic runs of large systems are unaffordable.` },
+    { rel: "particles in a Debye sphere", num: "N_D = " + sci(s.ND),
+      say: s.ND > 10
+        ? `<b>N_D ≫ 1</b>, so collective behaviour beats individual collisions. This is what makes it a plasma rather than a gas of charges.`
+        : `<b>N_D is small.</b> This is a strongly coupled system, not the collisionless plasma the formulas above assume. Treat the numbers with suspicion.` },
+  ];
+  $("ord").innerHTML = rows.map((r) =>
+    `<div class="ord-row"><div class="rel">${r.rel}</div><div class="num">${r.num}</div><div class="say">${r.say}</div></div>`).join("");
+
+  const warn = $("warnbar");
+  if (s.vA > 0.3 * C || s.vte > 0.3 * C || s.ND < 10) {
+    warn.hidden = false;
+    warn.textContent = "Heads up: at these settings the plasma is relativistic or strongly coupled, so the non-relativistic formulas used here are outside their range. The ordering is still instructive; the numbers are not.";
+  } else warn.hidden = true;
+
+  /* waves */
+  const sel = state.wave.selectedMode;
+  $("waves").innerHTML = waveList(s).map((w) => `
+    <button type="button" class="card wave" data-name="${esc(w.name)}"
+            aria-pressed="${w.mode === sel}" title="set ω = ${esc(w.onote)}">
+      <div class="wh"><h3>${w.name}</h3><span class="tag ${w.cls}">${w.tag}</span></div>
+      <div class="val">${w.val}</div>
+      <figure><svg viewBox="0 0 180 78" role="img" aria-label="${esc(w.name)} schematic">${w.fig}</svg></figure>
+      <dl>
+        <dt>moves</dt><dd>${w.who}</dd>
+        <dt>restores</dt><dd>${w.back}</dd>
+        <dt>direction</dt><dd>${w.dir}</dd>
+      </dl>
+      <div class="cond">${w.cond}</div>
+    </button>`).join("");
+
+  /* read-out */
+  const T = [
+    ["ω_pe", fmtFreq(s.wpe), "d_e = " + fmtLen(s.de), "electron plasma frequency — how fast electrons screen a field"],
+    ["ω_pi", fmtFreq(s.wpi), "d_i = " + fmtLen(s.di), "ion plasma frequency"],
+    ["Ω_e",  fmtFreq(s.Oe),  "ρ_e = " + fmtLen(s.rho_e), "electron cyclotron frequency"],
+    ["Ω_i",  fmtFreq(s.Oi),  "ρ_i = " + fmtLen(s.rho_i), "ion cyclotron frequency"],
+    ["ω_LH", fmtFreq(s.wLH), "—", "lower hybrid — ions unmagnetized, electrons magnetized"],
+    ["ω_UH", fmtFreq(s.wUH), "—", "upper hybrid — Langmuir with B included"],
+    ["λ_D",  fmtLen(s.lD),   "N_D = " + sci(s.ND), "Debye length — how far a charge is felt"],
+    ["v_A",  fmtSpd(s.vA, C), "β = " + sci(s.beta), "Alfvén speed — a kink running along a field line"],
+    ["c_s",  fmtSpd(s.cs, C), "—", "ion-acoustic speed — sound, carried by ion mass and electron pressure"],
+    ["v_te", fmtSpd(s.vte, C), "v_ti = " + fmtSpd(s.vti, C), "thermal speeds √(T/m)"],
+  ];
+  $("tbody").innerHTML = T.map((r) =>
+    `<tr><td class="s">${r[0]}</td><td class="v">${r[1]}</td><td class="v">${r[2]}</td><td>${r[3]}</td></tr>`).join("");
+}
+
+return { html, id, init, label, render };
+})();
+
+/* ---- tab-assumptions.js ---- */
+const __m_tab_assumptions = (() => {
+const { state, params, setAssume, resetAssume, selectMode } = __m_state;
+/* tab-assumptions.js — ported from published/which-wave-survives.html.
+ *
+ * Design decisions kept deliberately (docs/plan.md):
+ *   - models are an explicit allowed SET per wave, not a ranking. Hybrid is not
+ *     "more than" Hall: it has kinetic ions but massless electrons, so it LOSES
+ *     Langmuir waves. A ranking would hide that.
+ *   - the angle check is skipped when B0 = 0 (no field, no angle).
+ *   - tearing's `nonideal` flag is satisfied by resistivity OR kinetic electrons.
+ *   - the default is warm ideal MHD, oblique, EM -> 3 of 28 survive. That is the hook.
+ *
+ * New: a surviving card is a button. Clicking it selects that mode app-wide, which
+ * moves the probe on the Scales tab to a frequency characteristic of the mode.
+ */
+
+
+const id = "assumptions";
+const label = "Assumptions";
+
+/* ---------- the axes ---------- */
+const AXES = [
+  { k: "b0", label: "Background field B₀", hint: "magnetized?",
+    opts: [["zero", "B₀ = 0"], ["finite", "B₀ ≠ 0"]],
+    exp: { zero: "No preferred direction. Space is isotropic and the v×B term is gone from every equation.",
+           finite: "A preferred axis exists. Along B and across B are now different physics." } },
+
+  { k: "T", label: "Temperature", hint: "how much of f you keep",
+    opts: [["cold", "cold"], ["warm", "warm"], ["hot", "hot"]],
+    exp: { cold: "T = 0. Every particle of a species moves together. No pressure term at all.",
+           warm: "Finite pressure, described by moments (n, v, p). A fluid with heat.",
+           hot: "Keep the full distribution f(v). Particles at one speed can resonate while the average one does not." } },
+
+  { k: "uni", label: "Background uniformity", hint: "gradients?",
+    opts: [["homog", "homogeneous"], ["grad", "has gradients"]],
+    exp: { homog: "Background n, T and B are the same everywhere. Plane waves e^(ikx−iωt) are exact solutions.",
+           grad: "The equilibrium varies in space, so it stores free energy the plasma can release." } },
+
+  { k: "pert", label: "Perturbation type", hint: "does δB exist?",
+    opts: [["es", "electrostatic"], ["em", "electromagnetic"]],
+    exp: { es: "δB = 0, so ∇×E = 0 and E = −∇φ. One scalar unknown. Motion is along k.",
+           em: "δB ≠ 0. Faraday's law is live and the field lines themselves can bend and move." } },
+
+  { k: "theta", label: "Angle of k to B₀", hint: "θ",
+    opts: [["par", "∥ (θ = 0)"], ["obl", "oblique"], ["perp", "⊥ (θ = 90°)"]],
+    exp: { par: "k along B₀. The circularly polarized branches (whistler, ion cyclotron) live here.",
+           obl: "Neither. Most real waves. The slow mode and drift waves exist only here.",
+           perp: "k across B₀. The hybrid resonances and Bernstein waves live here." } },
+
+  { k: "model", label: "Description level", hint: "what your code solves",
+    opts: [["mhd", "MHD"], ["hall", "Hall / 2-fluid"], ["hybrid", "hybrid"], ["pic", "fully kinetic"]],
+    exp: { mhd: "One conducting fluid, quasineutral, ideal Ohm's law. Cheapest, and blind to everything below dᵢ.",
+           hall: "Ions and electrons as separate fluids, or one fluid with the Hall term kept. Whistlers appear here.",
+           hybrid: "Ions kinetic, electrons a massless fluid. Ion physics is honest; electron physics is gone, including Langmuir waves.",
+           pic: "Both species kinetic. Everything is present and you pay for all of it." } },
+
+  { k: "free", label: "Free energy in the equilibrium", hint: "what drives growth",
+    opts: [["none", "Maxwellian"], ["beam", "beam or current"], ["aniso", "T anisotropy"]],
+    exp: { none: "Equilibrium is a drifting Maxwellian with nothing to release. Waves oscillate; nothing grows.",
+           beam: "One population streams through another. The relative drift is energy waiting to be tapped.",
+           aniso: "T⊥ ≠ T∥. The plasma will grow its own waves to erase the anisotropy." } },
+
+  { k: "coll", label: "Collisions", hint: "is η finite?",
+    opts: [[false, "collisionless"], [true, "collisional"]],
+    exp: { false: "No resistivity. Magnetic topology cannot change unless something kinetic breaks it.",
+           true: "Finite η. Field lines can slip through the plasma and energy can be dissipated as heat." } },
+
+  { k: "rel", label: "Particle energies", hint: "is v ~ c?",
+    opts: [[false, "non-relativistic"], [true, "relativistic"]],
+    exp: { false: "v ≪ c, so the displacement current is dropped and γ = 1 everywhere.",
+           true: "γ > 1. Cyclotron frequency depends on energy, which makes resonances mass-dependent in a new way." } },
+];
+
+const MODNAME = { mhd: "MHD", hall: "Hall / two-fluid", hybrid: "hybrid", pic: "fully kinetic" };
+const MODSHORT = { mhd: "MHD", hall: "Hall", hybrid: "Hyb", pic: "PIC" };
+const TORD = { cold: 0, warm: 1, hot: 2 };
+const FREENAME = { beam: "a beam or a current", aniso: "a temperature anisotropy" };
+const THSYM = { par: "∥", obl: "obl", perp: "⊥" };
+
+/* `om` gives a frequency genuinely characteristic of the mode — a resonance, a
+ * cut-off, or a stated band edge — used when the mode is selected. Modes whose
+ * frequency depends on k with no characteristic value (drift waves, the gradient
+ * instabilities, Weibel) deliberately have none, and selecting them leaves the
+ * probe where it was rather than inventing a number. `on` says which it is. */
+const W = [
+  { g: "MHD modes (present in every model)",
+    rows: [
+      { n: "Shear Alfvén", b0: "finite", T: "cold", uni: "any", pert: "em", th: ["par", "obl"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none",
+        om: (s) => s.Oi, on: "Ω_i, where it stops being an MHD wave",
+        d: "ω = k∥ v_A",
+        why: "Ions ride sideways; the tension in the bent field line pulls them back. A wave on a string." },
+      { n: "Fast magnetosonic", b0: "finite", T: "cold", uni: "any", pert: "em", th: ["par", "obl", "perp"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none",
+        om: (s) => s.Oi, on: "Ω_i, where it hands over to the whistler branch",
+        d: "ω = k√(v_A² + c_s²)  (⊥)",
+        why: "Magnetic pressure and thermal pressure push together. The only mode that crosses field lines freely. With T = 0 it is the compressional Alfvén wave." },
+      { n: "Slow magnetosonic", b0: "finite", T: "warm", uni: "any", pert: "em", th: ["obl"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none",
+        om: (s) => s.Oi, on: "Ω_i, the top of its MHD range",
+        d: "ω ≈ k∥ c_s  (low β)",
+        why: "Magnetic and thermal pressure push against each other instead of together. It degenerates at 0° and 90°, so it only exists oblique." },
+      { n: "Sound wave", b0: "any", T: "warm", uni: "any", pert: "es", th: ["par", "obl", "perp"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none",
+        d: "ω = k c_s",
+        why: "Ordinary gas sound. Pressure is the only restoring force, so it needs a warm plasma and nothing else." }] },
+
+  { g: "Two-fluid and Hall modes (MHD cannot see these)",
+    rows: [
+      { n: "Whistler / R-mode", b0: "finite", T: "cold", uni: "any", pert: "em", th: ["par", "obl"],
+        m: ["hall", "hybrid", "pic"], free: "none",
+        om: (s) => Math.sqrt(s.Oe * s.Oi), on: "the middle of the Ω_i ≪ ω ≪ Ω_e band on a log axis",
+        d: "ω ≈ k² d_e² Ω_e cosθ",
+        why: "Below dᵢ the ions stop following the field and only electrons carry the current. Higher frequencies travel faster, which is the falling whistle it is named for." },
+      { n: "EMIC / L-mode", b0: "finite", T: "cold", uni: "any", pert: "em", th: ["par", "obl"],
+        m: ["hall", "hybrid", "pic"], free: "none",
+        om: (s) => s.Oi, on: "Ω_i, the resonance it approaches",
+        d: "ω → Ω_i",
+        why: "The left-hand partner of the whistler. It turns the same way an ion gyrates, so it can stay in step with one and heat it." },
+      { n: "Langmuir wave", b0: "any", T: "warm", uni: "any", pert: "es", th: ["par", "obl"],
+        m: ["hall", "pic"], free: "none",
+        om: (s) => s.wpe, on: "ω_pe, its own oscillation frequency",
+        d: "ω² = ω_pe² + 3k² v_te²",
+        why: "Electrons overshoot and the charge they leave behind pulls them back. Needs electron inertia, so a massless-electron hybrid code loses it completely." },
+      { n: "Ion acoustic", b0: "any", T: "warm", uni: "any", pert: "es", th: ["par", "obl"],
+        m: ["hall", "hybrid", "pic"], free: "none",
+        om: (s) => s.wpi, on: "ω_pi, the ceiling its branch rises to as kλ_D grows",
+        d: "ω = k c_s,  c_s = √(T_e/m_i)",
+        why: "Ion mass provides the inertia, electron pressure provides the spring. Two species doing different jobs, which is why one fluid is not enough." },
+      { n: "Upper hybrid", b0: "finite", T: "cold", uni: "any", pert: "es", th: ["perp"],
+        m: ["hall", "pic"], free: "none",
+        om: (s) => s.wUH, on: "ω_UH, the resonance",
+        d: "ω_UH² = ω_pe² + Ω_e²",
+        why: "A Langmuir oscillation with the gyration added. Both restoring forces act at once, so the frequencies add in quadrature." },
+      { n: "Lower hybrid", b0: "finite", T: "cold", uni: "any", pert: "es", th: ["perp", "obl"],
+        m: ["hall", "hybrid", "pic"], free: "none",
+        om: (s) => s.wLH, on: "ω_LH, the resonance",
+        d: "ω_LH⁻² = (Ω_eΩ_i)⁻¹ + ω_pi⁻²",
+        why: "Ions unmagnetized and electrons magnetized at the same frequency. The electrons cannot rush sideways to cancel the field, so the wave survives." },
+      { n: "O-mode (ordinary light)", b0: "any", T: "cold", uni: "any", pert: "em", th: ["par", "obl", "perp"],
+        m: ["hall", "pic"], free: "none",
+        om: (s) => s.wpe, on: "ω_pe, its cut-off",
+        d: "ω² = ω_pe² + c²k²",
+        why: "Light in a plasma. Below ω_pe the electrons screen it and it cannot propagate — that is the ionospheric radio cut-off." },
+      { n: "X-mode (extraordinary)", b0: "finite", T: "cold", uni: "any", pert: "em", th: ["perp"],
+        m: ["hall", "pic"], free: "none",
+        om: (s) => s.wUH, on: "ω_UH, its resonance",
+        d: "cut-offs at ω_R, ω_L; resonance at ω_UH",
+        why: "The other perpendicular light branch, partly longitudinal. Its resonance at ω_UH is how radio waves deposit energy in the ionosphere." }] },
+
+  { g: "Hot only — these need the distribution function",
+    rows: [
+      { n: "Electron Bernstein", b0: "finite", T: "hot", uni: "any", pert: "es", th: ["perp"],
+        m: ["pic"], free: "none",
+        om: (s) => s.Oe, on: "Ω_e, the first harmonic its bands sit between",
+        d: "bands between nΩ_e",
+        why: "Purely perpendicular electrostatic modes trapped between cyclotron harmonics. They exist only because different electrons have different gyroradii, which a fluid cannot represent." },
+      { n: "Ion Bernstein", b0: "finite", T: "hot", uni: "any", pert: "es", th: ["perp"],
+        m: ["hybrid", "pic"], free: "none",
+        om: (s) => s.Oi, on: "Ω_i, the first harmonic its bands sit between",
+        d: "bands between nΩ_i",
+        why: "The ion version. Visible in a hybrid code because its ions are kinetic." },
+      { n: "Landau damping (electron)", b0: "any", T: "hot", uni: "any", pert: "es", th: ["par", "obl"],
+        m: ["pic"], free: "none",
+        om: (s) => s.wpe, on: "ω_pe, the wave it damps",
+        d: "γ ∝ ∂f/∂v at v = ω/k",
+        why: "Not a wave but a fate. Electrons moving at exactly the wave's phase speed surf it and take its energy. A collisionless plasma damping with no collisions." },
+      { n: "Landau damping (ion)", b0: "any", T: "hot", uni: "any", pert: "es", th: ["par", "obl"],
+        m: ["hybrid", "pic"], free: "none",
+        om: (s) => s.wpi, on: "ω_pi, the top of the branch it damps",
+        d: "strong unless T_e ≫ T_i",
+        why: "The same mechanism on ions. It is what kills the ion-acoustic wave when the two temperatures are comparable." },
+      { n: "Cyclotron damping", b0: "finite", T: "hot", uni: "any", pert: "em", th: ["par", "obl"],
+        m: ["hybrid", "pic"], free: "none",
+        om: (s) => s.Oi, on: "Ω_i, the ion resonance",
+        d: "ω − k∥v∥ = nΩ_s",
+        why: "Resonance in the frame that moves with the particle. The Doppler shift, not the lab frequency, has to match the gyration." }] },
+
+  { g: "Instabilities — need free energy",
+    rows: [
+      { n: "Two-stream / Buneman", b0: "any", T: "cold", uni: "any", pert: "es", th: ["par"],
+        m: ["hall", "pic"], free: "beam",
+        om: (s) => s.wpe, on: "ω_pe, near which it grows",
+        d: "growth near ω ≈ k u_drift",
+        why: "A beam moving through a background. The beam's kinetic energy feeds an electrostatic wave that then scatters the beam. The simplest instability there is." },
+      { n: "Weibel / filamentation", b0: "any", T: "warm", uni: "any", pert: "em", th: ["perp"],
+        m: ["pic"], free: "aniso",
+        d: "purely growing, γ ∝ k",
+        why: "An anisotropic distribution spontaneously generates magnetic field out of nothing. The classic case is unmagnetized, which makes it one candidate for the universe's first fields." },
+      { n: "Firehose", b0: "finite", T: "warm", uni: "any", pert: "em", th: ["par"],
+        m: ["hybrid", "pic"], free: "aniso",
+        om: (s) => s.Oi, on: "Ω_i, the scale it grows at",
+        d: "threshold β∥ − β⊥ > 2",
+        why: "Too much parallel pressure and the field line cannot hold its own bend, like a hose with water running too fast. MHD with a CGL closure sees it, but gets the threshold wrong." },
+      { n: "Mirror", b0: "finite", T: "warm", uni: "any", pert: "em", th: ["obl"],
+        m: ["hybrid", "pic"], free: "aniso",
+        om: (s) => s.Oi, on: "Ω_i, the scale it grows at",
+        d: "threshold β⊥/β∥ > 1 + 1/β⊥",
+        why: "Too much perpendicular pressure and the plasma digs its own magnetic holes to sit in. Needs resonant particles for the right threshold, so it is a kinetic instability." },
+      { n: "Electron cyclotron maser", b0: "finite", T: "hot", uni: "any", pert: "em", th: ["obl"],
+        m: ["pic"], free: "aniso", rel: true,
+        om: (s) => s.Oe, on: "Ω_e, the resonance it works on",
+        d: "resonance ellipse in (v∥, v⊥)",
+        why: "The relativistic mass shift makes the resonance a curve in velocity space rather than a line. It is how the aurora radiates in radio and how some pulsars are thought to emit." }] },
+
+  { g: "Need a gradient — no plane waves here",
+    rows: [
+      { n: "Drift wave", b0: "finite", T: "warm", uni: "grad", pert: "es", th: ["obl"],
+        m: ["hall", "hybrid", "pic"], free: "none",
+        d: "ω = k_y v_*,  v_* ∝ ∇n",
+        why: "A density gradient plus a magnetic field makes a slow wave drift sideways. It is the universal instability of magnetized plasmas — almost any gradient will do." },
+      { n: "Interchange / flute", b0: "finite", T: "cold", uni: "grad", pert: "em", th: ["perp"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none",
+        d: "γ² ≈ g · ∇n/n",
+        why: "Rayleigh–Taylor with the magnetic field playing the role of the light fluid. Heavy plasma sitting on curved field lines falls through." },
+      { n: "Kelvin–Helmholtz", b0: "any", T: "cold", uni: "grad", pert: "em", th: ["obl"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none",
+        d: "needs velocity shear ∇u",
+        why: "Two layers sliding past each other roll up into vortices. A magnetic field along the flow suppresses it; across the flow it does not." },
+      { n: "Kink / sausage", b0: "finite", T: "cold", uni: "grad", pert: "em", th: ["obl"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "beam",
+        d: "current-driven, threshold in q",
+        why: "A current channel twists or pinches itself. The free energy is in the current, which is why the free-energy switch has to be set to a current for it to appear." },
+      { n: "Tearing / reconnection", b0: "finite", T: "cold", uni: "grad", pert: "em", th: ["obl"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none", nonideal: true,
+        d: "γ ∝ S^(−3/5) resistive",
+        why: "A current sheet breaks into islands and the field changes topology. Needs something to break flux freezing: resistivity, or kinetic electrons providing an off-diagonal pressure. Ideal MHD cannot do it at any resolution." },
+      { n: "Resistive diffusion", b0: "finite", T: "cold", uni: "any", pert: "em", th: ["par", "obl", "perp"],
+        m: ["mhd", "hall", "hybrid", "pic"], free: "none", coll: true,
+        d: "∂B/∂t = (η/μ₀)∇²B",
+        why: "Not a wave. The field simply soaks away through the plasma. It is the only thing the ηJ term does on its own." }] },
+];
+
+const FLAT = W.flatMap((g) => g.rows.map((r) => ({ ...r, grp: g.g })));
+
+/** Look a mode up by name, so the Scales tab can select one of these. */
+const findMode = (name) => FLAT.find((w) => w.n === name) || null;
+const MODE_COUNT = FLAT.length;
+
+const html = `
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">1 · The switchboard</div>
+    <h2>Nine assumptions</h2>
+    <p>These are the choices a speaker makes before the first slide, usually without saying so out loud.
+    Each one is a real decision about what to keep in the equations.</p>
+  </div>
+  <div class="card pad">
+    <div class="board" id="board"></div>
+    <div class="tally">
+      <span class="big" id="tallyN"></span>
+      <span class="txt" id="tallyT"></span>
+      <span class="re"><button type="button" id="reset">reset to warm ideal MHD</button></span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">2 · What is left</div>
+    <h2>The waves these assumptions allow</h2>
+    <p><b>Click a card</b> to make it the selected mode. The probe on the Scales tab jumps to a
+    frequency characteristic of it, and the angle switch moves if the mode needs a different one.</p>
+  </div>
+  <div class="live-grid" id="liveGrid"></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">3 · What is gone</div>
+    <h2>And the first reason each one failed</h2>
+    <p>A wave can fail several tests at once. This lists the first one, in the order the checks run,
+    so the reason is the most basic thing missing.</p>
+  </div>
+  <div class="card pad"><div class="dead-list" id="deadList"></div></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">4 · The matrix</div>
+    <h2>Every wave against every assumption</h2>
+    <p>The whole table at once. A dash means the wave does not care about that axis.
+    Rows in green survive your current switches. Scroll sideways on a narrow screen.</p>
+  </div>
+  <div class="card mx-scroll">
+    <table class="mx">
+      <thead><tr>
+        <th>Wave or instability</th><th>B<sub>0</sub></th><th>Temperature</th><th>Uniform?</th>
+        <th>Perturbation</th><th>Angle to B<sub>0</sub></th><th>Models that contain it</th>
+        <th>Free energy</th><th>Extra</th>
+      </tr></thead>
+      <tbody id="mxBody"></tbody>
+    </table>
+  </div>
+  <p style="margin-top:12px;font-size:13px;color:var(--ink-3)">
+  Reading a cell: <span class="mono">warm+</span> means warm or hotter will do; <span class="mono">hot</span>
+  means nothing less will do. <span class="mono">&#8741;</span> parallel to B<sub>0</sub>,
+  <span class="mono">&#8869;</span> perpendicular, <span class="mono">obl</span> oblique.</p>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">5 · The equations</div>
+    <h2>Which term switched off</h2>
+    <p>This is the part that makes the matrix stop being a list to memorise. A wave exists because a
+    term exists. Cross out the term and you have crossed out the wave.
+    Terms with a coloured background are the ones your current switches have turned <i>on</i>.</p>
+  </div>
+  <div class="card pad">
+    <div class="eqs" id="eqs"></div>
+    <div class="reasons" id="reasons"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">6 · The current</div>
+    <h2>Where J comes from, and why no code stores the ring current</h2>
+    <p>There is only one definition: <span class="mono">J = &Sigma;<sub>s</sub> q<sub>s</sub> n<sub>s</sub> v<sub>s</sub></span>,
+    the sum over species of charge times density times mean velocity. Everything called "a current"
+    in space physics is that sum, sliced differently. The slices below are the perpendicular current,
+    decomposed by <i>what makes the particles drift</i>.</p>
+  </div>
+  <div class="card pad">
+    <div class="jrow">
+      <div><div class="jn">Diamagnetic</div><div class="jf">J = (B &times; &nabla;p)/B&sup2;</div></div>
+      <div class="jd">No single particle drifts. Gyro-orbits are denser on one side than the other,
+      so more particles pass a given point going one way. It appears the moment there is a pressure
+      gradient, and it vanishes in a uniform plasma. <b>This is why the "uniform?" switch matters
+      for current, not just for waves.</b></div>
+    </div>
+    <div class="jrow">
+      <div><div class="jn">Grad-B and curvature</div><div class="jf">J = nq(v<sub>&nabla;B</sub> + v<sub>curv</sub>)</div></div>
+      <div class="jd">Real single-particle drifts, in opposite directions for ions and electrons, so they
+      add up into a current. <b>This pair is the ring current.</b> Trapped energetic ions in Earth's dipole
+      drift westward because the field is stronger and more curved on the inside of their orbit.</div>
+    </div>
+    <div class="jrow">
+      <div><div class="jn">Polarization</div><div class="jf">J = (&rho;/B&sup2;) dE<sub>&perp;</sub>/dt</div></div>
+      <div class="jd">Only appears when the perpendicular electric field is <i>changing</i>. It carries the
+      shear Alfvén wave, and it is proportional to the ion mass density — electrons contribute almost nothing.</div>
+    </div>
+    <div class="jrow">
+      <div><div class="jn">Magnetization</div><div class="jf">J = &nabla; &times; M,&nbsp; M = &minus;(p<sub>&perp;</sub>/B) b&#770;</div></div>
+      <div class="jd">The bookkeeping partner of the diamagnetic current. Which of the two you see depends
+      on whether you are describing the plasma by its particles or by its fluid moments — the total is the same.</div>
+    </div>
+    <div class="jrow">
+      <div><div class="jn">Field-aligned</div><div class="jf">J<sub>&parallel;</sub> along b&#770;</div></div>
+      <div class="jd">Carried almost entirely by electrons, because they move freely along B.
+      This is the current that closes magnetospheric circuits into the ionosphere.</div>
+    </div>
+    <div class="callout">
+      <p><b>So: is the ring current an input?</b> No. In a single-fluid code the state vector is
+      &rho;, v, p, B — <span class="mono">J</span> is not in it. J is recovered when needed from
+      <span class="mono">J = &nabla;&times;B/&mu;<sub>0</sub></span>, which is not a separate physical law but
+      the statement that <i>a current is what a bending magnetic field is</i>. A named current like the
+      ring current is a pattern you read out of the answer afterwards. The one exception is a seam between
+      two models: when an MHD code hands field-aligned currents to an ionosphere solver, a named current
+      really is an input — to the coupling, never to the equations.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">7 · The trade</div>
+    <h2>What each assumption buys, and what it costs</h2>
+    <p>Nobody chooses "hot" or "kinetic" because it is more correct. They choose it because a specific
+    thing they need is missing otherwise, and they pay for it.</p>
+  </div>
+  <div class="buys">
+    <div class="card buy">
+      <h3>cold &rarr; warm</h3>
+      <p>Add a pressure term &nabla;p to the momentum equation. The plasma can now push back on itself
+      with heat, not only with the field.</p>
+      <div class="gain"><b>gains</b> ion-acoustic and sound waves, the slow mode, drift waves,
+      and real propagation for the Langmuir oscillation.</div>
+      <div class="cost">costs: you now need an equation for p, which means a closure.</div>
+    </div>
+    <div class="card buy">
+      <h3>warm &rarr; hot</h3>
+      <p>Stop using moments. Keep the whole distribution function f(x, v, t) and solve Vlasov.
+      Particles at one particular speed can now do something the average particle does not.</p>
+      <div class="gain"><b>gains</b> Landau damping, cyclotron damping and resonant heating,
+      Bernstein waves, and correct thresholds for firehose and mirror.</div>
+      <div class="cost">costs: six dimensions instead of three, and the closure problem is replaced
+      by the resolution problem.</div>
+    </div>
+    <div class="card buy">
+      <h3>B<sub>0</sub> = 0 &rarr; B<sub>0</sub> &ne; 0</h3>
+      <p>Add the v &times; B<sub>0</sub> term. Space stops being isotropic: along the field and across
+      the field become completely different directions.</p>
+      <div class="gain"><b>gains</b> every Alfvénic and cyclotron mode, the hybrid resonances,
+      and the whole idea of a propagation angle.</div>
+      <div class="cost">costs: every dispersion relation now depends on &theta;, and your timestep
+      may be set by &Omega;<sub>e</sub>.</div>
+    </div>
+    <div class="card buy">
+      <h3>homogeneous &rarr; gradients</h3>
+      <p>Let the background vary in space. The equilibrium itself now stores free energy, and the
+      plasma can rearrange to release it.</p>
+      <div class="gain"><b>gains</b> drift waves, interchange, Kelvin&ndash;Helmholtz, tearing and
+      reconnection, and the diamagnetic current.</div>
+      <div class="cost">costs: no plane-wave analysis. You need an eigenvalue problem or a simulation.</div>
+    </div>
+    <div class="card buy">
+      <h3>electrostatic &rarr; electromagnetic</h3>
+      <p>Let the perturbation carry its own &delta;B. Faraday's law comes back and the field lines
+      themselves can move.</p>
+      <div class="gain"><b>gains</b> everything Alfvénic, whistlers, light, mirror and firehose.</div>
+      <div class="cost">costs: you solve for E and B instead of one scalar potential &phi;, which is
+      most of the cost of a PIC code.</div>
+    </div>
+    <div class="card buy">
+      <h3>MHD &rarr; Hall &rarr; hybrid &rarr; kinetic</h3>
+      <p>Each step lets one more species stop moving with the field. The order is set by scale:
+      ions decouple at d<sub>i</sub>, electrons at d<sub>e</sub>.</p>
+      <div class="gain"><b>gains</b> whistlers at Hall, ion kinetics at hybrid, Langmuir and electron
+      Bernstein only at fully kinetic.</div>
+      <div class="cost">costs: roughly one to two orders of magnitude per step, and hybrid gives up
+      Langmuir waves entirely by making electrons massless.</div>
+    </div>
+  </div>
+</section>
+`;
+
+/* ---------- the survival test ---------- */
+function check(w) {
+  const S = state.assume;
+  if (w.b0 !== "any" && w.b0 !== S.b0)
+    return { ok: false, why: w.b0 === "finite"
+      ? "needs a background magnetic field — with B₀ = 0 there is no v×B term to carry it"
+      : "only exists without a background field" };
+  if (TORD[S.T] < TORD[w.T])
+    return { ok: false, why: w.T === "warm"
+      ? "needs at least a <b>warm</b> plasma — with T = 0 there is no pressure term"
+      : "needs a <b>hot</b> plasma — it lives on individual particles in the distribution, not on the average" };
+  if (w.uni === "grad" && S.uni !== "grad")
+    return { ok: false, why: "needs a <b>gradient</b> in the background — it has nothing to feed on in a uniform plasma" };
+  if (w.pert !== "any" && w.pert !== S.pert)
+    return { ok: false, why: w.pert === "em"
+      ? "needs an <b>electromagnetic</b> perturbation — it carries its own δB"
+      : "is purely <b>electrostatic</b>; there is no δB in it" };
+  if (S.b0 !== "zero" && !w.th.includes(S.theta))
+    return { ok: false, why: "does not exist at this <b>angle</b> to B₀ (needs " + w.th.map((t) => THSYM[t]).join(" or ") + ")" };
+  if (!w.m.includes(S.model))
+    return { ok: false, why: "is not contained in the <b>" + MODNAME[S.model] + "</b> model" };
+  if (w.free !== "none" && w.free !== S.free)
+    return { ok: false, why: "needs free energy in the form of <b>" + FREENAME[w.free] + "</b>" };
+  if (w.coll && !S.coll)
+    return { ok: false, why: "needs <b>collisions</b> — it is the resistive term and nothing else" };
+  if (w.rel && !S.rel)
+    return { ok: false, why: "needs <b>relativistic</b> particles for the resonance to work" };
+  if (w.nonideal && !(S.coll || S.model === "hybrid" || S.model === "pic"))
+    return { ok: false, why: "needs something to <b>break flux freezing</b>: resistivity, or kinetic electrons" };
+  return { ok: true };
+}
+
+/* ---------- equations ---------- */
+function eqSpec() {
+  const S = state.assume;
+  const quasi = S.model === "mhd" || S.model === "hybrid";
+  const es = S.pert === "es";
+  const unmag = S.b0 === "zero";
+  const cold = S.T === "cold";
+  const hot = S.T === "hot";
+  const kinetic = S.model === "hybrid" || S.model === "pic";
+  const eInert = S.model === "pic" || S.model === "hall";
+
+  const pressLabel = cold ? "∇·P_s" : hot ? "∇·P_s  (a tensor)" : "∇p_s  (a scalar)";
+
+  const groups = [
+    { g: "Maxwell", eqs: [
+      { l: "Gauss", html: `<span class="t" data-k="gauss">∇·<b>E</b> = ρ_c/ε₀</span>` },
+      { l: "no monopoles", html: `∇·<b>B</b> = 0` },
+      { l: "Faraday", html: es
+        ? `<span class="t on">∇×<b>E</b> = 0</span>  →  <b>E</b> = −∇φ`
+        : `<span class="t on">∇×<b>E</b> = −∂<b>B</b>/∂t</span>` },
+      { l: "Ampère", html: `∇×<b>B</b> = μ₀<b>J</b> <span class="t" data-k="disp">+ (1/c²) ∂<b>E</b>/∂t</span>` },
+    ] },
+    { g: "Momentum, per species s", eqs: [
+      { l: "", html:
+        `m_s n_s (∂<b>v</b>_s/∂t + <b>v</b>_s·∇<b>v</b>_s) = ` +
+        `q_s n_s (<b>E</b> <span class="t" data-k="lorentz">+ <b>v</b>_s×<b>B</b></span>) ` +
+        `<span class="t" data-k="press">− ${pressLabel}</span> ` +
+        `<span class="t" data-k="coll">+ <b>R</b>_s</span>` },
+      { l: "electrons", html: `<span class="t" data-k="einert">m_e ∂<b>v</b>_e/∂t</span>  ← electron inertia` },
+    ] },
+    { g: "Ohm's law, assembled from the electron momentum equation", eqs: [
+      { l: "", html:
+        `<b>E</b> + <b>u</b>×<b>B</b> = ` +
+        `<span class="t" data-k="eta">η<b>J</b></span> ` +
+        `<span class="t" data-k="hall">+ (<b>J</b>×<b>B</b>)/ne</span> ` +
+        `<span class="t" data-k="pe">− ∇·P_e/ne</span> ` +
+        `<span class="t" data-k="einert2">+ (m_e/ne²) ∂<b>J</b>/∂t</span>` },
+    ] },
+  ];
+  if (kinetic) groups.push({ g: "...and instead of moments, Vlasov", eqs: [
+    { l: "", html: `∂f_s/∂t + <b>v</b>·∇f_s + (q_s/m_s)(<b>E</b> + <b>v</b>×<b>B</b>)·∂f_s/∂<b>v</b> = <span class="t ${S.coll ? "on" : "off"}">C[f_s]</span>` },
+  ] });
+
+  const flags = {
+    gauss: !quasi,
+    disp: S.rel,
+    lorentz: !unmag,
+    press: !cold,
+    coll: S.coll,
+    einert: eInert,
+    eta: S.coll,
+    hall: S.model !== "mhd",
+    pe: !cold && S.model !== "mhd",
+    einert2: eInert,
+  };
+
+  const reasons = [
+    { k: "faraday", t: "∇×E", on: !es,
+      onTxt: "Faraday's law is live, so the perturbation carries its own δB and field lines can bend and move. Everything Alfvénic needs this.",
+      offTxt: "Electrostatic: δB = 0 by assumption, so the curl equation collapses to E = −∇φ. One scalar unknown instead of six, which is why electrostatic PIC is the cheap one." },
+    { k: "gauss", t: "∇·E = ρ_c/ε₀", on: flags.gauss,
+      onTxt: "Charge separation is allowed, so Poisson's equation is a real equation you solve. This is what Langmuir waves and the Debye length live on.",
+      offTxt: "Quasineutrality assumed: ρ_c is set to zero, so this stops being an equation and becomes a constraint. No charge-separation waves." },
+    { k: "disp", t: "(1/c²) ∂E/∂t", on: flags.disp,
+      onTxt: "The displacement current is kept, so light waves propagate and the full speed of light is in the system.",
+      offTxt: "Non-relativistic, so this term is smaller than μ₀J by (v/c)² and is dropped. This is exactly why MHD has no light waves — and why an MHD timestep is not set by c." },
+    { k: "lorentz", t: "v_s×B", on: flags.lorentz,
+      onTxt: "The magnetic force is present, so there is a preferred direction and every cyclotron and Alfvénic mode is possible.",
+      offTxt: "B₀ = 0, so nothing turns the particles. Space is isotropic and no mode can distinguish parallel from perpendicular." },
+    { k: "press", t: "∇·P_s", on: flags.press,
+      onTxt: hot ? "Hot: P_s is a full tensor that you cannot write down without solving for f itself. <b>That is the closure problem</b> — and the reason kinetic codes exist."
+                 : "Warm: a scalar pressure with an equation of state. Sound, the slow mode and drift waves all come from this one term.",
+      offTxt: "Cold: T = 0, so there is no pressure at all. Everything driven by heat is gone — sound, ion-acoustic, the slow mode, drift waves." },
+    { k: "coll", t: "R_s", on: flags.coll,
+      onTxt: "Collisions exchange momentum between species, which is where resistivity comes from.",
+      offTxt: "Collisionless. Nothing exchanges momentum between species, so entropy and topology have to be changed by something else — resonance, or a kinetic term." },
+    { k: "einert", t: "m_e ∂v_e/∂t", on: flags.einert,
+      onTxt: "Electron inertia is kept, so electrons can lag behind the field and oscillate on their own. Langmuir waves and the electron skin depth d_e need this. Note that the plain Hall-MHD variant sets m_e = 0 even so, and loses them again.",
+      offTxt: "Electrons treated as massless: they respond instantly and have no oscillation of their own. This is the single assumption that costs a hybrid code its Langmuir waves." },
+    { k: "eta", t: "ηJ", on: flags.eta,
+      onTxt: "Resistive MHD. Field lines can slip through the plasma, so reconnection can happen.",
+      offTxt: "Ideal Ohm's law on this term. Flux is frozen in and the magnetic topology cannot change." },
+    { k: "hall", t: "(J×B)/ne", on: flags.hall,
+      onTxt: "The Hall term is kept: the field moves with the <i>electrons</i>, not with the bulk fluid. Whistlers appear the moment this term does.",
+      offTxt: "No Hall term, so the field moves with the single bulk fluid. Everything below dᵢ is invisible, whistlers included." },
+    { k: "pe", t: "∇·P_e/ne", on: flags.pe,
+      onTxt: "The electron pressure gradient is kept. It can generate an electric field with no current at all, and it supplies the off-diagonal terms that break flux freezing in collisionless reconnection.",
+      offTxt: "Dropped, either because the plasma is cold or because a single-fluid model has no separate electron pressure." },
+    { k: "einert2", t: "(m_e/ne²) ∂J/∂t", on: flags.einert2,
+      onTxt: "Electron inertia in Ohm's law. This is the term that sets the thickness of a collisionless reconnection layer, d_e. Many production codes drop it anyway because resolving d_e is expensive.",
+      offTxt: "Dropped. The electron skin depth is not represented, so the smallest structure the model admits is dᵢ or larger." },
+  ];
+  return { groups, flags, reasons };
+}
+
+const $ = (id) => document.getElementById(id);
+
+function init() {
+  $("board").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-ax]");
+    if (!b) return;
+    let v = b.dataset.v;
+    if (v === "true") v = true; else if (v === "false") v = false;
+    setAssume(b.dataset.ax, v);
+  });
+  $("reset").addEventListener("click", resetAssume);
+  $("liveGrid").addEventListener("click", (e) => {
+    const b = e.target.closest("button.wv");
+    if (!b) return;
+    const w = findMode(b.dataset.name);
+    if (!w) return;
+    if (state.wave.selectedMode === w.n) selectMode(null, null);
+    else selectMode(w.n, { omega: w.om, th: w.th });
+  });
+}
+
+function render() {
+  const S = state.assume;
+
+  $("board").innerHTML = AXES.map((a) => {
+    const cur = S[a.k];
+    const btns = a.opts.map(([v, lab]) =>
+      `<button type="button" data-ax="${a.k}" data-v="${v}" aria-pressed="${String(v) === String(cur)}">${lab}</button>`).join("");
+    return `<div class="ctl"><div class="hd"><b>${a.label}</b><span>${a.hint}</span></div>
+      <div class="seg">${btns}</div><div class="exp">${a.exp[cur]}</div></div>`;
+  }).join("");
+
+  const res = FLAT.map((w) => ({ w, r: check(w) }));
+  const live = res.filter((x) => x.r.ok);
+  const dead = res.filter((x) => !x.r.ok);
+  const sel = state.wave.selectedMode;
+
+  $("tallyN").textContent = live.length + " / " + FLAT.length;
+  $("tallyT").textContent = live.length === 0
+    ? "nothing at all propagates under these assumptions."
+    : "modes survive. The other " + dead.length + " are listed below with the reason each one failed.";
+
+  $("liveGrid").innerHTML = live.length ? live.map(({ w }) => `
+    <button type="button" class="wv" data-name="${w.n}" aria-pressed="${w.n === sel}">
+      <div class="h"><h3>${w.n}</h3><span class="pick">${w.n === sel ? "selected" : (w.om ? "select" : "no single ω")}</span></div>
+      <div class="disp">${w.d}</div>
+      <div class="why">${w.why}</div>
+      <div class="mods">${["mhd", "hall", "hybrid", "pic"].map((m) =>
+        `<span class="badge${w.m.includes(m) ? " on" : ""}">${MODSHORT[m]}</span>`).join("")}</div>
+    </button>`).join("")
+    : `<div class="card pad"><p>Nothing survives. That is a real answer, not a bug — try turning
+       the temperature up, or moving to a finer model.</p></div>`;
+
+  $("deadList").innerHTML = dead.map(({ w, r }) =>
+    `<div class="dr"><div class="n">${w.n}</div><div class="r">${r.why}</div></div>`).join("");
+
+  let mx = "";
+  for (const g of W) {
+    mx += `<tr class="grp-row"><td colspan="9">${g.g}</td></tr>`;
+    for (const w of g.rows) {
+      const ok = check(w).ok;
+      const extra = [w.coll ? "η" : "", w.rel ? "rel" : "", w.nonideal ? "non-ideal" : ""].filter(Boolean).join(" · ") || "—";
+      const th = w.th.length === 3 ? "any" : w.th.map((t) => THSYM[t]).join(" ");
+      mx += `<tr class="${ok ? "live" : "dead"}${w.n === sel ? " sel" : ""}">
+        <td class="nm"><span class="flag"></span>${w.n}</td>
+        <td class="c">${w.b0 === "any" ? "—" : (w.b0 === "finite" ? "B₀ ≠ 0" : "B₀ = 0")}</td>
+        <td class="c">${w.T === "cold" ? "cold+" : (w.T === "warm" ? "warm+" : "hot")}</td>
+        <td class="c">${w.uni === "grad" ? "∇ needed" : "—"}</td>
+        <td class="c">${w.pert === "any" ? "—" : w.pert.toUpperCase()}</td>
+        <td class="c">${th}</td>
+        <td class="c">${["mhd", "hall", "hybrid", "pic"].map((m) =>
+          `<span class="badge${w.m.includes(m) ? " on" : ""}">${MODSHORT[m]}</span>`).join(" ")}</td>
+        <td class="c">${w.free === "none" ? "—" : w.free}</td>
+        <td class="c">${extra}</td></tr>`;
+    }
+  }
+  $("mxBody").innerHTML = mx;
+
+  const { groups, flags, reasons } = eqSpec();
+  $("eqs").innerHTML = groups.map((g) =>
+    `<div class="eqgrp"><div class="gh">${g.g}</div>` +
+    g.eqs.map((e) => `<div class="eq"><div class="lbl">${e.l || ""}</div><div class="bd">${e.html}</div></div>`).join("") +
+    `</div>`).join("");
+  for (const [k, on] of Object.entries(flags)) {
+    document.querySelectorAll(`[data-k="${k}"]`).forEach((el) => {
+      el.classList.toggle("on", !!on);
+      el.classList.toggle("off", !on);
+    });
+  }
+  $("reasons").innerHTML = reasons.map((r) =>
+    `<div class="rr${r.on ? " keep" : ""}"><code>${r.t}</code><code class="st">${r.on ? "kept" : "dropped"}</code>` +
+    `<span>${r.on ? r.onTxt : r.offTxt}</span></div>`).join("");
+}
+
+/** Used by the header to describe the selected mode. */
+function describeSelected() {
+  const sel = state.wave.selectedMode;
+  if (!sel) return null;
+  const w = findMode(sel);
+  if (!w) return { name: sel, note: null, alive: null };
+  return {
+    name: w.n,
+    note: w.on || null,
+    alive: check(w).ok,
+    omega: w.om ? w.om(params()) : null,
+  };
+}
+
+return { MODE_COUNT, describeSelected, findMode, html, id, init, label, render };
+})();
+
+/* ---- tab-cma.js ---- */
+const __m_tab_cma = (() => {
+const { C, cmaMu, cmaPoint, cmaBoundaryX, cmaSignature, dispersionFrom } = __m_physics;
+const { sci, fmtFreq, esc } = __m_format;
+const { state, params, setOmega, notify } = __m_state;
+/* tab-cma.js — the Clemmow–Mullaly–Allis plane.
+ *
+ * Every boundary here is computed, not traced from a picture. At fixed Y each of
+ * R = 0, L = 0 and S = 0 is LINEAR in X, so the curves are exact; P = 0 is the
+ * vertical line X = 1 and the two cyclotron resonances are horizontal lines.
+ *
+ * Likewise the wave normal surface: clicking a point solves the cold-plasma
+ * quartic there and polar-plots v_phi = c/n against theta. Nothing is recalled.
+ *
+ * Honest about its own limits: this is a COLD plasma map. Landau damping,
+ * Bernstein waves and every instability on the Assumptions tab have no
+ * representation in it, and the panel at the bottom says so.
+ */
+
+
+const id = "cma";
+const label = "CMA";
+
+const html = `
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">1 · The map</div>
+    <h2>One picture of every cold-plasma wave</h2>
+    <p>Two axes replace the whole parameter space:
+    <span class="mono">X = (ω<sub>pe</sub>² + ω<sub>pi</sub>²)/ω²</span> across, and
+    <span class="mono">Y = |Ω<sub>e</sub>|Ω<sub>i</sub>/ω²</span> up. Both axes are logarithmic.
+    The lines are cut-offs (where a wave stops propagating) and resonances (where its
+    wavelength collapses). <b>Click anywhere</b> to solve the dispersion relation there.</p>
+  </div>
+  <div class="card ladder-box">
+    <svg id="cmaSvg" role="img" aria-label="CMA plane" style="display:block;width:100%;height:auto;cursor:crosshair"></svg>
+    <div class="key">
+      <span><i class="dot" style="background:var(--elec)"></i> R = 0 cut-off</span>
+      <span><i class="dot" style="background:var(--ion)"></i> L = 0 cut-off</span>
+      <span><i class="dot" style="background:var(--both)"></i> P = 0 cut-off</span>
+      <span><i class="dot" style="background:var(--live)"></i> S = 0 resonance (hybrids)</span>
+      <span><i class="dot" style="background:var(--ink-3)"></i> ω = |Ω<sub>e</sub>|, ω = Ω<sub>i</sub></span>
+    </div>
+  </div>
+  <p style="margin-top:12px;font-size:13.4px;color:var(--ink-2)" id="cmaSweep"></p>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">2 · The wave normal surface</div>
+    <h2>What the waves look like where you clicked</h2>
+    <p>A polar plot of phase speed against the angle to <b>B</b><sub>0</sub>. A closed surface means
+    the wave travels in every direction. A surface that opens into a lemniscate — a figure with a
+    gap — means there is a <b>resonance cone</b>: past that angle the wave cannot go at all.
+    Crossing a cut-off shrinks a surface to a point; crossing a resonance opens one.</p>
+  </div>
+  <div class="probe-grid">
+    <div class="card pad">
+      <svg id="wnsSvg" role="img" aria-label="Wave normal surface" style="display:block;width:100%;height:auto"></svg>
+    </div>
+    <div class="card pad">
+      <div id="wnsRead"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">3 · The regions</div>
+    <h2>How many regions, and why the answer moves</h2>
+  </div>
+  <div class="card pad">
+    <div id="regionSay" style="font-size:13.8px;color:var(--ink-2)"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">4 · What this map cannot show</div>
+    <h2>An honest limit, and it is itself the lesson</h2>
+  </div>
+  <div class="card pad limit">
+    <p>The CMA plane is built from the <b>cold</b> plasma dispersion relation: every particle of a
+    species moves together, and there is no distribution function. So it cannot contain anything that
+    lives on individual particles having different speeds:</p>
+    <ul style="margin:10px 0 0;padding-left:20px;font-size:13.6px;color:var(--ink-2)">
+      <li><b>Landau and cyclotron damping</b> — they need particles at one particular speed to resonate
+      while the average particle does not. In a cold plasma there is only the average particle.</li>
+      <li><b>Bernstein waves</b> — they exist because different particles have different gyroradii.</li>
+      <li><b>Every instability</b> on the Assumptions tab — firehose, mirror, two-stream, Weibel,
+      tearing. A cut-off tells you where a wave stops; it says nothing about whether one grows.</li>
+      <li><b>Any gradient mode</b> — the plane assumes a uniform background, so drift waves,
+      interchange and Kelvin–Helmholtz are not on it either.</li>
+    </ul>
+    <p style="margin-top:12px"><b>That limit is the same lesson as the Assumptions tab.</b> This is a map
+    of one set of assumptions. When a mode is missing from it, the useful question is not "where is it"
+    but "which assumption removed it" — and the switchboard answers that directly.</p>
+  </div>
+</section>
+`;
+
+const $ = (id) => document.getElementById(id);
+
+/* The point being inspected. Starts null, meaning "follow the live plasma". */
+let pick = null;
+
+const LO = -5, HI = 5;   // decades shown on both axes
+
+function init() {
+  // The viewBox is built from the element's width, so a resize changes the drawing.
+  let rt;
+  addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => render(), 120); });
+
+  $("cmaSvg").addEventListener("click", (e) => {
+    const svg = $("cmaSvg");
+    const r = svg.getBoundingClientRect();
+    const vb = svg.viewBox.baseVal;
+    const px = ((e.clientX - r.left) / r.width) * vb.width;
+    const py = ((e.clientY - r.top) / r.height) * vb.height;
+    const g = geom(vb.width, vb.height);
+    if (px < g.l || px > vb.width - g.r || py < g.t || py > vb.height - g.b) return;
+    pick = {
+      X: Math.pow(10, LO + ((px - g.l) / g.w) * (HI - LO)),
+      Y: Math.pow(10, HI - ((py - g.t) / g.h) * (HI - LO)),
+    };
+    notify("cma");
+  });
+}
+
+const geom = (W, H) => {
+  const l = 54, r = 14, t = 14, b = 42;
+  return { l, r, t, b, w: W - l - r, h: H - t - b };
+};
+
+function render() {
+  const s = params();
+  const mu = cmaMu(s);
+  const live = cmaPoint(s, state.wave.omega);
+
+  /* ---------- the plane ---------- */
+  // Measure, do not assume. A fixed 720-wide viewBox squeezed into a 328px phone
+  // card scales everything by 0.46, including font-size="10" labels, which then
+  // render at 4.6px. Sizing the viewBox to the element keeps one viewBox unit
+  // equal to one CSS pixel, so a 10px label really is 10px. drawLadder in
+  // tab-scales.js already works this way; this is the same trick.
+  const el = $("cmaSvg");
+  const W = Math.max(300, Math.round(el.clientWidth || el.parentNode.clientWidth - 28));
+  const H = Math.round(Math.max(240, Math.min(480, W * 0.66)));
+  const g = geom(W, H);
+  const sx = (X) => g.l + ((Math.log10(X) - LO) / (HI - LO)) * g.w;
+  const sy = (Y) => g.t + ((HI - Math.log10(Y)) / (HI - LO)) * g.h;
+  const clampY = (v) => Math.max(g.t - 5, Math.min(g.t + g.h + 5, v));
+
+  let out = "";
+  // grid
+  for (let d = LO; d <= HI; d++) {
+    const x = sx(Math.pow(10, d)), y = sy(Math.pow(10, d));
+    out += `<line x1="${x}" y1="${g.t}" x2="${x}" y2="${g.t + g.h}" stroke="var(--line-soft)" stroke-width="1"/>`;
+    out += `<line x1="${g.l}" y1="${y}" x2="${g.l + g.w}" y2="${y}" stroke="var(--line-soft)" stroke-width="1"/>`;
+    out += `<text x="${x}" y="${g.t + g.h + 16}" font-size="10" fill="var(--ink-3)" text-anchor="middle" font-family="IBM Plex Mono,monospace">10${esc(supOf(d))}</text>`;
+    out += `<text x="${g.l - 6}" y="${y + 3}" font-size="10" fill="var(--ink-3)" text-anchor="end" font-family="IBM Plex Mono,monospace">10${esc(supOf(d))}</text>`;
+  }
+  out += `<text x="${g.l + g.w / 2}" y="${H - 6}" font-size="11.5" fill="var(--ink-2)" text-anchor="middle" font-family="IBM Plex Mono,monospace">X = (ω_pe² + ω_pi²)/ω²  →  denser, or lower frequency</text>`;
+  out += `<text transform="translate(13,${g.t + g.h / 2}) rotate(-90)" font-size="11.5" fill="var(--ink-2)" text-anchor="middle" font-family="IBM Plex Mono,monospace">Y = |Ω_e|Ω_i/ω²  →  stronger field</text>`;
+
+  // boundary curves: sample Y, solve for X exactly
+  const curve = (kind, colour, dash = "") => {
+    const segs = [];
+    let cur = [];
+    const N = 600;
+    for (let i = 0; i <= N; i++) {
+      const Y = Math.pow(10, LO + ((HI - LO) * i) / N);
+      const X = cmaBoundaryX(kind, Y, mu);
+      if (X == null || X <= 0 || !isFinite(X)) { if (cur.length > 1) segs.push(cur); cur = []; continue; }
+      const lx = Math.log10(X);
+      if (lx < LO - 0.5 || lx > HI + 0.5) { if (cur.length > 1) segs.push(cur); cur = []; continue; }
+      cur.push([sx(X), sy(Y)]);
+    }
+    if (cur.length > 1) segs.push(cur);
+    return segs.map((sg) =>
+      `<path d="M${sg.map((p) => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L")}"
+         fill="none" stroke="${colour}" stroke-width="1.8" ${dash} stroke-linejoin="round"/>`).join("");
+  };
+
+  out += curve("R", "var(--elec)");
+  out += curve("L", "var(--ion)");
+  out += curve("S", "var(--live)", 'stroke-dasharray="5 3"');
+  // P = 0 is exactly X = 1
+  out += `<line x1="${sx(1)}" y1="${g.t}" x2="${sx(1)}" y2="${g.t + g.h}" stroke="var(--both)" stroke-width="1.8"/>`;
+  // the two cyclotron resonances are horizontal lines
+  for (const [Y, lab] of [[1 / mu, "ω = |Ω_e|"], [mu, "ω = Ω_i"]]) {
+    const y = sy(Y);
+    if (y > g.t && y < g.t + g.h) {
+      out += `<line x1="${g.l}" y1="${y}" x2="${g.l + g.w}" y2="${y}" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="2 4"/>`;
+      out += `<text x="${g.l + g.w - 4}" y="${y - 4}" font-size="10" fill="var(--ink-3)" text-anchor="end" font-family="IBM Plex Mono,monospace">${esc(lab)}</text>`;
+    }
+  }
+
+  // Sweeping omega moves along a line of slope 1: X and Y both scale as 1/omega^2,
+  // so X/Y is fixed by the plasma alone. That is the single most useful fact here.
+  const ratio = live.X / live.Y;
+  const yA = Math.pow(10, LO), yB = Math.pow(10, HI);
+  out += `<line x1="${sx(ratio * yA)}" y1="${sy(yA)}" x2="${sx(ratio * yB)}" y2="${sy(yB)}"
+    stroke="var(--ink)" stroke-width="1" stroke-dasharray="1 5" opacity=".55"/>`;
+
+  // the live marker
+  const mx = sx(live.X), my = clampY(sy(live.Y));
+  out += `<circle cx="${mx}" cy="${my}" r="7" fill="none" stroke="var(--ink)" stroke-width="2"/>`;
+  out += `<circle cx="${mx}" cy="${my}" r="2.5" fill="var(--ink)"/>`;
+  out += `<text x="${mx + 11}" y="${my - 8}" font-size="10.5" fill="var(--ink)" font-family="IBM Plex Mono,monospace">your plasma at ω</text>`;
+
+  if (pick) {
+    const px = sx(pick.X), py = sy(pick.Y);
+    out += `<circle cx="${px}" cy="${py}" r="6" fill="var(--both)" opacity=".85"/>`;
+    out += `<text x="${px + 10}" y="${py + 12}" font-size="10.5" fill="var(--both)" font-family="IBM Plex Mono,monospace">inspecting</text>`;
+  }
+
+  el.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  el.setAttribute("height", H);
+  el.innerHTML = out;
+
+  $("cmaSweep").innerHTML =
+    `The faint diagonal is <b>your plasma</b>. X and Y both fall as 1/ω², so changing the probe
+     frequency slides the marker along that one line and nothing else moves — the line itself is
+     fixed by B and n alone. <b>Sweeping ω is a walk across region boundaries</b>, and each crossing
+     is a wave appearing or disappearing. Right now
+     ω = ${fmtFreq(state.wave.omega)}, X = ${sci(live.X)}, Y = ${sci(live.Y)}.`;
+
+  /* ---------- the wave normal surface ---------- */
+  const at = pick || live;
+  const sig = cmaSignature(at.X, at.Y, mu);
+  drawSurface(sig);
+
+  const names = [];
+  if (sig.R > 0) names.push("R-wave (whistler branch) along <b>B</b>");
+  if (sig.L > 0) names.push("L-wave (ion-cyclotron branch) along <b>B</b>");
+  if (sig.P > 0) names.push("O-mode (ordinary) across <b>B</b>");
+  if (sig.XM > 0) names.push("X-mode (extraordinary) across <b>B</b>");
+
+  $("wnsRead").innerHTML = `
+    <div class="eyebrow">${pick ? "clicked point" : "your plasma, live"}</div>
+    <div class="mono" style="font-size:12.6px;margin:6px 0 10px">
+      X = ${sci(at.X)} · Y = ${sci(at.Y)} · signature ${sig.key}</div>
+    <div class="tbl-scroll"><table class="ro"><tbody>
+      ${[["R", sig.R], ["L", sig.L], ["P", sig.P], ["S", sig.S], ["RL/S", sig.XM]].map(([k, v]) =>
+        `<tr><td class="s">${k}</td><td class="v" style="color:${v > 0 ? "var(--live)" : "var(--ink-3)"}">${sci(v)}</td>
+         <td>${v > 0 ? "propagates" : "evanescent"}</td></tr>`).join("")}
+    </tbody></table></div>
+    <p style="margin-top:12px;font-size:13.4px">
+      ${names.length
+        ? "Propagating here: " + names.join("; ") + "."
+        : "<b>Nothing propagates here.</b> Every principal mode is evanescent — this is a stop band."}
+    </p>
+    ${!isFinite(sig.R) || !isFinite(sig.L) || !isFinite(sig.S) || Math.abs(sig.S) > 1e12
+      ? `<p style="margin-top:10px;font-size:13.4px;color:var(--warn)">
+          <b>You are sitting on a resonance line.</b> ω equals a cyclotron frequency exactly, so
+          R or L diverges and n² → ∞: the wavelength collapses and the phase speed goes to zero.
+          That is a real physical resonance, not a gap — it is where the wave hands its energy to
+          the gyrating particles. Nudge ω slightly to see the surface reopen.</p>`
+      : ""}
+    <p style="margin-top:8px;font-size:13.4px;color:var(--ink-2)">
+      ${sig.cone
+        ? `<b>There is a resonance cone.</b> P and S have opposite signs, so tan²θ = −P/S is positive and
+           there is a real angle beyond which the wave cannot propagate — the surface opens into a
+           lemniscate. Resonance cone at θ = ${sci((Math.atan(Math.sqrt(Math.max(0, -sig.P / sig.S))) * 180) / Math.PI)}°.`
+        : `No resonance cone: P and S share a sign, so every surface here is closed and the wave can
+           travel at any angle to <b>B</b>.`}
+    </p>
+    ${pick ? `<p style="margin-top:10px"><button class="chip" type="button" id="cmaClear">follow my plasma again</button></p>` : ""}`;
+
+  const clr = $("cmaClear");
+  if (clr) clr.addEventListener("click", () => { pick = null; notify("cma"); });
+
+  /* ---------- regions ---------- */
+  $("regionSay").innerHTML = `
+    Textbook CMA diagrams are usually drawn with an artificially small mass ratio, because at the real
+    one the structure is crushed against the axes. The mass ratio here is
+    <b>m_i/(Z m_e) = ${sci(mu)}</b>, which puts ω = |Ω_e| at Y = ${sci(1 / mu)} and ω = Ω_i at
+    Y = ${sci(mu)} — ${sci(mu * mu)} apart. Change it on the <b>Units</b> tab and watch the two
+    dashed lines move together.
+    <br><br>
+    <b>On the number of regions.</b> <code>docs/physics.md</code> quotes 13, from Stix. Counting them
+    is a question about how you define a region: classifying by which principal modes propagate, plus
+    whether a resonance cone exists and how the two surfaces nest, an independent flood fill of this
+    plane finds <b>12 at m_i/m_e = 25 or 100, and 11 at 1836</b>. The count is genuinely mass-ratio
+    dependent, and a finer classifier would split more. So this page does not assert a number it has
+    not computed — the honest statement is that the boundaries are exact and the regions between them
+    are whatever those boundaries enclose.`;
+}
+
+function supOf(d) {
+  const S = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
+  return String(d).split("").map((c) => S[c] || c).join("");
+}
+
+/** Polar-plot v_phi = c/n against theta, for both roots of the quartic. */
+function drawSurface(sig) {
+  const el = $("wnsSvg");
+  const W = Math.max(260, Math.round(el.clientWidth || el.parentNode.clientWidth - 36));
+  const H = Math.round(Math.max(240, Math.min(340, W * 0.88)));
+  const cx = W / 2, cy = H / 2, Rmax = Math.min(W, H) / 2 - 30;
+  const D = (sig.R - sig.L) / 2;
+  const st = { R: sig.R, L: sig.L, P: sig.P, S: sig.S, D };
+
+  const N = 361;
+  const branches = [[], []];
+  let vmax = 0;
+  // Exactly ON a cyclotron line, R or L diverges, so S and D do too and every
+  // root comes out NaN rather than +Infinity — Infinity/Infinity. Detect the
+  // singular parameters directly instead of trying to read it off the roots.
+  let resonant = ![st.R, st.L, st.P, st.S, st.D].every(Number.isFinite)
+              || Math.abs(st.S) > 1e12 || Math.abs(st.D) > 1e12;
+  for (let i = 0; i < N; i++) {
+    const th = (i / (N - 1)) * Math.PI;           // 0..180, then mirror
+    const n2 = dispersionFrom(st, th).n2;
+    for (let b = 0; b < 2; b++) {
+      // Three outcomes, and they are NOT the same thing:
+      //   n2 > 0 finite -> propagates at v = c/n
+      //   n2 -> +inf    -> RESONANCE: the wavelength collapses and v_phi -> 0.
+      //                    Radius zero is the honest picture; a gap would say
+      //                    "cannot propagate", which is the opposite of true.
+      //   n2 <= 0       -> evanescent: a real gap in the surface.
+      let v = null;
+      if (n2[b] > 0) v = isFinite(n2[b]) ? C / Math.sqrt(n2[b]) : 0;
+      if (v != null && v > 0) vmax = Math.max(vmax, v);
+      if (!isFinite(n2[b]) && n2[b] > 0) resonant = true;
+      branches[b].push({ th, v });
+    }
+  }
+
+  let out = "";
+  // axes: B0 is vertical, so theta is measured from the vertical
+  out += `<line x1="${cx}" y1="${cy - Rmax - 12}" x2="${cx}" y2="${cy + Rmax + 12}" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  out += `<line x1="${cx - Rmax - 12}" y1="${cy}" x2="${cx + Rmax + 12}" y2="${cy}" stroke="var(--line)" stroke-width="1"/>`;
+  out += `<text x="${cx + 4}" y="${cy - Rmax - 16}" font-size="10.5" fill="var(--ink-3)" font-family="IBM Plex Mono,monospace">B₀  (θ = 0)</text>`;
+  out += `<text x="${cx + Rmax - 4}" y="${cy - 6}" font-size="10.5" fill="var(--ink-3)" text-anchor="end" font-family="IBM Plex Mono,monospace">θ = 90°</text>`;
+
+  if (vmax === 0) {
+    out += `<text x="${cx}" y="${cy - 6}" font-size="12.5" fill="var(--ink-3)" text-anchor="middle" font-family="IBM Plex Sans,sans-serif">${
+      resonant ? "at resonance: v_φ → 0 in every direction" : "no propagating mode here"}</text>`;
+    if (resonant) {
+      out += `<text x="${cx}" y="${cy + 14}" font-size="10.5" fill="var(--ink-3)" text-anchor="middle" font-family="IBM Plex Sans,sans-serif">the surface has collapsed to a point</text>`;
+      out += `<circle cx="${cx}" cy="${cy}" r="3" fill="var(--ink-3)"/>`;
+    }
+  } else {
+    const colours = ["var(--both)", "var(--live)"];
+    branches.forEach((br, b) => {
+      // split into runs of propagating angles: a gap IS the resonance cone
+      const runs = [];
+      let cur = [];
+      for (const p of br) {
+        if (p.v == null) { if (cur.length > 1) runs.push(cur); cur = []; continue; }
+        const r = (p.v / vmax) * Rmax;
+        // theta from the +y axis (B0 up), and mirror across the vertical
+        cur.push([cx + r * Math.sin(p.th), cy - r * Math.cos(p.th)]);
+      }
+      if (cur.length > 1) runs.push(cur);
+      for (const run of runs) {
+        const d = "M" + run.map((p) => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L");
+        const mirror = "M" + run.map((p) => (2 * cx - p[0]).toFixed(1) + " " + p[1].toFixed(1)).join(" L");
+        out += `<path d="${d}" fill="none" stroke="${colours[b]}" stroke-width="2"/>`;
+        out += `<path d="${mirror}" fill="none" stroke="${colours[b]}" stroke-width="2" opacity=".55"/>`;
+      }
+    });
+    out += `<text x="${cx}" y="${H - 6}" font-size="10.5" fill="var(--ink-3)" text-anchor="middle" font-family="IBM Plex Mono,monospace">radius = v_φ, outer edge = ${sci(vmax / C)} c</text>`;
+  }
+
+  el.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  el.setAttribute("height", H);
+  el.innerHTML = out;
+}
+
+return { html, id, init, label, render };
+})();
+
+/* ---- tab-3d.js ---- */
+const __m_tab_3d = (() => {
+const { C, E, ME, borisStep, gyroSense, drifts, norm } = __m_physics;
+const { sci, esc } = __m_format;
+const { state, params, notify } = __m_state;
+/* tab-3d.js — the geometry, drawn rather than described.
+ *
+ * B0 along z, k at angle theta in the x-z plane, wave fronts as planes, and a
+ * test particle pushed by the SAME Boris integrator that physics.js exports and
+ * that build project 2 asks you to write. Nothing here is a cartoon of an orbit:
+ * the trail is the integrated trajectory.
+ *
+ * Handedness is the detail this page exists to get right. For B = B z-hat, viewed
+ * looking DOWN from +z, ions turn clockwise and electrons anticlockwise. Every
+ * figure states the viewing direction next to the arrow, because "clockwise" is
+ * meaningless without it.
+ *
+ * Projection is hand-rolled on a canvas — no 3D library, per the page format rules.
+ */
+
+
+const id = "viewer";
+const label = "3D viewer";
+
+const html = `
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">1 · The picture</div>
+    <h2>Field, wave and particle in one frame</h2>
+    <p><b>Drag to rotate.</b> <b>B</b><sub>0</sub> runs along z. <b>k</b> sits at the angle you set on
+    the Assumptions tab. The grey sheets are wave fronts — surfaces of constant phase — and their
+    shading is the density modulation. The particle is pushed by a real Boris integrator, one step per
+    frame, so the trail is an integrated orbit and not a drawing of one.</p>
+  </div>
+  <div class="card pad">
+    <div class="presets" id="v3Species" role="group" aria-label="Species"></div>
+    <canvas id="v3" style="display:block;width:100%;height:auto;touch-action:none;cursor:grab"></canvas>
+    <div class="key" style="margin-top:10px">
+      <span><i class="dot" style="background:var(--ink-3)"></i> B₀ and field lines</span>
+      <span><i class="dot" style="background:var(--both)"></i> k and the wave fronts</span>
+      <span><i class="dot" style="background:var(--live)"></i> δE</span>
+      <span><i class="dot" style="background:var(--warn)"></i> δB</span>
+      <span><i class="dot" id="v3Dot"></i> the particle</span>
+    </div>
+    <div class="ratios" id="v3Read" style="padding-left:0;padding-right:0"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">2 · Take the orbit apart</div>
+    <h2>One trajectory, one piece at a time</h2>
+    <p>Each switch adds a term to the fields the integrator sees. The measured drift is read off the
+    orbit itself; the analytic one comes from the textbook formula. <b>They should agree</b> — and when
+    they do not, the reason is always that an assumption behind the formula has stopped holding.</p>
+  </div>
+  <div class="card pad">
+    <div class="board" id="v3Toggles"></div>
+    <div class="tbl-scroll" style="margin-top:14px"><table class="ro">
+      <thead><tr><th>Drift</th><th>Formula</th><th>Analytic</th><th>Measured from the orbit</th></tr></thead>
+      <tbody id="v3Drifts"></tbody>
+    </table></div>
+    <p style="margin-top:12px;font-size:13.4px;color:var(--ink-2)" id="v3DriftSay"></p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">3 · Schematic</div>
+    <h2>The same configuration, flat and labelled</h2>
+    <p>The whiteboard version: no perspective, every direction named, and a caption written from the
+    current settings. This is the figure to copy into notes or a talk.</p>
+  </div>
+  <div class="card pad">
+    <div class="presets">
+      <button class="chip" type="button" id="v3Quiz" aria-pressed="false">quiz me — hide the labels</button>
+      <button class="chip" type="button" id="v3Reveal" hidden>reveal</button>
+      <button class="chip" type="button" id="v3Export" aria-pressed="false">show SVG source</button>
+    </div>
+    <div id="v3QuizAsk" hidden style="margin:12px 0;font-size:13.8px;color:var(--ink-2)"></div>
+    <div id="v3Schem"></div>
+    <div id="v3Cap" style="margin-top:10px;font-size:13.4px;color:var(--ink-2)"></div>
+    <div id="v3Src" hidden style="margin-top:14px">
+      <p style="font-size:13px;color:var(--ink-3);margin-bottom:6px">
+        Select and copy. Downloads are not available inside an artifact, so the source is shown instead.</p>
+      <pre class="mono" id="v3SrcBox" style="max-height:300px;overflow:auto;background:var(--surface-2);
+        padding:12px;border-radius:8px;font-size:11.5px;line-height:1.5;white-space:pre-wrap;word-break:break-all"></pre>
+      <button class="chip" type="button" id="v3Copy" style="margin-top:8px">copy to clipboard</button>
+      <span id="v3CopyMsg" class="mono" style="font-size:12px;color:var(--live);margin-left:8px"></span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">4 · What this viewer cannot show</div>
+    <h2>Test particles, and nothing else</h2>
+  </div>
+  <div class="card pad limit">
+    <p>The particle here does not affect the fields. That is the <b>test-particle</b> approximation, and
+    it is what lets one orbit be integrated in isolation — but it removes everything collective:</p>
+    <ul style="margin:10px 0 0;padding-left:20px;font-size:13.6px;color:var(--ink-2)">
+      <li><b>Landau damping</b> needs the particles to drain the wave. Here the wave amplitude is
+      whatever you set, forever.</li>
+      <li><b>Instabilities</b> need the orbit to feed back into the field. A test particle cannot grow
+      a wave.</li>
+      <li><b>Bernstein waves</b> need a distribution of gyroradii. There is one particle.</li>
+    </ul>
+    <p style="margin-top:12px">What it <i>can</i> show honestly is single-particle motion: gyration and its
+    sense, the drifts, and whether your integrator conserves what it claims to. That last one is the
+    point of build project 2 — and the reason the Boris scheme here is the real thing rather than an
+    animation.</p>
+  </div>
+</section>
+`;
+
+const $ = (id) => document.getElementById(id);
+
+/* ---------- view + scene state (local; none of it is physics) ---------- */
+let yaw = -0.6, pitch = 0.35, dragging = false, lastX = 0, lastY = 0;
+let raf = null, tick = 0;
+let species = "ion";
+let quiz = false, revealed = false, showSrc = false;
+const on = { gyration: true, exb: false, gradB: false, curvature: false, polarization: false };
+
+/* Orbit state, in normalised units: the viewer works in gyro-radii and gyro-periods
+ * so the picture is the same shape for any real plasma. The readout converts back. */
+let orbit = null;
+
+const TOGGLES = [
+  { k: "gyration", label: "Gyration", hint: "the bare orbit",
+    exp: "v × B and nothing else. The circle whose sense is the whole point of this page." },
+  { k: "exb", label: "E × B drift", hint: "same for both species",
+    exp: "A uniform E across B. Both species drift the same way at E/B, so this drift carries NO current." },
+  { k: "gradB", label: "grad-B drift", hint: "charge-dependent",
+    exp: "B gets stronger along x, so the gyroradius is smaller on one side of the orbit than the other. Ions and electrons go opposite ways, so this one carries current." },
+  { k: "curvature", label: "Curvature drift", hint: "needs bent field lines",
+    exp: "Field lines curve, so a particle running along one feels a centrifugal push. Uses a circular vacuum field, where grad-B is present too — they always come together." },
+  { k: "polarization", label: "Polarization drift", hint: "only while E changes",
+    exp: "E swings in time. The drift is along dE/dt, proportional to mass, so ions dominate it — which is why it carries the shear Alfvén wave." },
+];
+
+/* ---------- the field the integrator actually sees ---------- */
+function fieldAt(p, t) {
+  // Normalised: B0 = 1 along z, gyrofrequency 1 for the ion.
+  let B = [0, 0, 1];
+  let Ef = [0, 0, 0];
+  if (on.curvature) {
+    // Circular vacuum field about the y axis: B = B0 (R0/rho) phi-hat, rho = sqrt(x^2+z^2).
+    // The textbook case, and the only honest way to show curvature: grad-B comes
+    // with it, because a curved vacuum field must also weaken outward.
+    const R0 = 6;
+    const rho = Math.hypot(p[0], p[2]) || 1e-9;
+    const mag = R0 / rho;
+    B = [(-p[2] / rho) * mag, 0, (p[0] / rho) * mag];
+  } else if (on.gradB) {
+    // B_z growing along x. div B = 0 since it does not vary along z.
+    B = [0, 0, 1 + 0.06 * p[0]];
+  }
+  if (on.exb) Ef[0] += 0.05;
+  if (on.polarization) Ef[0] += 0.05 * Math.sin(0.06 * t);
+  return { B, E: Ef };
+}
+
+function resetOrbit() {
+  const sgn = species === "ion" ? +1 : -1;
+  orbit = {
+    x: on.curvature ? [6, 0, 0] : [0, 0, 0],
+    v: on.curvature ? [0, 0.25, 0.6] : [1, 0, 0.25],
+    qm: sgn,                       // normalised q/m; sign is what sets the handedness
+    trail: [],
+    t: 0,
+    start: null,
+  };
+  orbit.start = orbit.x.slice();
+}
+
+/* ---------- projection ---------- */
+function project(p, W, H, scale) {
+  const cy = Math.cos(yaw), sy = Math.sin(yaw);
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const x1 = p[0] * cy + p[2] * sy;
+  const z1 = -p[0] * sy + p[2] * cy;
+  const y2 = p[1] * cp - z1 * sp;
+  const z2 = p[1] * sp + z1 * cp;
+  const d = 26;
+  const f = d / (d + z2);
+  return [W / 2 + x1 * scale * f, H / 2 - y2 * scale * f, z2];
+}
+
+function draw() {
+  const cv = $("v3");
+  if (!cv) return;
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  const W = cv.clientWidth || 600;
+  const H = Math.round(Math.min(460, Math.max(300, W * 0.62)));
+  if (cv.width !== W * dpr || cv.height !== H * dpr) {
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.height = H + "px";
+  }
+  const g = cv.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, W, H);
+
+  const css = getComputedStyle(document.body);
+  const col = (n) => css.getPropertyValue(n).trim() || "#888";
+  const scale = Math.min(W, H) / 16;
+  const P = (p) => project(p, W, H, scale);
+
+  const line = (a, b, c, w = 1, dash = null) => {
+    const A = P(a), B = P(b);
+    g.save(); g.strokeStyle = c; g.lineWidth = w;
+    if (dash) g.setLineDash(dash);
+    g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(B[0], B[1]); g.stroke(); g.restore();
+  };
+  const arrow = (a, b, c, w, label) => {
+    line(a, b, c, w);
+    const A = P(a), B = P(b);
+    const ang = Math.atan2(B[1] - A[1], B[0] - A[0]);
+    g.save(); g.fillStyle = c; g.beginPath();
+    g.moveTo(B[0], B[1]);
+    g.lineTo(B[0] - 9 * Math.cos(ang - 0.38), B[1] - 9 * Math.sin(ang - 0.38));
+    g.lineTo(B[0] - 9 * Math.cos(ang + 0.38), B[1] - 9 * Math.sin(ang + 0.38));
+    g.closePath(); g.fill();
+    if (label && !quiz) {
+      g.font = "600 12px 'IBM Plex Mono', monospace";
+      g.fillText(label, B[0] + 6, B[1] - 4);
+    }
+    g.restore();
+  };
+
+  const inkSoft = col("--line");
+  const ink3 = col("--ink-3");
+
+  // field lines along z (or circles, when the field is curved)
+  if (on.curvature) {
+    g.save(); g.strokeStyle = ink3; g.globalAlpha = 0.5; g.lineWidth = 1;
+    for (const R of [4, 6, 8]) {
+      g.beginPath();
+      for (let i = 0; i <= 72; i++) {
+        const a = (i / 72) * Math.PI * 2;
+        const p = P([R * Math.cos(a), 0, R * Math.sin(a)]);
+        i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]);
+      }
+      g.stroke();
+    }
+    g.restore();
+  } else {
+    for (const [dx, dy] of [[-3, -3], [-3, 3], [3, -3], [3, 3], [0, 0]]) {
+      line([dx, dy, -7], [dx, dy, 7], inkSoft, 1, [3, 4]);
+    }
+  }
+
+  // wave fronts: planes perpendicular to k, shaded by the density modulation
+  const thDeg = { par: 0, obl: 45, perp: 90 }[state.wave.theta] ?? 45;
+  const th = (thDeg * Math.PI) / 180;
+  const k = [Math.sin(th), 0, Math.cos(th)];
+  const perp1 = [0, 1, 0];
+  const perp2 = [Math.cos(th), 0, -Math.sin(th)];
+  g.save();
+  for (let m = -2; m <= 2; m++) {
+    const phase = m * 1.8 + tick * 0.04;
+    const shade = 0.5 + 0.5 * Math.cos(phase);
+    g.globalAlpha = 0.09 + 0.16 * shade;
+    g.strokeStyle = col("--both");
+    g.lineWidth = 1.2;
+    const o = [k[0] * m * 2.6, 0, k[2] * m * 2.6];
+    g.beginPath();
+    for (let i = 0; i <= 4; i++) {
+      const u = -4 + (i * 8) / 4;
+      const a = P([o[0] + perp1[0] * u - perp2[0] * 4, o[1] + perp1[1] * u, o[2] + perp1[2] * u - perp2[2] * 4]);
+      const b = P([o[0] + perp1[0] * u + perp2[0] * 4, o[1] + perp1[1] * u, o[2] + perp1[2] * u + perp2[2] * 4]);
+      g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]);
+    }
+    g.stroke();
+  }
+  g.restore();
+
+  // B0, k, and the oscillating dE / dB
+  arrow([0, 0, 0], [0, 0, 6.4], ink3, 2.2, "B₀");
+  arrow([0, 0, 0], [k[0] * 5.2, 0, k[2] * 5.2], col("--both"), 2.2, "k");
+
+  const osc = Math.sin(tick * 0.06);
+  const es = state.assume.pert === "es";
+  // Electrostatic: dE is ALONG k. Electromagnetic: dE is perpendicular to k, and
+  // dB perpendicular to both. Drawing them any other way would be a lie about the
+  // very thing the Assumptions tab is switching.
+  const dE = es
+    ? [k[0] * 2.6 * osc, 0, k[2] * 2.6 * osc]
+    : [perp1[0] * 2.6 * osc, perp1[1] * 2.6 * osc, perp1[2] * 2.6 * osc];
+  arrow([0, 0, 0], dE, col("--live"), 2, "δE");
+  if (!es) {
+    const dB = [perp2[0] * 2.2 * osc, 0, perp2[2] * 2.2 * osc];
+    arrow([0, 0, 0], dB, col("--warn"), 2, "δB");
+  }
+
+  // the particle: one Boris step per frame, with a trail
+  if (!orbit) resetOrbit();
+  const dt = 0.12;
+  for (let i = 0; i < 3; i++) {
+    const f = fieldAt(orbit.x, orbit.t);
+    const next = borisStep(orbit.x, orbit.v, f.E, f.B, orbit.qm, dt);
+    orbit.x = next.x; orbit.v = next.v; orbit.t += dt;
+    orbit.trail.push(orbit.x.slice());
+    if (orbit.trail.length > 1400) orbit.trail.shift();
+  }
+  const pc = species === "ion" ? col("--ion") : col("--elec");
+  g.save();
+  g.strokeStyle = pc; g.lineWidth = 1.5; g.globalAlpha = 0.85;
+  g.beginPath();
+  orbit.trail.forEach((p, i) => { const q = P(p); i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); });
+  g.stroke();
+  g.restore();
+  const hp = P(orbit.x);
+  g.fillStyle = pc;
+  g.beginPath(); g.arc(hp[0], hp[1], 4.5, 0, 7); g.fill();
+
+  // the handedness caption — never draw the sense without the viewing direction
+  if (!quiz) {
+    const gs = gyroSense(species === "ion" ? +1 : -1);
+    g.fillStyle = pc;
+    g.font = "600 12px 'IBM Plex Mono', monospace";
+    g.fillText(`${species}: ${gs.sense} seen looking down from +z  (${gs.handed})`, 12, H - 12);
+  }
+}
+
+function loop() {
+  tick++;
+  draw();
+  raf = requestAnimationFrame(loop);
+}
+
+function start() { if (!raf) loop(); }
+function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+/* ---------- the flat schematic, and its SVG source ---------- */
+function schematicSVG(forExport = false) {
+  const s = params();
+  const thDeg = { par: 0, obl: 45, perp: 90 }[state.wave.theta] ?? 45;
+  const th = (thDeg * Math.PI) / 180;
+  const gs = gyroSense(species === "ion" ? +1 : -1);
+  const cx = 300, cy = 150, R = 52;
+  const L = (t) => (quiz && !revealed ? "" : t);
+
+  // Looking down the +z axis: B is out of the page. Gyration sense is drawn as an
+  // arc with an arrowhead, and the viewing direction is stated beside it.
+  const sweep = gs.sign > 0 ? 1 : 0;
+  const a0 = -0.6, a1 = a0 + gs.sign * 2.2;
+  const p0 = [cx + R * Math.cos(a0), cy + R * Math.sin(a0)];
+  const p1 = [cx + R * Math.cos(a1), cy + R * Math.sin(a1)];
+  const colP = species === "ion" ? "#b45518" : "#1f6fbf";
+
+  const kx = Math.sin(th), ky = -Math.cos(th);
+  // Two jobs, two shapes. On the page the SVG must scale down to a phone card, so
+  // it gets viewBox + max-width and NO width/height — a hard width="600" in a 320px
+  // card scrolls the whole page sideways. The exported copy keeps width/height so
+  // the SVG you paste somewhere else has an intrinsic size.
+  const sizing = forExport
+    ? ' width="600" height="300"'
+    : ' style="max-width:100%;height:auto;display:block"';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300"${sizing}
+     font-family="IBM Plex Sans, sans-serif">
+  <rect width="600" height="300" fill="none"/>
+  <!-- B out of the page -->
+  <circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="#77839a" stroke-width="2"/>
+  <circle cx="${cx}" cy="${cy}" r="2.6" fill="#77839a"/>
+  <text x="${cx + 15}" y="${cy + 4}" font-size="13" fill="#77839a">${L("B₀ out of the page (+z)")}</text>
+  <!-- gyro-orbit -->
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${colP}" stroke-width="2" stroke-dasharray="4 3"/>
+  <path d="M${p0[0].toFixed(1)} ${p0[1].toFixed(1)} A${R} ${R} 0 1 ${sweep} ${p1[0].toFixed(1)} ${p1[1].toFixed(1)}"
+        fill="none" stroke="${colP}" stroke-width="3" marker-end="url(#ah)"/>
+  <circle cx="${p1[0].toFixed(1)}" cy="${p1[1].toFixed(1)}" r="5" fill="${colP}"/>
+  <text x="${cx - R}" y="${cy + R + 26}" font-size="13" fill="${colP}">${L(`${species} · ${gs.sense} · ${gs.handed}`)}</text>
+  <text x="${cx - R}" y="${cy + R + 44}" font-size="11.5" fill="#77839a">${L("viewed looking DOWN from +z")}</text>
+  <!-- k and wave fronts -->
+  <g stroke="#6a45bd" stroke-width="1.4" opacity="0.5">
+    ${[-2, -1, 0, 1, 2].map((m) => {
+      const ox = 470 + kx * m * 26, oy = 150 + ky * m * 26;
+      const px = -ky * 46, py = kx * 46;
+      return `<line x1="${(ox - px).toFixed(1)}" y1="${(oy - py).toFixed(1)}" x2="${(ox + px).toFixed(1)}" y2="${(oy + py).toFixed(1)}"/>`;
+    }).join("\n    ")}
+  </g>
+  <line x1="470" y1="150" x2="${(470 + kx * 60).toFixed(1)}" y2="${(150 + ky * 60).toFixed(1)}"
+        stroke="#6a45bd" stroke-width="2.5" marker-end="url(#ahk)"/>
+  <text x="${(470 + kx * 60 + 8).toFixed(1)}" y="${(150 + ky * 60).toFixed(1)}" font-size="13" fill="#6a45bd">${L(`k at θ = ${thDeg}°`)}</text>
+  <text x="418" y="256" font-size="11.5" fill="#77839a">${L("wave fronts: surfaces of constant phase")}</text>
+  <!-- axes -->
+  <g stroke="#a3adbe" stroke-width="1.2">
+    <line x1="60" y1="240" x2="128" y2="240"/><line x1="60" y1="240" x2="60" y2="172"/>
+  </g>
+  <text x="132" y="244" font-size="12" fill="#a3adbe">x</text>
+  <text x="54" y="166" font-size="12" fill="#a3adbe">y</text>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="${colP}"/></marker>
+    <marker id="ahk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6a45bd"/></marker>
+  </defs>
+</svg>`;
+}
+
+function caption() {
+  const s = params();
+  const thDeg = { par: 0, obl: 45, perp: 90 }[state.wave.theta] ?? 45;
+  const gs = gyroSense(species === "ion" ? +1 : -1);
+  const rho = species === "ion" ? s.rho_i : s.rho_e;
+  const Om = species === "ion" ? s.Oi : s.Oe;
+  return `A ${species} gyrates <b>${gs.sense}</b> about <b>B</b><sub>0</sub> = ${sci(s.B * 1e9)} nT
+    (pointing out of the page, +z), viewed looking down from +z — it is ${gs.handed}. Its gyroradius is
+    ${sci(rho)} m and it completes one orbit in ${sci((2 * Math.PI) / Om)} s. A wave travels at
+    θ = ${thDeg}° to the field with ω = ${sci(state.wave.omega)} rad/s, so
+    ω/Ω = ${sci(state.wave.omega / Om)}${state.wave.omega / Om > 0.3 && state.wave.omega / Om < 3
+      ? " — close enough to resonance that the wave and the orbit stay in step."
+      : state.wave.omega / Om < 0.3
+        ? " — slow compared with the gyration, so the particle stays magnetized."
+        : " — fast compared with the gyration, so the field barely acts."}`;
+}
+
+/* ---------- drift table ---------- */
+function driftRows() {
+  const s = params();
+  const q = species === "ion" ? E * s.Z : -E;
+  const m = species === "ion" ? s.mi : ME;
+  const B = [0, 0, s.B];
+  const Efield = [1e-3, 0, 0];
+  const vperp = species === "ion" ? s.vti : s.vte;
+  const vpar = vperp;
+  const gradB = [s.B / 1e6, 0, 0];
+  const kappa = [1 / 1e6, 0, 0];
+  const dEdt = [1e-3 * 0.06, 0, 0];
+
+  const mag = (v) => norm(v);
+  const rows = [
+    { k: "exb", n: "E × B", f: "E×B / B²", v: mag(drifts.exb(Efield, B)),
+      note: "identical for both species — carries no current" },
+    { k: "gradB", n: "grad-B", f: "(m v⊥²/2qB)(B×∇B)/B²", v: mag(drifts.gradB(vperp, m, q, B, gradB)),
+      note: "opposite for ions and electrons — this is the ring current" },
+    { k: "curvature", n: "curvature", f: "(m v∥²/qB)(B×κ)/B", v: mag(drifts.curvature(vpar, m, q, B, kappa)),
+      note: "always arrives with grad-B in a vacuum field" },
+    { k: "polarization", n: "polarization", f: "(m/qB²) dE⊥/dt", v: mag(drifts.polarization(dEdt, m, q, B)),
+      note: "∝ mass, so ions dominate — it carries the shear Alfvén wave" },
+  ];
+  return rows;
+}
+
+/** Guiding-centre velocity measured from the integrated orbit, in normalised units. */
+function measuredDrift() {
+  if (!orbit || orbit.trail.length < 200) return null;
+  const n = orbit.trail.length;
+  const a = orbit.trail[n - 200], b = orbit.trail[n - 1];
+  const steps = 199;   // the trail is appended once per sub-step, each of length dt
+  const d = [(b[0] - a[0]) / (steps * 0.12), (b[1] - a[1]) / (steps * 0.12), (b[2] - a[2]) / (steps * 0.12)];
+  return d;
+}
+
+/* ---------- wiring ---------- */
+function init() {
+  const cv = $("v3");
+  cv.addEventListener("pointerdown", (e) => {
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+    cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing";
+  });
+  cv.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    yaw += (e.clientX - lastX) * 0.01;
+    pitch = Math.max(-1.3, Math.min(1.3, pitch + (e.clientY - lastY) * 0.01));
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  const end = (e) => { dragging = false; cv.style.cursor = "grab"; };
+  cv.addEventListener("pointerup", end);
+  cv.addEventListener("pointercancel", end);
+
+  $("v3Species").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    species = b.dataset.sp;
+    resetOrbit();
+    notify("v3");
+  });
+  $("v3Toggles").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-t]");
+    if (!b) return;
+    const k = b.dataset.t;
+    on[k] = !on[k];
+    // curvature and grad-B use different field models; do not pretend to stack them
+    if (k === "curvature" && on.curvature) on.gradB = false;
+    if (k === "gradB" && on.gradB) on.curvature = false;
+    resetOrbit();
+    notify("v3");
+  });
+  $("v3Quiz").addEventListener("click", () => {
+    quiz = !quiz; revealed = false;
+    notify("v3");
+  });
+  $("v3Reveal").addEventListener("click", () => { revealed = true; notify("v3"); });
+  $("v3Export").addEventListener("click", () => { showSrc = !showSrc; notify("v3"); });
+  $("v3Copy").addEventListener("click", async () => {
+    const box = $("v3SrcBox");
+    try {
+      await navigator.clipboard.writeText(box.textContent);
+      $("v3CopyMsg").textContent = "copied";
+    } catch {
+      // Clipboard access can be refused; selecting the text is the fallback.
+      const r = document.createRange();
+      r.selectNodeContents(box);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      $("v3CopyMsg").textContent = "selected — press ⌘C";
+    }
+    setTimeout(() => { $("v3CopyMsg").textContent = ""; }, 2500);
+  });
+
+  resetOrbit();
+}
+
+function render() {
+  const s = params();
+
+  $("v3Species").innerHTML = ["ion", "electron"].map((x) =>
+    `<button class="chip" type="button" data-sp="${x}" aria-pressed="${x === species}">${x}</button>`).join("");
+  const dot = $("v3Dot");
+  if (dot) dot.style.background = species === "ion" ? "var(--ion)" : "var(--elec)";
+
+  $("v3Toggles").innerHTML = TOGGLES.map((t) => `
+    <div class="ctl">
+      <div class="hd"><b>${t.label}</b><span>${t.hint}</span></div>
+      <div class="seg"><button type="button" data-t="${t.k}" aria-pressed="${on[t.k]}">${on[t.k] ? "on" : "off"}</button></div>
+      <div class="exp">${t.exp}</div>
+    </div>`).join("");
+
+  const md = measuredDrift();
+  $("v3Drifts").innerHTML = driftRows().map((r) => {
+    const live = on[r.k];
+    const meas = live && md ? sci(Math.hypot(md[0], md[1])) + " (normalised)" : "—";
+    return `<tr${live ? "" : ' style="opacity:.5"'}>
+      <td class="s">${r.n}</td><td class="c mono" style="font-size:12px">${esc(r.f)}</td>
+      <td class="v">${sci(r.v)} m/s</td><td class="v">${meas}</td></tr>`;
+  }).join("");
+
+  $("v3DriftSay").innerHTML = on.curvature
+    ? `The curved-field model is a circular vacuum field, where <b>grad-B and curvature always appear
+       together</b> — a vacuum field that bends must also weaken outward. That is why they are usually
+       quoted as one combined drift, and why the toggle switches the field model rather than adding a term.`
+    : on.gradB
+    ? `B grows along x, so the gyroradius is smaller on one side of the orbit than the other and the
+       circle fails to close. Switch species and watch the drift reverse: <b>that reversal is what makes
+       it a current</b>.`
+    : on.exb
+    ? `Switch species. The drift does <b>not</b> reverse — E×B is mass- and charge-independent, which is
+       exactly why it carries no current and why it is the one drift MHD keeps.`
+    : `Nothing but v × B. The orbit closes; the guiding centre does not move. Every drift below is a way
+       of breaking that closure.`;
+
+  /* schematic, quiz, export */
+  $("v3Schem").innerHTML = schematicSVG(false);
+  $("v3Cap").innerHTML = quiz && !revealed ? "" : caption();
+  $("v3Quiz").setAttribute("aria-pressed", String(quiz));
+  $("v3Reveal").hidden = !quiz || revealed;
+  $("v3QuizAsk").hidden = !quiz;
+  if (quiz) {
+    $("v3QuizAsk").innerHTML = revealed
+      ? `<b>Answers are shown.</b> The sense of gyration is the one worth checking twice: it follows from
+         <b>F</b> = q<b>v</b>×<b>B</b> and reverses with the sign of the charge, not with the direction of <b>B</b>.`
+      : `<b>Name these, then reveal.</b> (1) Which way does <b>B</b><sub>0</sub> point, and how can you tell?
+         (2) Which way does this ${species} gyrate, viewed from +z? (3) What angle is <b>k</b> at, and what
+         are the faint parallel lines? (4) If you swapped the species, what changes — and what does not?`;
+  }
+  $("v3Export").setAttribute("aria-pressed", String(showSrc));
+  $("v3Src").hidden = !showSrc;
+  if (showSrc) $("v3SrcBox").textContent = schematicSVG(true);
+
+  $("v3Read").innerHTML = [
+    { c: "", h: "θ", v: ({ par: "0°", obl: "45°", perp: "90°" })[state.wave.theta] ?? "45°" },
+    { c: "", h: "perturbation", v: state.assume.pert === "es" ? "electrostatic · δE ∥ k" : "electromagnetic · δE ⊥ k" },
+    { c: species === "ion" ? "i" : "e", h: "ρ", v: sci(species === "ion" ? s.rho_i : s.rho_e) + " m" },
+    { c: species === "ion" ? "i" : "e", h: "Ω", v: sci(species === "ion" ? s.Oi : s.Oe) + " rad/s" },
+    { c: "", h: "ω/Ω", v: sci(state.wave.omega / (species === "ion" ? s.Oi : s.Oe)) },
+  ].map((r) => `<span class="rchip ${r.c}">${r.h} <b>${r.v}</b></span>`).join("");
+
+  start();
+}
+
+/** Called by the shell when this tab is hidden, so the animation stops costing anything. */
+function hide() { stop(); }
+
+return { hide, html, id, init, label, render };
+})();
+
+/* ---- tab-units.js ---- */
+const __m_tab_units = (() => {
+const { CONVENTIONS, C } = __m_physics;
+const { sci, fmtLen, fmtFreq, fmtSpd, esc } = __m_format;
+const { state, params, setPlasma, notify } = __m_state;
+/* tab-units.js — what a normalization means, and why that one was chosen.
+ *
+ * The converter is two-way on purpose. Reading a paper you go normalized ->
+ * physical ("they quote kλ_D = 0.5; how big is that?"). Setting up a run you go
+ * the other way. Both directions are the same identity, and seeing it stay true
+ * while you drag a slider is the point.
+ */
+
+
+const id = "units";
+const label = "Units";
+
+const html = `
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">1 · Pick a convention</div>
+    <h2>Every code quotes its numbers in its own units</h2>
+    <p>Each convention picks a length and a frequency whose product is its speed unit.
+    That consistency is why the three belong together — and it is also a diagnostic:
+    <b>the normalization tells you which scale the authors think is essential</b>, and
+    often which code they ran.</p>
+  </div>
+  <div class="card pad">
+    <div class="presets" id="convPick" role="group" aria-label="Normalization conventions"></div>
+    <div class="tbl-scroll"><table class="ro">
+      <thead><tr><th>Unit</th><th>Definition</th><th>Value in this plasma</th></tr></thead>
+      <tbody id="unitTable"></tbody>
+    </table></div>
+    <div id="convWhy" style="margin-top:14px;font-size:14px;color:var(--ink-2)"></div>
+    <div id="convCheck" class="mono" style="margin-top:10px;font-size:12.8px"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">2 · The converter</div>
+    <h2>Both directions, because you need both</h2>
+    <p>Type in either box. The other follows.</p>
+  </div>
+  <div class="card pad">
+    <div class="sliders">
+      <div class="sl">
+        <label for="kNorm"><span class="nm">k × <span id="kUnitName"></span></span>
+          <span class="vl mono" id="kNormEcho"></span></label>
+        <input type="range" id="kNorm" min="-3" max="2" step="0.01">
+        <div class="sub">The dimensionless wavenumber, as a paper would quote it.</div>
+      </div>
+      <div class="sl">
+        <label for="lamPhys"><span class="nm">wavelength λ = 2π/k</span>
+          <span class="vl mono" id="lamEcho"></span></label>
+        <input type="range" id="lamPhys" min="-6" max="10" step="0.01">
+        <div class="sub">The same wave, in metres.</div>
+      </div>
+    </div>
+    <div class="tbl-scroll" style="margin-top:14px"><table class="ro">
+      <thead><tr><th>Quantity</th><th>Value</th><th>Meaning</th></tr></thead>
+      <tbody id="convOut"></tbody>
+    </table></div>
+    <div id="kWhere" style="margin-top:14px;font-size:13.6px;color:var(--ink-2)"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">3 · Reading someone else's units</div>
+    <h2>What a quoted normalization is telling you</h2>
+  </div>
+  <div class="card pad">
+    <div id="diagnose" class="ord"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">4 · The mass ratio</div>
+    <h2>What a reduced-mass-ratio run does to every scale</h2>
+    <p>PIC runs often use m<sub>i</sub>/m<sub>e</sub> = 100 or 25 instead of 1836, because the real
+    ratio makes the electron scales unaffordably small. Every electron–ion separation shrinks by
+    &radic;(m<sub>i</sub>/m<sub>e</sub>). <b>Change it here and watch the ladders on the Scales tab
+    close up.</b> This is question Q4 of your main goal in miniature: a heating number from a
+    reduced-ratio run needs care before it is applied to a real plasma.</p>
+  </div>
+  <div class="card pad">
+    <div class="presets" id="mrPick" role="group" aria-label="Mass ratio"></div>
+    <div class="tbl-scroll"><table class="ro">
+      <thead><tr><th>Separation</th><th>Real ratio</th><th>Now</th><th>Shrunk by</th></tr></thead>
+      <tbody id="mrTable"></tbody>
+    </table></div>
+    <div id="mrSay" style="margin-top:14px;font-size:13.8px;color:var(--ink-2)"></div>
+  </div>
+</section>
+`;
+
+const $ = (id) => document.getElementById(id);
+
+/** Which convention is showing. Local to this tab — it changes no physics. */
+let conv = "espic";
+/** The converter is driven from the normalized side; the physical box writes back to it. */
+let kNormValue = 0.5;
+
+const MASS_RATIOS = [
+  { v: null, label: "1836 · real protons" },
+  { v: 100, label: "100 · a common PIC choice" },
+  { v: 25, label: "25 · cheap and visibly wrong" },
+];
+
+const current = () => CONVENTIONS.find((c) => c.id === conv) || CONVENTIONS[2];
+
+/** Name the two named scales a length falls between — more useful than the bare number. */
+function placeLength(x, s) {
+  const marks = [
+    ["λ_D", s.lD], ["ρ_e", s.rho_e], ["d_e", s.de], ["ρ_i", s.rho_i], ["d_i", s.di], ["L", s.L],
+  ].sort((a, b) => a[1] - b[1]);
+  if (x < marks[0][1]) return `below every named scale — smaller than ${marks[0][0]}`;
+  if (x > marks[marks.length - 1][1]) return `above every named scale — larger than ${marks[marks.length - 1][0]}`;
+  for (let i = 0; i < marks.length - 1; i++) {
+    if (x >= marks[i][1] && x <= marks[i + 1][1]) {
+      return `between <b>${marks[i][0]}</b> and <b>${marks[i + 1][0]}</b>`;
+    }
+  }
+  return "";
+}
+
+function init() {
+  $("convPick").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    conv = b.dataset.conv;
+    notify("units");
+  });
+  $("mrPick").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    const v = b.dataset.mr === "null" ? null : +b.dataset.mr;
+    setPlasma({ massRatio: v });
+  });
+  $("kNorm").addEventListener("input", () => {
+    kNormValue = Math.pow(10, +$("kNorm").value);
+    notify("units");
+  });
+  $("lamPhys").addEventListener("input", () => {
+    const lam = Math.pow(10, +$("lamPhys").value);
+    const s = params();
+    kNormValue = ((2 * Math.PI) / lam) * current().len(s);
+    notify("units");
+  });
+}
+
+function render() {
+  const s = params();
+  const c = current();
+
+  $("convPick").innerHTML = CONVENTIONS.map((x) =>
+    `<button class="chip" type="button" data-conv="${x.id}" aria-pressed="${x.id === conv}">${x.name}</button>`).join("");
+
+  const T = [
+    ["time", c.timeLabel, fmtFreq(1 / c.time(s)).replace("rad/s", "rad/s ⁻¹ →") + ` — the unit is ${sci(c.time(s))} s`],
+    ["length", c.lenLabel, fmtLen(c.len(s))],
+    ["speed", c.speedLabel, fmtSpd(c.speed(s), C)],
+  ];
+  $("unitTable").innerHTML = T.map((r) =>
+    `<tr><td class="s">${r[0]}</td><td class="v">${esc(r[1])}</td><td>${r[2]}</td></tr>`).join("");
+
+  $("convWhy").innerHTML = `<b>Why this one.</b> ${c.why}`;
+
+  const { got, want } = c.identity(s);
+  const err = Math.abs(got - want) / Math.abs(want);
+  $("convCheck").innerHTML =
+    `check: ${esc(c.checkLabel)} → ${sci(got)} vs ${sci(want)} ` +
+    `<span style="color:var(--live)">(agrees to ${err === 0 ? "machine precision" : err.toExponential(1)})</span>` +
+    (c.anisotropic
+      ? `<div style="margin-top:6px;color:var(--warn)">This convention has <b>two</b> length units —
+         ρ_i across <b>B</b>, L along it — so length ÷ time does not collapse to one speed the way
+         the others do. That anisotropy <i>is</i> the gyrokinetic ordering, not an inconsistency.</div>`
+      : "");
+
+  /* ---- converter ---- */
+  const Lu = c.len(s);
+  const k = kNormValue / Lu;
+  const lam = (2 * Math.PI) / k;
+  $("kNorm").value = Math.log10(kNormValue);
+  $("lamPhys").value = Math.log10(lam);
+  $("kUnitName").textContent = c.lenLabel.split(" ")[0];
+  $("kNormEcho").textContent = sci(kNormValue);
+  $("lamEcho").textContent = fmtLen(lam);
+
+  const rows = [
+    ["k × " + c.lenLabel.split(" ")[0], sci(kNormValue), "what a paper quotes"],
+    ["k", sci(k) + " m⁻¹", "the physical wavenumber"],
+    ["λ = 2π/k", fmtLen(lam), "one wavelength"],
+    ["λ / λ_D", sci(lam / s.lD), "cells an explicit PIC code needs across one wavelength"],
+    ["λ / d_i", sci(lam / s.di), "below 1 and ions have stopped following the field"],
+    ["ω if this were a Langmuir wave", fmtFreq(Math.sqrt(s.wpe * s.wpe + 3 * k * k * s.vte * s.vte)),
+     "Bohm–Gross: ω² = ω_pe² + 3k²v_te²"],
+  ];
+  $("convOut").innerHTML = rows.map((r) =>
+    `<tr><td class="s">${esc(r[0])}</td><td class="v">${r[1]}</td><td>${r[2]}</td></tr>`).join("");
+
+  const kld = k * s.lD;
+  $("kWhere").innerHTML =
+    `This wavelength sits ${placeLength(lam, s)} on the length ladder. ` +
+    (kld > 0.3
+      ? `At kλ_D = ${sci(kld)} a Langmuir wave is <b>strongly Landau damped</b> — above about 0.3 the
+         wave's phase speed has dropped into the bulk of the electron distribution, so there are
+         plenty of electrons to surf it. This is the physical reason kλ_D is the parameter to quote,
+         not just a convenient grid unit.`
+      : `At kλ_D = ${sci(kld)} a Langmuir wave is <b>only weakly damped</b>: its phase speed is far out
+         in the tail, where almost no electrons travel. Damping switches on near kλ_D ≈ 0.3.`);
+
+  /* ---- reading someone else's units ---- */
+  const tMHD = s.L / s.vA;
+  const diag = [
+    { rel: "quoted per ω_pi⁻¹", num: sci(1 / s.wpi) + " s",
+      say: `Your question, answered directly. At MHD scale that is an absurdly short time —
+        ${sci(tMHD * s.wpi)}× shorter than the MHD time L/v_A = ${sci(tMHD)} s. So a paper
+        normalizing to ω_pi is telling you it works at <b>ion-kinetic scale</b>, or that it is a PIC
+        run with a reduced mass ratio. Either way, ask which.` },
+    { rel: "quoted per Ω_i⁻¹", num: sci(1 / s.Oi) + " s",
+      say: `Hybrid or Hall units. The authors consider the ion gyration the essential clock, so the
+        result is about ion-scale physics — reconnection layers, ion cyclotron waves, firehose.` },
+    { rel: "quoted per ω_pe⁻¹", num: sci(1 / s.wpe) + " s",
+      say: `A fully kinetic run. Only a PIC code needs to resolve the electron plasma frequency,
+        so this normalization is nearly a statement of which code was used.` },
+    { rel: "lengths per d_i", num: sci(s.di) + " m",
+      say: `Hybrid units. <b>Check the box size in these units</b>: a run only a few d_i across cannot
+        contain the large-scale driving, whatever its resolution.` },
+    { rel: "lengths per λ_D", num: sci(s.lD) + " m",
+      say: `Explicit electrostatic PIC. The grid must resolve λ_D, so this is the code's own cell
+        size. A box of N λ_D is a box of about N cells.` },
+    { rel: "lengths per ρ_i", num: sci(s.rho_i) + " m",
+      say: `Gyrokinetic. The perpendicular structure is ordered to the gyroradius while the parallel
+        structure stays at system size — so expect k⊥ρ_i ~ 1 and ω ≪ Ω_i.` },
+  ];
+  $("diagnose").innerHTML = diag.map((r) =>
+    `<div class="ord-row"><div class="rel">${r.rel}</div><div class="num">${r.num}</div>
+     <div class="say">${r.say}</div></div>`).join("");
+
+  /* ---- mass ratio ---- */
+  const mr = state.plasma.massRatio;
+  $("mrPick").innerHTML = MASS_RATIOS.map((m) =>
+    `<button class="chip" type="button" data-mr="${m.v === null ? "null" : m.v}"
+             aria-pressed="${String(m.v) === String(mr)}">${m.label}</button>`).join("");
+
+  const realRatio = 1836.15267343;
+  const now = s.massRatioUsed;
+  const shrink = Math.sqrt(realRatio / now);
+  const mrRows = [
+    ["d_i / d_e", sci(Math.sqrt(realRatio)), sci(s.di / s.de), sci(shrink) + "×"],
+    ["ρ_i / ρ_e (equal T)", sci(Math.sqrt(realRatio)), sci((s.rho_i / s.rho_e) * Math.sqrt(s.Te / s.Ti)), sci(shrink) + "×"],
+    ["Ω_e / Ω_i", sci(realRatio), sci(s.Oe / s.Oi), sci(realRatio / now) + "×"],
+    ["ω_pe / ω_pi", sci(Math.sqrt(realRatio)), sci(s.wpe / s.wpi), sci(shrink) + "×"],
+    ["ω_LH / Ω_i", "—", sci(s.wLH / s.Oi), "moves with it"],
+  ];
+  $("mrTable").innerHTML = mrRows.map((r) =>
+    `<tr><td class="s">${esc(r[0])}</td><td class="v">${r[1]}</td><td class="v">${r[2]}</td><td class="v">${r[3]}</td></tr>`).join("");
+
+  $("mrSay").innerHTML = mr == null
+    ? `Using the real proton mass. Switch to 100 or 25 and every electron–ion separation above
+       collapses by the square root of the change — then look at the frequency ladder on the Scales
+       tab and see the gap between Ω_i and Ω_e close.`
+    : `<b>m_i/m_e = ${sci(now)}.</b> Every electron–ion separation is now ${sci(shrink)}× smaller than
+       in a real plasma. That is the point of doing it — the run becomes affordable — but it also means
+       any frequency <i>between</i> the ion and electron scales, ω_LH above all, has moved. A heating
+       fraction measured here is not automatically the heating fraction of a real plasma, and saying
+       why not is a publishable argument.`;
+}
+
+return { html, id, init, label, render };
+})();
+
+/* ---- main.js ---- */
+const __m_main = (() => {
+const { SPECIES, PRESETS, C } = __m_physics;
+const { sci, fmtB, fmtN, fmtT, fmtLen, fmtFreq, esc } = __m_format;
+const { state, params, subscribe, notify, applyPreset, setPlasma, setOmega, selectMode } = __m_state;
+const scales = __m_tab_scales;
+const assumptions = __m_tab_assumptions;
+const cma = __m_tab_cma;
+const viewer = __m_tab_3d;
+const units = __m_tab_units;
+/* main.js — the shell: persistent header, tab switching, and the render loop.
+ *
+ * The header carries the plasma and wave controls on every tab, plus a strip of
+ * the ratios that decide which model you are allowed to use. It collapses at
+ * phone width, where the controls would otherwise push the content off-screen.
+ */
+
+
+
+const TABS = [scales, assumptions, cma, viewer, units];
+
+const $ = (id) => document.getElementById(id);
+
+/** Phone only: are all 15 ratio chips showing, or just the first four? */
+let ratiosOpen = false;
+
+/* ---------- header ---------- */
+const HEADER_HTML = `
+<div class="hdr card" id="hdr" data-open="true">
+  <div class="hdr-bar">
+    <span class="who" id="hdrWho"></span>
+    <button class="hdr-toggle" type="button" id="hdrToggle" aria-expanded="true"
+            aria-controls="hdrBody">hide controls</button>
+  </div>
+  <div class="ratios" id="ratios"></div>
+  <div class="selbar" id="selbar" hidden></div>
+  <div class="hdr-body" id="hdrBody">
+    <div class="eyebrow">1 · Set the plasma</div>
+    <h2 style="font-size:20px;margin:2px 0 6px">Four numbers describe it</h2>
+    <p style="color:var(--ink-2);font-size:14px;margin-bottom:14px">
+      A plasma is set by the magnetic field <b>B</b>, the density <b>n</b>, and the two temperatures
+      <b>T<sub>e</sub></b> and <b>T<sub>i</sub></b>. Everything in every tab is computed from those four.
+      Start from a preset, then push one slider and watch what moves.</p>
+    <div class="presets" id="presets" role="group" aria-label="Preset plasmas"></div>
+    <div class="sliders">
+      <div class="sl">
+        <label for="sB"><span class="nm">B &nbsp;magnetic field</span><span class="vl mono" id="vB"></span></label>
+        <input type="range" id="sB" min="-11" max="-1" step="0.02">
+        <div class="sub">How strong the field is. It sets both cyclotron frequencies.</div>
+      </div>
+      <div class="sl">
+        <label for="sN"><span class="nm">n &nbsp;electron density</span><span class="vl mono" id="vN"></span></label>
+        <input type="range" id="sN" min="2" max="22" step="0.02">
+        <div class="sub">How many particles per cubic metre. It sets both plasma frequencies.</div>
+      </div>
+      <div class="sl">
+        <label for="sTe"><span class="nm">T<sub>e</sub> &nbsp;electron temperature</span><span class="vl mono" id="vTe"></span></label>
+        <input type="range" id="sTe" min="-2" max="7" step="0.02">
+        <div class="sub">How fast electrons move at random. It sets the Debye length.</div>
+      </div>
+      <div class="sl">
+        <label for="sTi"><span class="nm">T<sub>i</sub> &nbsp;ion temperature</span><span class="vl mono" id="vTi"></span></label>
+        <input type="range" id="sTi" min="-2" max="7" step="0.02">
+        <div class="sub">In space plasmas this is often <i>not</i> equal to T<sub>e</sub>.</div>
+      </div>
+      <div class="sl">
+        <label for="sSp"><span class="nm">ion species</span><span class="vl" id="vSp"></span></label>
+        <select id="sSp"></select>
+        <div class="sub">A heavier ion is slower and lazier: every ion scale shifts together.</div>
+      </div>
+      <div class="sl">
+        <label for="sL"><span class="nm">L &nbsp;size of the structure</span><span class="vl mono" id="vL"></span></label>
+        <input type="range" id="sL" min="-4" max="12" step="0.02">
+        <div class="sub">The thing you want to study, or your simulation box. Only used on the length ladder.</div>
+      </div>
+      <div class="sl">
+        <label for="sW"><span class="nm">&omega; &nbsp;wave frequency (the probe)</span><span class="vl mono" id="vW"></span></label>
+        <input type="range" id="sW" min="-6" max="14" step="0.01">
+        <div class="sub">The wave you are asking about. Compare it with &Omega;<sub>s</sub> to see who can follow it.</div>
+      </div>
+    </div>
+  </div>
+</div>`;
+
+function buildShell() {
+  $("app").innerHTML =
+    HEADER_HTML +
+    `<nav class="tabs" id="tabs" role="tablist"></nav>` +
+    TABS.map((t) => `<div class="panel" role="tabpanel" id="panel-${t.id}" hidden>${t.html}</div>`).join("");
+
+  $("tabs").innerHTML = TABS.map((t) =>
+    `<button type="button" role="tab" data-tab="${t.id}" aria-selected="false"
+             aria-controls="panel-${t.id}">${t.label}</button>`).join("");
+
+  $("sSp").innerHTML = SPECIES.map((s) => `<option value="${s.id}">${esc(s.label)}</option>`).join("");
+  $("presets").innerHTML = PRESETS.map((p) =>
+    `<button class="chip" type="button" data-preset="${esc(p.n)}" aria-pressed="false">${p.n}</button>`).join("");
+}
+
+/* ---------- wiring ---------- */
+const LOG_INPUTS = [
+  ["sB", "B"], ["sN", "n"], ["sTe", "Te"], ["sTi", "Ti"], ["sL", "L"],
+];
+
+function wire() {
+  $("presets").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    const p = PRESETS.find((x) => x.n === b.dataset.preset);
+    if (p) applyPreset(p);
+  });
+
+  for (const [el, key] of LOG_INPUTS) {
+    $(el).addEventListener("input", () => setPlasma({ [key]: Math.pow(10, +$(el).value) }));
+  }
+  $("sSp").addEventListener("change", () => setPlasma({ species: $("sSp").value }));
+  $("sW").addEventListener("input", () => setOmega(Math.pow(10, +$("sW").value)));
+
+  $("tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-tab]");
+    if (b) showTab(b.dataset.tab);
+  });
+
+  const hdr = $("hdr"), toggle = $("hdrToggle");
+  toggle.addEventListener("click", () => {
+    const open = hdr.dataset.open !== "true";
+    hdr.dataset.open = String(open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.textContent = open ? "hide controls" : "show controls";
+  });
+
+  $("ratios").addEventListener("click", (e) => {
+    if (!e.target.closest(".more")) return;
+    ratiosOpen = !ratiosOpen;
+    renderHeader();
+  });
+
+  $("selbar").addEventListener("click", (e) => {
+    if (e.target.closest("button")) selectMode(null, null);
+  });
+
+  // Start collapsed on a phone, where the controls would fill the screen.
+  if (matchMedia("(max-width: 700px)").matches) toggle.click();
+}
+
+function showTab(id) {
+  // Let a tab stop work it does while visible — the 3D viewer runs an animation
+  // loop, and leaving it spinning behind a hidden panel is pure waste.
+  for (const t of TABS) if (t.id !== id && typeof t.hide === "function") t.hide();
+  state.tab = id;
+  for (const t of TABS) $("panel-" + t.id).hidden = t.id !== id;
+  for (const b of $("tabs").querySelectorAll("button[data-tab]")) {
+    b.setAttribute("aria-selected", String(b.dataset.tab === id));
+  }
+  // A hidden panel has zero width, so its ladders could not size themselves.
+  // Re-render the tab now that it is visible.
+  const tab = TABS.find((t) => t.id === id);
+  if (tab) tab.render();
+}
+
+/* ---------- header render ---------- */
+function renderHeader() {
+  const s = params();
+  const p = state.plasma;
+
+  // Keep the sliders in step with the state, whatever changed it (a preset, a mode).
+  $("sB").value = Math.log10(p.B);
+  $("sN").value = Math.log10(p.n);
+  $("sTe").value = Math.log10(p.Te);
+  $("sTi").value = Math.log10(p.Ti);
+  $("sL").value = Math.log10(p.L);
+  $("sSp").value = p.species;
+  $("sW").value = Math.log10(state.wave.omega);
+
+  $("vB").textContent = fmtB(s.B);
+  $("vN").textContent = fmtN(s.n);
+  $("vTe").textContent = fmtT(s.Te) + "  (" + sci(s.Te * 11604.5) + " K)";
+  $("vTi").textContent = fmtT(s.Ti) + "  (" + sci(s.Ti * 11604.5) + " K)";
+  $("vL").textContent = fmtLen(s.L);
+  $("vSp").textContent = "m_i/m_e = " + sci(s.mi / 9.1093837015e-31);
+  $("vW").textContent = fmtFreq(state.wave.omega);
+
+  $("hdrWho").innerHTML = state.presetName
+    ? `${esc(state.presetName)} <span>· ${fmtB(s.B)}, ${sci(s.n * 1e-6)} cm⁻³</span>`
+    : `custom plasma <span>· ${fmtB(s.B)}, ${sci(s.n * 1e-6)} cm⁻³, T<sub>e</sub> ${fmtT(s.Te)}</span>`;
+
+  for (const b of $("presets").querySelectorAll(".chip")) {
+    b.setAttribute("aria-pressed", String(b.dataset.preset === state.presetName));
+  }
+
+  // The ratios that decide which model is allowed. Same numbers as the orderings
+  // section, compressed to a strip you can read while on another tab.
+  const w = state.wave.omega;
+  $("ratios").innerHTML = [
+    { c: "b", h: "β", v: sci(s.beta) },
+    { c: "e", h: "ω_pe/Ω_e", v: sci(s.wpe / s.Oe) },
+    { c: "i", h: "Ω_i/ω_pi", v: sci(s.Oi / s.wpi) },
+    { c: "i", h: "ρ_i/d_i", v: sci(s.rho_i / s.di) },
+    { c: "", h: "L/d_i", v: sci(s.L / s.di) },
+    { c: "", h: "L/λ_D", v: sci(s.L / s.lD) },
+    { c: "e", h: "ω/Ω_e", v: sci(w / s.Oe) },
+    { c: "i", h: "ω/Ω_i", v: sci(w / s.Oi) },
+    { c: "", h: "v_A/c", v: sci(s.vA / C) },
+    { c: state.plasma.massRatio == null ? "" : "b",
+      h: "m_i/m_e", v: sci(s.massRatioUsed) + (state.plasma.massRatio == null ? "" : " ⚠") },
+  ].map((r) => `<span class="rchip ${r.c}">${r.h} <b>${r.v}</b></span>`).join("") +
+    `<button type="button" class="more">${ratiosOpen ? "less" : "+ 11 more"}</button>`;
+  // The expanded flag cannot live in the markup above: renderHeader rewrites this
+  // innerHTML on every notify, which would reset it on the next slider nudge.
+  $("ratios").dataset.expanded = String(ratiosOpen);
+
+  const sel = assumptions.describeSelected();
+  const bar = $("selbar");
+  if (!sel) {
+    bar.hidden = true;
+  } else {
+    bar.hidden = false;
+    const alive = sel.alive === false
+      ? ` — <span style="color:var(--ink-3)">does not survive the current assumptions</span>`
+      : "";
+    const note = sel.note ? ` · ω set to ${esc(sel.note)}` : ` · no single characteristic ω, so the probe was left alone`;
+    bar.innerHTML = `selected mode: <b>${esc(sel.name)}</b>${alive}<span style="color:var(--ink-3)">${note}</span>` +
+      `<button type="button">clear</button>`;
+  }
+}
+
+/* ---------- boot ---------- */
+buildShell();
+for (const t of TABS) t.init();
+wire();
+
+subscribe(() => {
+  renderHeader();
+  const tab = TABS.find((t) => t.id === state.tab);
+  if (tab) tab.render();
+});
+
+applyPreset(PRESETS[0]);
+showTab("scales");
+notify("boot");
+
+return {};
+})();
+</script>
+
+<script>
+/* Offline support: cache this page so it opens without signal. */
+if ("serviceWorker" in navigator) {
+  const status = document.getElementById("offline-status");
+  navigator.serviceWorker.register("sw.js").then(() => navigator.serviceWorker.ready).then(() => {
+    if (status) status.textContent = "✓ available offline";
+  }).catch(() => {});
+}
+</script>
+</body>
+</html>

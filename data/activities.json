@@ -1,0 +1,67 @@
+[
+    {
+        "year": "2026",
+        "type": "award",
+        "title": {
+            "en": "Outstanding Student Presentation Award, JpGU-AGU Joint Meeting 2026",
+            "ja": "優秀学生発表賞（JpGU-AGU Joint Meeting 2026）"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": "https://www.jpgu.org/en/ospa/jpgu-2026-outstanding-student-presentation-award/"
+    },
+    {
+        "year": "2026",
+        "type": "talk",
+        "title": {
+            "en": "JpGU-AGU Joint Meeting 2026",
+            "ja": "JpGU-AGU Joint Meeting 2026"
+        },
+        "detail": {
+            "en": "Poster: Validation of machine-learning-based closure models for collisionless plasmas in the linear regime",
+            "ja": "ポスター発表：Validation of machine-learning-based closure models for collisionless plasmas in the linear regime"
+        },
+        "url": ""
+    },
+    {
+        "year": "2025",
+        "type": "organizer",
+        "title": {
+            "en": "Satellite Data Analysis Seminar at Astrocamp (2025–2026)",
+            "ja": "衛星データ解析ゼミ at Astrocamp（2025–2026）"
+        },
+        "detail": {
+            "en": "Organized the satellite data analysis seminar at Astrocamp.",
+            "ja": "Astrocamp での衛星データ解析ゼミの企画・運営。"
+        },
+        "url": "https://camp.ase-lab.space/"
+    },
+    {
+        "year": "2025",
+        "type": "talk",
+        "title": {
+            "en": "SGEPSS Fall Meeting 2025 (Kobe)",
+            "ja": "SGEPSS 秋季大会 2025（神戸）"
+        },
+        "detail": {
+            "en": "Poster: Linear properties of machine-learning-based closure models for collisionless plasmas",
+            "ja": "ポスター発表：Linear properties of machine-learning-based closure models for collisionless plasmas"
+        },
+        "url": ""
+    },
+    {
+        "year": "2022",
+        "type": "organizer",
+        "title": {
+            "en": "Satellite Data Analysis Seminar at ASE-Lab (2022)",
+            "ja": "衛星データ解析ゼミ at ASE-Lab.（2022）"
+        },
+        "detail": {
+            "en": "Organized the satellite data analysis seminar at ASE-Lab.",
+            "ja": "ASE-Lab. での衛星データ解析ゼミの企画・運営。"
+        },
+        "url": "https://www.ase-lab.space/"
+    }
+]

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta name="robots" content="noindex">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>記事タイトル — icebox.</title>
+
+    <meta name="description" content="宇宙プラズマ物理を学ぶ修士学生 (ice)^3 のポートフォリオ。">
+    <meta name="theme-color" content="#F8FAFA">
+
+    <link rel="alternate" hreflang="en" href="https://iceqbie.github.io/blog/">
+    <link rel="alternate" hreflang="ja" href="https://iceqbie.github.io/jp/blog/">
+    <link rel="alternate" hreflang="x-default" href="https://iceqbie.github.io/blog/">
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+
+    <script src="/script.js" defer></script>
+</head>
+<body>
+
+    <a class="skip-link" href="#main">本文へ移動</a>
+
+    <!-- =========================================
+         HEADER / NAVIGATION
+         ========================================= -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="/jp/" class="site-name">icebox.</a>
+
+            <nav class="site-nav" aria-label="メインナビゲーション">
+                <a href="/jp/">ホーム</a>
+                <a href="/jp/about/">プロフィール</a>
+                <a href="/jp/projects/">プロジェクト</a>
+                <a href="/jp/blog/" aria-current="page">ブログ</a>
+                <a href="/jp/photos/">写真</a>
+                <a href="/blog/" class="lang-switch" lang="en" hreflang="en">English</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main id="main">
+
+        <!--
+            HOW TO PUBLISH A NOTION ARTICLE
+            --------------------------------
+            1. Copy this file to /blog/<slug>/index.html  (slug: short, lowercase, hyphens, e.g. 2026-10-first-post)
+            2. In Notion: ••• → Export → HTML. Unzip it.
+            3. Open the exported .html, copy everything INSIDE <div class="page-body"> … </div>
+               and paste it where it says "PASTE NOTION CONTENT HERE" below.
+            4. Put the exported images in /blog/<slug>/ and fix the <img src="…"> paths.
+            5. Fill in <title>, the <h1>, the date, and set lang="ja" or lang="en" on <html>.
+            6. Add an entry to /data/articles.json so the card shows up on Home and /blog/.
+        -->
+
+        <article class="prose container">
+
+            <p class="prose-meta">
+                <time datetime="2026-01-01">2026-01-01</time>
+            </p>
+
+            <h1>記事タイトル</h1>
+
+            <!-- PASTE NOTION CONTENT HERE -->
+            <p>ここに本文が入ります。</p>
+
+            <a class="back-link" href="/jp/blog/">← ブログ一覧へ</a>
+
+        </article>
+
+    </main>
+
+    <!-- =========================================
+         FOOTER / CONTACT
+         ========================================= -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+
+            <div class="footer-contact">
+                <div class="social-links">
+                    <a href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a href="https://x.com/iceqbie" target="_blank" rel="noopener noreferrer">X ↗</a>
+                    <a href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 (ice)^3</span>
+                <span class="footer-mono">最終更新: 2026-09-28</span>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -2,31 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <!-- Responsive viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>icebox. — (ice)^3</title>
 
-    <meta
-        name="description"
-        content="Personal homepage of (ice)^3 graduate researcher in physics."
-    >
+    <meta name="description" content="Portfolio of (ice)^3, an MSc student in astrophysical plasma physics.">
+    <meta name="theme-color" content="#F8FAFA">
+
+    <link rel="alternate" hreflang="en" href="https://iceqbie.github.io/">
+    <link rel="alternate" hreflang="ja" href="https://iceqbie.github.io/jp/">
+    <link rel="alternate" hreflang="x-default" href="https://iceqbie.github.io/">
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap"
         rel="stylesheet"
     >
 
     <!-- Main stylesheet -->
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="/style.css">
 
+    <script src="/script.js" defer></script>
+</head>
 <body>
+
+    <a class="skip-link" href="#main">Skip to content</a>
 
     <!-- =========================================
          HEADER / NAVIGATION
@@ -34,676 +38,115 @@
     <header class="site-header">
         <div class="container header-inner">
 
-            <a href="#" class="site-name">
-                icebox.
-            </a>
+            <a href="/" class="site-name">icebox.</a>
 
             <nav class="site-nav" aria-label="Main navigation">
-                <a href="#about">About</a>
-                <a href="#interests">Interests</a>
-                <a href="#publications">Publications</a>
-                <a href="#activities">Activities</a>
-                <a href="#projects">Projects</a>
-                <a href="#articles">Articles</a>
-                <a href="#contact">Contact</a>
-                <span class="nav-divider">|</span>
-                <a href="jp/" lang="ja">日本語</a>
+                <a href="/" aria-current="page">Home</a>
+                <a href="/about/">About</a>
+                <a href="/projects/">Projects</a>
+                <a href="/blog/">Blog</a>
+                <a href="/photos/">Photos</a>
+                <a href="/jp/" class="lang-switch" lang="ja" hreflang="ja">日本語</a>
             </nav>
 
         </div>
     </header>
 
+    <main id="main">
 
-    <main>
-
-        <!-- =========================================
-             HERO
-             ========================================= -->
         <section class="hero">
             <div class="container">
 
-                <p class="eyebrow">
-                    ASTROPHYSICS · GRADUATE STUDENT
-                </p>
+                <p class="eyebrow">ASTROPHYSICAL PLASMA · MSc STUDENT</p>
 
-                <h1 class="site-title">
-                    icebox.
-                </h1>
+                <h1 class="site-title">icebox.</h1>
 
-                <p class="hero-description">
-                    Keeping thoughts cool, ideas fresh, and memories frozen.
-                </p>
+                <p class="hero-description" lang="en">Keeping thoughts cool, ideas fresh, and memories frozen.</p>
+
+                <p class="hero-intro">I'm (ice)^3, a master's student at the University of Tokyo. I study astrophysical plasma physics with numerical simulations and machine learning. Here I keep my projects, notes and photographs.</p>
 
                 <div class="hero-links">
-                    <a href="cv/CV.pdf" target="_blank" rel="noopener noreferrer">CV ↗</a>
-                    <a href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-                    <a href="YOUR_GOOGLE_SCHOLAR_URL" target="_blank" rel="noopener noreferrer">Google Scholar ↗</a>
-                    <a href="https://www.linkedin.com/in/mei-kanda/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+                    <a class="button button-primary" href="/about/">About me</a>
+                    <a class="button" href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a class="button" href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
                 </div>
 
             </div>
         </section>
 
-
-        <!-- =========================================
-             ABOUT
-             ========================================= -->
-        <section id="about" class="section">
+        <section id="projects" class="section" aria-labelledby="h-projects">
             <div class="container">
 
                 <div class="section-heading">
-                    <span class="section-number">01</span>
-                    <h2>About</h2>
+                    <span class="section-number" aria-hidden="true">01</span>
+                    <h2 id="h-projects">Projects</h2>
+                    <a class="section-more" href="/projects/">All projects →</a>
                 </div>
 
-                <div class="about-grid">
-
-                    <div class="about-main">
-                        <p class="lead">
-                            I am a graduate student working on astrophysical
-                            plasma physics and numerical simulations.
-                        </p>
-
-                        <p>
-                            My research focuses on understanding plasma processes
-                            in astrophysical environments through theoretical
-                            analysis and computational modeling.
-                        </p>
-                    </div>
-
-                    <aside class="about-meta">
-                        <div>
-                            <span class="meta-label">Based</span>
-                            <span>Japan</span>
-                        </div>
-
-                        <div>
-                            <span class="meta-label">Field</span>
-                            <span>Astrophysical Plasma Physics</span>
-                        </div>
-
-                        <div>
-                            <span class="meta-label">Status</span>
-                            <span>Graduate Student (Master's Program)</span>
-                        </div>
-                    </aside>
-
+                <div data-list="projects" data-limit="3" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see the project list.</p></noscript>
                 </div>
 
             </div>
         </section>
 
-
-        <!-- =========================================
-             INTERESTS
-             ========================================= -->
-        <section id="interests" class="section section-tinted">
+        <section id="blog" class="section section-tinted" aria-labelledby="h-blog">
             <div class="container">
 
                 <div class="section-heading">
-                    <span class="section-number">02</span>
-                    <h2>Interests</h2>
+                    <span class="section-number" aria-hidden="true">02</span>
+                    <h2 id="h-blog">Blog</h2>
+                    <a class="section-more" href="/blog/">All articles →</a>
                 </div>
 
-                <div class="interests-grid">
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            01
-                        </div>
-
-                        <div class="research-content">
-                            <h3>Numerical Simulations</h3>
-
-                            <p>
-                                Computational approaches for studying
-                                nonlinear plasma dynamics and astrophysical
-                                systems.
-                            </p>
-
-                            <div class="tags">
-                                <span>Numerical</span>
-                                <span>Simulation</span>
-                                <span>Python</span>
-                            </div>
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            02
-                        </div>
-
-                        <div class="research-content">
-                            <h3>Astrophysical Plasmas</h3>
-
-                            <p>
-                                Plasma processes occurring in high-energy
-                                astrophysical environments.
-                            </p>
-
-                            <div class="tags">
-                                <span>Astrophysics</span>
-                                <span>Plasma Physics</span>
-                            </div>
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            03
-                        </div>
-
-                        <div class="research-content">
-                            <h3>Machine Learning for Plasmas</h3>
-
-                            <p>
-                                Can data-driven closure models reproduce
-                                kinetic plasma behavior in affordable
-                                simulations?
-                            </p>
-
-                            <div class="tags">
-                                <span>Machine Learning</span>
-                                <span>Closure Models</span>
-                                <span>Kinetic</span>
-                            </div>
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            04
-                        </div>
-
-                        <div class="research-content">
-                            <h3>Magnetic Reconnection</h3>
-
-                            <p>
-                                How is magnetic energy converted into
-                                particle acceleration in collisionless
-                                plasmas?
-                            </p>
-
-                            <div class="tags">
-                                <span>Reconnection</span>
-                                <span>Particle Acceleration</span>
-                            </div>
-                        </div>
-
-                    </article>
-
-
-                    <article class="interest-card">
-
-                        <div class="research-index">
-                            05
-                        </div>
-
-                        <div class="research-content">
-                            <h3>Solar System Dynamics</h3>
-
-                            <p>
-                                What sets the long-term stability and chaotic
-                                evolution of planetary systems?
-                            </p>
-
-                            <div class="tags">
-                                <span>N-Body</span>
-                                <span>Orbital Dynamics</span>
-                            </div>
-                        </div>
-
-                    </article>
-
+                <div data-list="articles" data-limit="3" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see the article list.</p></noscript>
                 </div>
 
             </div>
         </section>
 
-
-        <!-- =========================================
-             PUBLICATIONS
-             ========================================= -->
-        <section id="publications" class="section">
+        <section id="activity" class="section" aria-labelledby="h-activity">
             <div class="container">
 
                 <div class="section-heading">
-                    <span class="section-number">03</span>
-                    <h2>Publications</h2>
+                    <span class="section-number" aria-hidden="true">03</span>
+                    <h2 id="h-activity">Activity</h2>
+                    <a class="section-more" href="/about/#activity">Full profile →</a>
                 </div>
 
-
-                <div class="publication-list">
-
-                    <article class="publication">
-
-                        <div class="publication-year">
-                            2025
-                        </div>
-
-                        <div class="publication-body">
-
-                            <h3>
-                                On the Statistical Convergence of N-Body Simulations of the Solar System
-                            </h3>
-
-                            <p class="authors">
-                                H. Rein, G. Brown, M. Kanda
-                            </p>
-
-                            <p class="journal">
-                                <em>The Open Journal of Astrophysics</em>
-                            </p>
-
-                            <div class="publication-links">
-                                <a href="https://arxiv.org/abs/2507.04987" target="_blank" rel="noopener noreferrer">arXiv ↗</a>
-                                <a href="https://doi.org/10.33232/001c.154745" target="_blank" rel="noopener noreferrer">DOI ↗</a>
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="publication">
-
-                        <div class="publication-year">
-                            2024
-                        </div>
-
-                        <div class="publication-body">
-
-                            <h3>
-                                Analysis of the Quality Assurance Results from the Initial Part of Production of the ATLAS18 ITk Strip Sensors
-                            </h3>
-
-                            <p class="authors">
-                                È. Bach et al.
-                            </p>
-
-                            <p class="journal">
-                                <em>Nuclear Instruments and Methods in Physics Research Section A</em>
-                            </p>
-
-                            <div class="publication-links">
-                                <a href="https://www.sciencedirect.com/science/article/pii/S0168900224003619" target="_blank" rel="noopener noreferrer">Paper ↗</a>
-                                <a href="https://doi.org/10.1016/j.nima.2024.169435" target="_blank" rel="noopener noreferrer">DOI ↗</a>
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="publication">
-
-                        <div class="publication-year">
-                            2023
-                        </div>
-
-                        <div class="publication-body">
-
-                            <h3>
-                                Experimental Study and Empirical Modeling of Long Term Annealing of the ATLAS18 Strip Sensors
-                            </h3>
-
-                            <p class="authors">
-                                R. Orr et al.
-                            </p>
-
-                            <p class="journal">
-                                <em>Proceedings of Science (Pixel 2022)</em>
-                            </p>
-
-                            <div class="publication-links">
-                                <a href="https://doi.org/10.22323/1.420.0043" target="_blank" rel="noopener noreferrer">Paper ↗</a>
-                                <a href="https://doi.org/10.22323/1.420.0043" target="_blank" rel="noopener noreferrer">DOI ↗</a>
-                            </div>
-
-                        </div>
-
-                    </article>
-
+                <div data-list="activities" data-limit="5" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see the activity list.</p></noscript>
                 </div>
 
             </div>
         </section>
 
-
-        <!-- =========================================
-             ACTIVITIES
-             ========================================= -->
-        <section id="activities" class="section section-tinted">
+        <section id="photos" class="section section-tinted" aria-labelledby="h-photos">
             <div class="container">
 
                 <div class="section-heading">
-                    <span class="section-number">04</span>
-                    <h2>Activities</h2>
-                </div>
-
-
-                <div class="timeline">
-
-                    <article class="timeline-item">
-
-                        <div class="timeline-year">
-                            2026
-                        </div>
-
-                        <div class="timeline-content">
-                            <h3>JpGU-AGU Joint Meeting 2026</h3>
-
-                            <p>
-                                Poster presentation —
-                                <em>Validation of machine-learning-based closure models for collisionless plasmas in the linear regime</em>
-                                — M. Kanda, T. Amano
-                            </p>
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item">
-
-                        <div class="timeline-year">
-                            2026
-                        </div>
-
-                        <div class="timeline-content">
-                            <h3>Outstanding Student Presentation Award at JpGU-AGU Joint Meeting 2026</h3>
-
-                            <a
-                                    href="https://www.jpgu.org/en/ospa/jpgu-2026-outstanding-student-presentation-award/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Link ↗
-                            </a>
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item">
-
-                        <div class="timeline-year">
-                            2025
-                        </div>
-
-                        <div class="timeline-content">
-                            <h3>SGEPSS Fall Meeting (Kobe, Japan)</h3>
-
-                            <p>
-                                Poster presentation —
-                                <em>Linear properties of machine-learning-based closure models for collisionless plasmas</em>
-                                — M. Kanda, T. Amano
-                            </p>
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- =========================================
-             PROJECTS
-             ========================================= -->
-        <section id="projects" class="section">
-            <div class="container">
-
-                <div class="section-heading">
-                    <span class="section-number">05</span>
-                    <h2>Projects</h2>
-                </div>
-
-                <div class="research-list">
-
-                    <article class="research-item">
-
-                        <div class="research-index">
-                            01
-                        </div>
-
-                        <div class="research-content">
-                            <h3><a href="https://camp.ase-lab.space/" target="_blank" rel="noopener noreferrer">Satellite Data Analysis Seminar at Astrocamp (2025–2026; Organizer)</a></h3>
-
-                            <p>
-                                Organized the satellite data analysis seminar
-                                (衛星データ解析ゼミ) at Astrocamp.
-                            </p>
-
-                            <div class="tags">
-                                <span>Astrocamp</span>
-                                <span>Education</span>
-                            </div>
-                        </div>
-
-                    </article>
-
-
-                    <article class="research-item">
-
-                        <div class="research-index">
-                            02
-                        </div>
-
-                        <div class="research-content">
-                            <h3><a href="https://www.ase-lab.space/" target="_blank" rel="noopener noreferrer">Satellite Data Analysis Seminar at ASE-Lab (2022; Organizer)</a></h3>
-
-                            <p>
-                                Organized the satellite data analysis seminar
-                                (衛星データ解析ゼミ) at ASE-Lab.
-                            </p>
-
-                            <div class="tags">
-                                <span>ASE-Lab</span>
-                                <span>Education</span>
-                            </div>
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- =========================================
-             ARTICLES
-             ========================================= -->
-        <section id="articles" class="section">
-            <div class="container">
-
-                <div class="section-heading">
-                    <span class="section-number">06</span>
-                    <h2>Articles</h2>
-                </div>
-
-                <!--
-                    HOW TO ADD AN ARTICLE
-                    ----------------------
-                    1. In Notion: open your article page.
-                    2. Click Share → Publish to web → Copy link.
-                    3. Copy one of the article-card blocks below
-                       and replace the title, date, description, and href
-                       with your Notion public link. The page must stay
-                       published for visitors to view it.
-                -->
-
-                <div class="articles-grid">
-
-                    <article class="article-card">
-
-                        <span class="article-date">—</span>
-
-                        <h3>First article coming soon</h3>
-
-                        <p>
-                            Articles written in Notion will appear here.
-                        </p>
-
-                    </article>
-
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- =========================================
-             PHOTOGRAPHY
-             ========================================= -->
-        <section class="section">
-            <div class="container">
-
-                <div class="section-heading">
-                    <span class="section-number">07</span>
-                    <h2>Photography</h2>
+                    <span class="section-number" aria-hidden="true">04</span>
+                    <h2 id="h-photos">Photos</h2>
+                    <a class="section-more" href="/photos/">Gallery →</a>
                 </div>
 
                 <div class="unsplash-card">
 
                     <div class="unsplash-card-header">
-
                         <div>
-                            <span class="meta-label">PHOTOGRAPHY</span>
+                            <span class="meta-label">Unsplash</span>
                             <h3>@iceqbie</h3>
                         </div>
-
                     </div>
 
-
-                    <div class="photo-grid">
-
-                        <a
-                            href="https://unsplash.com/photos/a-tree-with-white-flowers-and-green-leaves-QDzzZZHFz-U"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1712968015844-6d76311d9dd3?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="A tree with white flowers and green leaves"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/mount-fuji-at-sunset-over-the-ocean-8M4cD7uirUU"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1778073240307-7e9a6b8cae13?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Mount Fuji at sunset over the ocean in Hayama, Japan"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/5m6bXYsO8K4"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1655641720293-cb061274658c?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Toronto city skyline at sunset"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/pink-lotus-flower-with-green-leaves-WcjH20FnAF0"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1785930355684-08babeacb1f9?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="A pink lotus flower with a yellow center surrounded by large green leaves"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/snow-capped-mount-fuji-at-sunrise-over-the-ocean-vVNPhKwAJts"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520227076-e8e0f99f439f?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Snow-capped Mount Fuji at sunrise over the ocean"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/snow-capped-mountain-over-a-calm-sea-at-twilight-6tz-zyRX4TU"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520226907-1e6dbd36b09c?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Snow-capped mountain over a calm sea at twilight"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/snow-capped-mount-fuji-and-a-lighthouse-over-the-calm-ocean-Updo7ICSqFU"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520226905-12eba92116d4?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Snow-capped Mount Fuji and a lighthouse over the calm ocean"
-                            >
-                        </a>
-
-
-                        <a
-                            href="https://unsplash.com/photos/mount-fuji-with-snow-capped-peak-overlooking-the-ocean-at-twilight-VlQekFW7cx4"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="photo-card"
-                        >
-                            <img
-                                src="https://images.unsplash.com/photo-1784520226907-6ae4511b928c?auto=format&fit=crop&w=900&q=80&ixlib=rb-4.1.0"
-                                alt="Mount Fuji with snow-capped peak overlooking the ocean at twilight"
-                            >
-                        </a>
-
-                    </div>
-
+                <div class="photo-strip" data-list="photos" data-limit="8" aria-busy="true">
+                    <noscript><p class="list-empty">Photos are on <a class="text-link" href="https://unsplash.com/@iceqbie">Unsplash</a>.</p></noscript>
+                </div>
 
                     <div class="unsplash-card-footer">
-
                         <span>Selected photographs</span>
-
-                        <a href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">
-                            View all photographs ↗
-                        </a>
-
+                        <a class="text-link" href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">View all on Unsplash ↗</a>
                     </div>
 
                 </div>
@@ -711,43 +154,25 @@
             </div>
         </section>
 
-
-        </main>
-
+    </main>
 
     <!-- =========================================
          FOOTER / CONTACT
          ========================================= -->
     <footer id="contact" class="site-footer">
-        <div class="container footer-inner">
+        <div class="container">
 
             <div class="footer-contact">
-
-                <a
-                    href="mailto:your.email@example.com"
-                    class="footer-email"
-                >
-                    your.email@example.com
-                </a>
-
                 <div class="social-links">
                     <a href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
                     <a href="https://x.com/iceqbie" target="_blank" rel="noopener noreferrer">X ↗</a>
-                    <a href="https://www.linkedin.com/in/mei-kanda/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
                     <a href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
                 </div>
-
             </div>
 
             <div class="footer-bottom">
-                <span>
-                    © 2026 Mei Kanda
-                </span>
-
-                <span class="footer-mono">
-                    Last updated: 2026-08-15
-                </span>
-
+                <span>© 2026 (ice)^3</span>
+                <span class="footer-mono">Last updated: 2026-09-28</span>
             </div>
 
         </div>
