@@ -109,45 +109,54 @@
                     <article class="card">
                         <div class="card-body">
                             <span class="interest-index" aria-hidden="true">01</span>
-                            <h3 class="card-title">数値シミュレーション</h3>
-                            <p class="card-summary">非線形なプラズマダイナミクスや宇宙物理学的な系を理解するための数値計算手法。</p>
-                            <ul class="tags" aria-label="Tags"><li>Numerical</li><li>Simulation</li><li>Python</li></ul>
+                            <h3 class="card-title">乱流はエネルギーをどう分けるか</h3>
+                            <p class="card-summary">無衝突プラズマでは、イオンと電子のエネルギーを等しくする仕組みがありません。イオンと電子の加熱比は、プラズマβと温度比 Tᵢ/Tₑ でどう決まるのか。ブラックホール降着流の見え方を左右する問題です。</p>
+                            <ul class="tags" aria-label="Tags"><li>Turbulence</li><li>Ion/Electron Heating</li><li>β</li></ul>
                         </div>
                     </article>
 
                     <article class="card">
                         <div class="card-body">
                             <span class="interest-index" aria-hidden="true">02</span>
-                            <h3 class="card-title">宇宙プラズマ</h3>
-                            <p class="card-summary">高エネルギー天体環境で生じるプラズマの物理過程。</p>
-                            <ul class="tags" aria-label="Tags"><li>Astrophysics</li><li>Plasma Physics</li></ul>
+                            <h3 class="card-title">熱か、非熱的なテールか</h3>
+                            <p class="card-summary">同じエネルギーが熱になることも、高速粒子のべき乗テールになることもあります。どれだけがどちらへ行き、傾きは何で決まるのか。答えは誤差付きでフィットした分布関数です。</p>
+                            <ul class="tags" aria-label="Tags"><li>Particle Acceleration</li><li>Distribution Functions</li></ul>
                         </div>
                     </article>
 
                     <article class="card">
                         <div class="card-body">
                             <span class="interest-index" aria-hidden="true">03</span>
-                            <h3 class="card-title">機械学習 × プラズマ</h3>
-                            <p class="card-summary">データ駆動型のクロージャモデルは、現実的な計算コストで運動論的プラズマの振る舞いを再現できるか？</p>
-                            <ul class="tags" aria-label="Tags"><li>Machine Learning</li><li>Closure Models</li><li>Kinetic</li></ul>
+                            <h3 class="card-title">何が散逸を担うのか</h3>
+                            <p class="card-summary">ランダウ減衰、確率的加熱、乱流が作る薄い電流シートでの磁気リコネクション、ファイアホース・ミラー不安定性。それぞれ異なる分配を予言し、どれが効くかはβとスケールで変わります。</p>
+                            <ul class="tags" aria-label="Tags"><li>Landau Damping</li><li>Reconnection</li><li>Instabilities</li></ul>
                         </div>
                     </article>
 
                     <article class="card">
                         <div class="card-body">
                             <span class="interest-index" aria-hidden="true">04</span>
-                            <h3 class="card-title">磁気リコネクション</h3>
-                            <p class="card-summary">無衝突プラズマにおいて、磁気エネルギーはどのように粒子加速へ変換されるのか？</p>
-                            <ul class="tags" aria-label="Tags"><li>Reconnection</li><li>Particle Acceleration</li></ul>
+                            <h3 class="card-title">そのシミュレーションは信用できるか</h3>
+                            <p class="card-summary">標準的な陽解法 PIC は数値的にプラズマを加熱します。報告されている加熱率のうち、スキームを変えても残るのはどれだけか。エネルギー保存・構造保存型の手法で確かめます。</p>
+                            <ul class="tags" aria-label="Tags"><li>PIC</li><li>Structure-Preserving</li><li>Numerical Heating</li></ul>
                         </div>
                     </article>
 
                     <article class="card">
                         <div class="card-body">
                             <span class="interest-index" aria-hidden="true">05</span>
-                            <h3 class="card-title">太陽系力学</h3>
-                            <p class="card-summary">惑星系の長期的な安定性とカオス的進化を決めるものは何か？</p>
-                            <ul class="tags" aria-label="Tags"><li>N-Body</li><li>Orbital Dynamics</li></ul>
+                            <h3 class="card-title">そのコストは見合うか</h3>
+                            <p class="card-summary">エネルギー保存スキームには陽解法 PIC にはない大域的な陰的ソルブが必要で、GPU は陽解法に有利です。大きな時間刻みでその分を取り返せるかは、実機で測るしかありません。</p>
+                            <ul class="tags" aria-label="Tags"><li>HPC</li><li>GPU</li><li>Profiling</li></ul>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-body">
+                            <span class="interest-index" aria-hidden="true">06</span>
+                            <h3 class="card-title">機械学習によるクロージャ</h3>
+                            <p class="card-summary">現在の研究テーマ：データ駆動型のクロージャモデルは、計算コストの低い流体シミュレーションで運動論的プラズマの振る舞いを再現できるか。熱流束のクロージャと加熱率の処方は同じ種類の問題です。</p>
+                            <ul class="tags" aria-label="Tags"><li>Machine Learning</li><li>Closure Models</li><li>Kinetic</li></ul>
                         </div>
                     </article>
                 </div>
