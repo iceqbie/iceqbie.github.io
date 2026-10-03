@@ -1,0 +1,62 @@
+# Re-print the CV PDFs (cv/ice3-cv-en.pdf, cv/ice3-cv-ja.pdf) whenever the
+# data or the CV pages change, so the PDF always matches the site.
+name: Build CV PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/timeline.json
+      - data/publications.json
+      - cv/index.html
+      - jp/cv/index.html
+      - style.css
+      - script.js
+      - tools/build-cv.sh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: cv
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The pages load Noto Sans JP from Google Fonts; the system font is a fallback.
+      - name: Japanese fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk >/dev/null
+
+      - name: Print the CV to PDF
+        env:
+          TZ: Asia/Tokyo
+        run: tools/build-cv.sh
+
+      - name: Commit the PDFs
+        id: commit
+        run: |
+          if git diff --quiet -- cv/*.pdf; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cv/*.pdf
+          git commit -m "Rebuild CV PDFs"
+          git pull --rebase origin main
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start the Pages build by
+      # itself, so ask for one.
+      - name: Rebuild GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

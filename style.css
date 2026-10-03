@@ -1557,6 +1557,251 @@ h4.card-title {
 
 
 /* =========================================================
+   CV (web page and the PDF printed from it)
+   ========================================================= */
+
+.cv {
+    max-width: 860px;
+
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+}
+
+.cv-header {
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+
+    border-bottom: 2px solid var(--charcoal);
+}
+
+.cv-header h1 {
+    margin-bottom: var(--space-xs);
+
+    font-size: var(--fs-h1-page);
+    line-height: var(--lh-heading);
+    letter-spacing: -0.02em;
+}
+
+.cv-affil {
+    margin-bottom: 4px;
+}
+
+.cv-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+
+    margin-bottom: 0;
+
+    font-size: var(--fs-caption);
+}
+
+.cv-contact a {
+    text-decoration: underline;
+    text-decoration-color: var(--ice-blue);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+.cv-updated {
+    margin: 4px 0 0;
+
+    color: var(--charcoal-soft);
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+}
+
+.cv-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin: var(--space-md) 0;
+}
+
+.cv-lead {
+    max-width: var(--text-width);
+
+    color: var(--charcoal-soft);
+}
+
+.cv-section {
+    margin-bottom: var(--space-lg);
+}
+
+.cv-section h2 {
+    margin-bottom: var(--space-sm);
+    padding-bottom: 6px;
+
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    border-bottom: var(--border);
+}
+
+.cv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.cv-row {
+    display: grid;
+    grid-template-columns: 11em minmax(0, 1fr);
+    gap: var(--space-sm);
+
+    break-inside: avoid;
+}
+
+.cv-period {
+    padding-top: 2px;
+
+    color: var(--charcoal-soft);
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+}
+
+.cv-body :is(h3, h4) {
+    margin: 0;
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.cv-body p {
+    margin: 2px 0 0;
+
+    color: var(--charcoal-soft);
+    font-size: var(--fs-small);
+}
+
+.cv-body a,
+.cv .publication-body a {
+    text-decoration: underline;
+    text-decoration-color: var(--ice-blue);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+/* Publications inside the CV use the CV's tighter rhythm. */
+.cv .publication-list {
+    border-top: 0;
+}
+
+.cv .publication {
+    grid-template-columns: 11em minmax(0, 1fr);
+    gap: var(--space-sm);
+
+    padding: 0 0 14px;
+
+    border-bottom: 0;
+
+    break-inside: avoid;
+}
+
+.cv .publication-body :is(h3, h4) {
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .cv-row,
+    .cv .publication {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+}
+
+@page {
+    size: A4;
+    margin: 15mm 16mm;
+}
+
+@media print {
+    :root {
+        --fs-body: 10pt;
+        --fs-small: 9.5pt;
+        --fs-caption: 9pt;
+        --fs-meta: 8.5pt;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .skip-link,
+    .site-header,
+    .site-footer,
+    .cv-actions,
+    noscript {
+        display: none !important;
+    }
+
+    .cv {
+        width: auto;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .cv-header {
+        margin-bottom: 14pt;
+        padding-bottom: 8pt;
+    }
+
+    .cv-header h1 {
+        font-size: 20pt;
+    }
+
+    .cv-section {
+        margin-bottom: 12pt;
+    }
+
+    .cv-section h2 {
+        margin-bottom: 6pt;
+        padding-bottom: 3pt;
+
+        font-size: 12pt;
+
+        break-after: avoid;
+    }
+
+    .cv-list {
+        gap: 6pt;
+    }
+
+    .cv-row,
+    .cv .publication {
+        grid-template-columns: 9.5em minmax(0, 1fr);
+        gap: 10pt;
+    }
+
+    .cv .publication {
+        padding-bottom: 6pt;
+    }
+
+    .cv-body :is(h3, h4),
+    .cv .publication-body :is(h3, h4) {
+        font-size: 10pt;
+    }
+
+    .cv .publication-links {
+        font-size: 8.5pt;
+    }
+
+    a {
+        text-decoration-color: var(--ice-blue);
+    }
+}
+
+
+/* =========================================================
    JAPANESE
    ========================================================= */
 

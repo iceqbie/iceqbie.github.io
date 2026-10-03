@@ -6,6 +6,9 @@
      data-limit  optional; show only the first N items
      data-filter list pages only: show the tag bar and honour ?tag=
      data-level  heading level for each row (default 3; 4 under an h3)
+     data-kinds  timeline only: space-separated kinds to include
+     data-types  timeline only: space-separated types to include
+     data-view   timeline only: "cv" for plain CV rows instead of the chronology
 
    Items are written once with { en, ja } fields; the page
    language comes from <html lang>. Lists are shown newest
@@ -23,7 +26,7 @@
             organizer: "Organizer",
             seminar: "Seminar",
             research: "Research",
-            club: "Extracurricular",
+            club: "Club",
             volunteer: "Volunteer",
             qualification: "Qualification",
             education: "Education",
@@ -31,7 +34,7 @@
             present: "Present",
             now: "Now",
             months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            kinds: { all: "All", research: "Research", other: "Beyond research", career: "Education & work" },
+            kinds: { all: "All", research: "Research", other: "Extracurricular", career: "Education & work" },
             kindsLabel: "Filter the timeline",
             shown: (n) => `Showing ${n} ${n === 1 ? "entry" : "entries"}`,
             written: { en: "English", ja: "Japanese" },
@@ -55,14 +58,14 @@
             organizer: "企画・運営",
             seminar: "ゼミ",
             research: "研究経験",
-            club: "課外活動",
+            club: "団体活動",
             volunteer: "ボランティア",
             qualification: "資格",
             education: "学歴",
             work: "職歴",
             present: "在学中",
             now: "現在",
-            kinds: { all: "すべて", research: "研究", other: "研究以外", career: "学歴・職歴" },
+            kinds: { all: "すべて", research: "研究", other: "課外活動", career: "学歴・職歴" },
             kindsLabel: "年表の絞り込み",
             shown: (n) => `${n}件を表示中`,
             written: { en: "英語", ja: "日本語" },
@@ -206,11 +209,8 @@
         !item.start && item.end === "present" ? "9999" : (item.start || item.end || "0000");
 
     function timelineEntry(item) {
-        const title = escapeHtml(pick(item.title));
         const detail = pick(item.detail);
-        const heading = item.url
-            ? `<a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${title}${isExternal(item.url) ? " ↗" : ""}</a>`
-            : title;
+        const heading = entryHeading(item);
 
         return `
                 <li class="chrono-item" data-kind="${escapeHtml(item.kind)}">
@@ -223,12 +223,37 @@
                 </li>`;
     }
 
+    const newestFirst = (items) => items
+        .map((item, i) => [item, i])
+        .sort(([a, i], [b, j]) => sortKey(b).localeCompare(sortKey(a)) || i - j)
+        .map(([item]) => item);
+
+    const entryHeading = (item) => {
+        const title = escapeHtml(pick(item.title));
+        return item.url
+            ? `<a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${title}${isExternal(item.url) ? " ↗" : ""}</a>`
+            : title;
+    };
+
+    // CV view: period | title and detail, newest first, no grouping.
+    function cvList(items) {
+        return `<ol class="cv-list">${newestFirst(items).map((item) => {
+            const detail = pick(item.detail);
+            return `
+                <li class="cv-row">
+                    <span class="cv-period">${escapeHtml(period(item))}</span>
+                    <div class="cv-body">
+                        <h${LEVEL}>${entryHeading(item)}</h${LEVEL}>
+                        ${detail ? `<p>${escapeHtml(detail)}</p>` : ""}
+                    </div>
+                </li>`;
+        }).join("")}</ol>`;
+    }
+
     // Items grouped by year, with buttons that show one kind at a time.
-    function timeline(items) {
-        const sorted = items
-            .map((item, i) => [item, i])
-            .sort(([a, i], [b, j]) => sortKey(b).localeCompare(sortKey(a)) || i - j)
-            .map(([item]) => item);
+    function timeline(items, container) {
+        if (container.dataset.view === "cv") return cvList(items);
+        const sorted = newestFirst(items);
 
         const groups = [];
         for (const item of sorted) {
@@ -255,6 +280,7 @@
     }
 
     function wireTimeline(container) {
+        if (container.dataset.view === "cv") return;
         const buttons = container.querySelectorAll(".chrono-btn");
         const status = container.querySelector(".chrono-status");
 
@@ -355,13 +381,20 @@
         try {
             let items = await load(name);
 
+            // data-kinds / data-types keep only the listed values.
+            for (const field of ["kinds", "types"]) {
+                const keep = container.dataset[field]?.split(/\s+/);
+                const key = field === "kinds" ? "kind" : "type";
+                if (keep) items = items.filter((item) => keep.includes(item[key]));
+            }
+
             const all = items;
             if (active) items = items.filter((item) => (item.tags || []).includes(active));
             if (limit > 0) items = items.slice(0, limit);
 
             LEVEL = parseInt(container.dataset.level, 10) || 3;
             const list = !items.length ? null
-                : renderer.all ? renderer.all(items)
+                : renderer.all ? renderer.all(items, container)
                 : renderer.wrap(items.map(renderer.item).join(""));
             const body = list ?? (active ? "" : `<p class="list-empty">${escapeHtml(TEXT.empty[name])}</p>`);
 
@@ -376,6 +409,20 @@
 
         container.removeAttribute("aria-busy");
     });
+
+
+    /* ---------- CV: build date (PDF only) ---------- */
+
+    // tools/build-cv.sh opens the CV with ?updated=YYYY-MM-DD so the PDF
+    // carries its date; the web version shows none.
+    const updated = new URLSearchParams(location.search).get("updated");
+    const stamp = document.querySelector(".cv-updated");
+    if (stamp && /^\d{4}-\d{2}-\d{2}$/.test(updated || "")) {
+        const time = stamp.querySelector("time");
+        time.dateTime = updated;
+        time.textContent = updated;
+        stamp.hidden = false;
+    }
 
 
     /* ---------- sliders ---------- */

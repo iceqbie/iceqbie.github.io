@@ -66,13 +66,13 @@
         <section class="page-header">
             <div class="container">
                 <h1>プロフィール</h1>
-                <p>自己紹介、研究、興味と、これまでの歩みを年表にまとめています。</p>
                 <nav class="page-toc" aria-label="このページの目次">
                     <ul>
                     <li><a href="#profile">自己紹介</a></li>
                     <li><a href="#research">研究</a></li>
                     <li><a href="#interests-other">興味</a></li>
                     <li><a href="#timeline">年表</a></li>
+                    <li><a href="#cv">CV</a></li>
                     </ul>
                 </nav>
             </div>
@@ -235,7 +235,30 @@
                     <h2 id="h-timeline">年表</h2>
                 </div>
 
-                <div data-list="timeline" aria-busy="true">
+                <div data-list="timeline" data-kinds="research other" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="cv" class="section" aria-labelledby="h-cv">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="section-number" aria-hidden="true">05</span>
+                    <h2 id="h-cv">CV</h2>
+                </div>
+
+                <p class="cv-lead">学歴と職歴です。研究経験・論文・発表・課外活動・資格・スキルを含む CV 全体は PDF でご覧いただけます。</p>
+
+                <div class="cv-actions">
+                    <a class="button button-primary" href="/cv/ice3-cv-ja.pdf" target="_blank" rel="noopener">PDF を開く</a>
+                    <a class="button" href="/cv/ice3-cv-ja.pdf" download>PDF をダウンロード</a>
+                    <a class="button" href="/jp/cv/">Web 版 CV</a>
+                </div>
+
+                <div data-list="timeline" data-view="cv" data-kinds="career" aria-busy="true">
                     <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
                 </div>
 

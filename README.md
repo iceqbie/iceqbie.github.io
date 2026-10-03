@@ -7,7 +7,8 @@ Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages f
 | Path | What it is |
 | --- | --- |
 | `/`, `/jp/` | Home (English / Japanese) |
-| `/about/`, `/jp/about/` | Profile and skills → Research (interests slider, publications) → Interests → Timeline (everything with a date, filterable) |
+| `/about/`, `/jp/about/` | Profile and skills → Research (interests slider, publications) → Interests → Timeline (research and extracurricular) → CV (education and work, PDF buttons) |
+| `/cv/`, `/jp/cv/` | Full CV page; `cv/ice3-cv-en.pdf` and `cv/ice3-cv-ja.pdf` are printed from it |
 | `/projects/`, `/jp/projects/` | Project cards |
 | `/projects/<slug>/` | Each standalone HTML project |
 | `/jp/blog/` | Article cards (the blog is Japanese only; `/blog/` redirects here) |
@@ -109,7 +110,7 @@ Re-running the script for the same slug overwrites that post, so edit in Notion 
 
 **Publication** — add to the top of `data/publications.json` (`year`, `title`, `journal`, `links`). Home shows the first three. No author lists — see Privacy.
 
-**Timeline** — everything with a date on the profile (research experience, talks, awards, activities, qualifications, education, work) lives in `data/timeline.json`; order in the file doesn't matter, the page sorts newest first and groups by year.
+**Timeline and CV** — everything with a date (research experience, talks, awards, activities, qualifications, education, work) lives in `data/timeline.json`; order in the file doesn't matter, every view sorts newest first. The profile timeline shows `research` and `other`; the profile's CV section and the CV pages show `career`; the CV pages and PDFs show everything, by `type`.
 
 ```json
 {
@@ -122,8 +123,10 @@ Re-running the script for the same slug overwrites that post, so edit in Notion 
 ```
 
 - `start` / `end`: `"YYYY"` or `"YYYY-MM"`; `end` can be `"present"`; either may be empty (`"start": "", "end": "2023"` shows as 〜2023). The period text (2025年6月–10月 / Jun–Oct 2025) is generated.
-- `kind` (filter buttons): `research`, `other` (beyond research), `career` (education and work).
+- `kind`: `research` (timeline), `other` (timeline, shown as 課外活動 / Extracurricular), `career` (CV only: education and work).
 - `type` (badge): `award`, `talk`, `research`, `organizer`, `club`, `volunteer`, `qualification`, `education`, `work`.
+
+**CV PDFs** — `tools/build-cv.sh` prints `/cv/` and `/jp/cv/` to `cv/ice3-cv-en.pdf` and `cv/ice3-cv-ja.pdf` with headless Chrome. You don't need to run it: `.github/workflows/cv.yml` rebuilds and commits both PDFs whenever `data/timeline.json`, `data/publications.json`, the CV pages, `style.css` or `script.js` change. Run it locally only to preview (`tools/build-cv.sh`, then open the PDFs). The CV shows (ice)^3, the affiliation and the site/GitHub links — never a name, phone, email or supervisor.
 
 **Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`).
 
