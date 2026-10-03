@@ -7,10 +7,10 @@ Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages f
 | Path | What it is |
 | --- | --- |
 | `/`, `/jp/` | Home (English / Japanese) |
-| `/about/`, `/jp/about/` | Profile, interests, publications, activity |
+| `/about/`, `/jp/about/` | Profile → Research (interests slider, publications, talks) → Beyond research (interests, activities, qualifications) → Background (education and work) |
 | `/projects/`, `/jp/projects/` | Project cards |
 | `/projects/<slug>/` | Each standalone HTML project |
-| `/blog/`, `/jp/blog/` | Article cards |
+| `/jp/blog/` | Article cards (the blog is Japanese only; `/blog/` redirects here) |
 | `/blog/<slug>/` | Each article |
 | `/photos/`, `/jp/photos/` | Unsplash gallery |
 | `/data/*.json` | The lists shown on the pages above |
@@ -109,7 +109,11 @@ Re-running the script for the same slug overwrites that post, so edit in Notion 
 
 **Publication** — add to the top of `data/publications.json` (`year`, `title`, `journal`, `links`). Home shows the first three. No author lists — see Privacy.
 
-**Activity** — add to the top of `data/activities.json`. `type` is one of `award`, `talk`, `organizer`, `seminar`.
+**Activity / qualification** — add to `data/activities.json`, newest first. `kind` is `research` (shown under Research) or `other` (shown under Beyond research). `type` is one of `award`, `talk`, `organizer`, `seminar`, `club`, `qualification`. `year` can be a string, `{ "en": …, "ja": … }`, or empty.
+
+**Education / work** — add to `data/career.json`, newest first. `type` is `education` or `work`; `period` is `{ "en": "2023–", "ja": "2023〜" }` and may be left empty until you know it.
+
+**Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`).
 
 **Photo** — add to `data/photos.json`: the Unsplash photo page URL, the image URL (right-click the photo on Unsplash → copy image address), and alt text in both languages.
 

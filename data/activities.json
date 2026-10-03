@@ -1,6 +1,7 @@
 [
     {
         "year": "2026",
+        "kind": "research",
         "type": "award",
         "title": {
             "en": "Outstanding Student Presentation Award, JpGU-AGU Joint Meeting 2026",
@@ -14,6 +15,7 @@
     },
     {
         "year": "2026",
+        "kind": "research",
         "type": "talk",
         "title": {
             "en": "JpGU-AGU Joint Meeting 2026",
@@ -27,6 +29,7 @@
     },
     {
         "year": "2025",
+        "kind": "other",
         "type": "organizer",
         "title": {
             "en": "Satellite Data Analysis Seminar at Astrocamp (2025–2026)",
@@ -40,6 +43,7 @@
     },
     {
         "year": "2025",
+        "kind": "research",
         "type": "talk",
         "title": {
             "en": "SGEPSS Fall Meeting 2025 (Kobe)",
@@ -52,7 +56,25 @@
         "url": ""
     },
     {
+        "year": {
+            "en": "–2023",
+            "ja": "〜2023"
+        },
+        "kind": "other",
+        "type": "club",
+        "title": {
+            "en": "TELSTAR (space outreach magazine) — PR Lead",
+            "ja": "宇宙広報団体 TELSTAR 広報リーダー"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": "https://spacemgz-telstar.com/"
+    },
+    {
         "year": "2022",
+        "kind": "other",
         "type": "organizer",
         "title": {
             "en": "Satellite Data Analysis Seminar at ASE-Lab (2022)",
@@ -63,5 +85,33 @@
             "ja": "ASE-Lab. での衛星データ解析ゼミの企画・運営。"
         },
         "url": "https://www.ase-lab.space/"
+    },
+    {
+        "year": "",
+        "kind": "other",
+        "type": "qualification",
+        "title": {
+            "en": "SAJ Ski Badge Test, Level 1",
+            "ja": "SAJ（全日本スキー連盟）バッジテスト 1級"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
+    },
+    {
+        "year": "",
+        "kind": "other",
+        "type": "qualification",
+        "title": {
+            "en": "SIA Ski Badge, Gold",
+            "ja": "SIA（日本プロスキー教師協会）ゴールド"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
     }
 ]

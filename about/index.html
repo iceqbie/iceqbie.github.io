@@ -53,7 +53,6 @@
                 <a href="/">Home</a>
                 <a href="/about/" aria-current="page">About</a>
                 <a href="/projects/">Projects</a>
-                <a href="/blog/">Blog</a>
                 <a href="/photos/">Photos</a>
                 <a href="/jp/about/" class="lang-switch" lang="ja" hreflang="ja">日本語</a>
             </nav>
@@ -66,7 +65,15 @@
         <section class="page-header">
             <div class="container">
                 <h1>About</h1>
-                <p>Profile, research interests, publications and activity.</p>
+                <p>Profile, research, life beyond research, and background.</p>
+                <nav class="page-toc" aria-label="On this page">
+                    <ul>
+                    <li><a href="#profile">Profile</a></li>
+                    <li><a href="#research">Research</a></li>
+                    <li><a href="#beyond">Beyond research</a></li>
+                    <li><a href="#background">Background</a></li>
+                    </ul>
+                </nav>
             </div>
         </section>
 
@@ -81,23 +88,17 @@
                 <div class="about-grid">
 
                     <div class="about-main">
-                        <p class="lead">I'm a graduate student working on astrophysical plasma physics and numerical simulations.</p>
-
-                        <p>My research looks at plasma processes in astrophysical environments through theoretical analysis and computational modeling. Lately I'm testing whether machine-learning closure models can stand in for expensive kinetic simulations.</p>
+                        <p class="lead">I became a science student after falling for mathematics and the dome film <i>The Man from the 9 Dimensions</i> in junior high. As an undergraduate I worked on particle-detector experiments; now I study space plasma. I lived in Canada for a long time, so I really can't stand the heat.</p>
                     </div>
 
                     <dl class="about-meta">
                         <div>
-                            <dt class="meta-label">Based</dt>
-                            <dd>Tokyo, Japan</dd>
+                            <dt class="meta-label">Affiliation</dt>
+                            <dd>2nd-year Master's student, Department of Earth and Planetary Science, Graduate School of Science, The University of Tokyo</dd>
                         </div>
                         <div>
                             <dt class="meta-label">Field</dt>
-                            <dd>Astrophysical Plasma Physics</dd>
-                        </div>
-                        <div>
-                            <dt class="meta-label">Status</dt>
-                            <dd>Master's student, University of Tokyo</dd>
+                            <dd>Space plasma physics</dd>
                         </div>
                     </dl>
 
@@ -106,98 +107,130 @@
             </div>
         </section>
 
-        <section id="interests" class="section section-tinted" aria-labelledby="h-interests">
+        <section id="research" class="section section-tinted" aria-labelledby="h-research">
             <div class="container">
 
                 <div class="section-heading">
                     <span class="section-number" aria-hidden="true">02</span>
-                    <h2 id="h-interests">Interests</h2>
+                    <h2 id="h-research">Research</h2>
                 </div>
 
-                <div class="card-grid">
-                    <article class="card">
-                        <div class="card-body">
-                            <span class="interest-index" aria-hidden="true">01</span>
-                            <h3 class="card-title">How Turbulence Divides Its Energy</h3>
-                            <p class="card-summary">In a collisionless plasma nothing makes ions and electrons share energy. What sets the ion-to-electron heating ratio, as a function of plasma β and Tᵢ/Tₑ? It decides what an accretion flow around a black hole looks like.</p>
-                            <ul class="tags" aria-label="Tags"><li>Turbulence</li><li>Ion/Electron Heating</li><li>β</li></ul>
-                        </div>
-                    </article>
+                <h3 class="sub-heading" id="interests">Research interests</h3>
 
-                    <article class="card">
-                        <div class="card-body">
-                            <span class="interest-index" aria-hidden="true">02</span>
-                            <h3 class="card-title">Heat or a Nonthermal Tail</h3>
-                            <p class="card-summary">The same energy can thermalise or end up in a power-law tail of fast particles. How much goes where, and what sets the slope? The answer is a fitted distribution function with an honest error bar.</p>
-                            <ul class="tags" aria-label="Tags"><li>Particle Acceleration</li><li>Distribution Functions</li></ul>
-                        </div>
-                    </article>
+                <div class="slider" data-slider>
+                    <div class="slider-track" role="region" aria-label="Research interests" tabindex="0">
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index" aria-hidden="true">01</span>
+                                <h4 class="card-title">How Turbulence Divides Its Energy</h4>
+                                <p class="card-summary">In a collisionless plasma nothing makes ions and electrons share energy. What sets the ion-to-electron heating ratio, as a function of plasma β and Tᵢ/Tₑ? It decides what an accretion flow around a black hole looks like.</p>
+                                <ul class="tags" aria-label="Tags"><li>Turbulence</li><li>Ion/Electron Heating</li><li>β</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index" aria-hidden="true">02</span>
+                                <h4 class="card-title">Heat or a Nonthermal Tail</h4>
+                                <p class="card-summary">The same energy can thermalise or end up in a power-law tail of fast particles. How much goes where, and what sets the slope? The answer is a fitted distribution function with an honest error bar.</p>
+                                <ul class="tags" aria-label="Tags"><li>Particle Acceleration</li><li>Distribution Functions</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index" aria-hidden="true">03</span>
+                                <h4 class="card-title">Which Mechanism Dissipates</h4>
+                                <p class="card-summary">Landau damping, stochastic heating, reconnection in the thin sheets turbulence makes, or the firehose and mirror instabilities. Each predicts a different split, and which one wins depends on β and scale.</p>
+                                <ul class="tags" aria-label="Tags"><li>Landau Damping</li><li>Reconnection</li><li>Instabilities</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index" aria-hidden="true">04</span>
+                                <h4 class="card-title">Can the Simulation Be Trusted?</h4>
+                                <p class="card-summary">Standard explicit PIC heats the plasma numerically. How much of a published heating fraction survives a change of scheme? Energy-conserving, structure-preserving methods are how to find out.</p>
+                                <ul class="tags" aria-label="Tags"><li>PIC</li><li>Structure-Preserving</li><li>Numerical Heating</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index" aria-hidden="true">05</span>
+                                <h4 class="card-title">What Does It Cost?</h4>
+                                <p class="card-summary">An energy-conserving scheme needs a global implicit solve where explicit PIC needs none, and GPUs favour explicit PIC. Whether larger timesteps pay for the solve has to be measured on real hardware.</p>
+                                <ul class="tags" aria-label="Tags"><li>HPC</li><li>GPU</li><li>Profiling</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index" aria-hidden="true">06</span>
+                                <h4 class="card-title">Machine-Learning Closures</h4>
+                                <p class="card-summary">My current research: can data-driven closure models reproduce kinetic plasma behavior in affordable fluid simulations? A heat-flux closure and a heating prescription are the same kind of object.</p>
+                                <ul class="tags" aria-label="Tags"><li>Machine Learning</li><li>Closure Models</li><li>Kinetic</li></ul>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="slider-controls" hidden>
+                        <button type="button" class="slider-btn" aria-label="Previous">←</button>
+                        <span class="slider-count" aria-hidden="true"></span>
+                        <button type="button" class="slider-btn" aria-label="Next">→</button>
+                    </div>
+                </div>
 
-                    <article class="card">
-                        <div class="card-body">
-                            <span class="interest-index" aria-hidden="true">03</span>
-                            <h3 class="card-title">Which Mechanism Dissipates</h3>
-                            <p class="card-summary">Landau damping, stochastic heating, reconnection in the thin sheets turbulence makes, or the firehose and mirror instabilities. Each predicts a different split, and which one wins depends on β and scale.</p>
-                            <ul class="tags" aria-label="Tags"><li>Landau Damping</li><li>Reconnection</li><li>Instabilities</li></ul>
-                        </div>
-                    </article>
+                <h3 class="sub-heading" id="publications">Publications</h3>
+                <div data-list="publications" data-level="4" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
+                </div>
 
-                    <article class="card">
-                        <div class="card-body">
-                            <span class="interest-index" aria-hidden="true">04</span>
-                            <h3 class="card-title">Can the Simulation Be Trusted?</h3>
-                            <p class="card-summary">Standard explicit PIC heats the plasma numerically. How much of a published heating fraction survives a change of scheme? Energy-conserving, structure-preserving methods are how to find out.</p>
-                            <ul class="tags" aria-label="Tags"><li>PIC</li><li>Structure-Preserving</li><li>Numerical Heating</li></ul>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card-body">
-                            <span class="interest-index" aria-hidden="true">05</span>
-                            <h3 class="card-title">What Does It Cost?</h3>
-                            <p class="card-summary">An energy-conserving scheme needs a global implicit solve where explicit PIC needs none, and GPUs favour explicit PIC. Whether larger timesteps pay for the solve has to be measured on real hardware.</p>
-                            <ul class="tags" aria-label="Tags"><li>HPC</li><li>GPU</li><li>Profiling</li></ul>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card-body">
-                            <span class="interest-index" aria-hidden="true">06</span>
-                            <h3 class="card-title">Machine-Learning Closures</h3>
-                            <p class="card-summary">My current research: can data-driven closure models reproduce kinetic plasma behavior in affordable fluid simulations? A heat-flux closure and a heating prescription are the same kind of object.</p>
-                            <ul class="tags" aria-label="Tags"><li>Machine Learning</li><li>Closure Models</li><li>Kinetic</li></ul>
-                        </div>
-                    </article>
+                <h3 class="sub-heading" id="research-activity">Presentations &amp; awards</h3>
+                <div data-list="activities" data-level="4" data-kind="research" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
                 </div>
 
             </div>
         </section>
 
-        <section id="publications" class="section" aria-labelledby="h-publications">
+        <section id="beyond" class="section" aria-labelledby="h-beyond">
             <div class="container">
 
                 <div class="section-heading">
                     <span class="section-number" aria-hidden="true">03</span>
-                    <h2 id="h-publications">Publications</h2>
+                    <h2 id="h-beyond">Beyond research</h2>
                 </div>
 
-                <div data-list="publications" aria-busy="true">
-                    <noscript><p class="list-empty">Please enable JavaScript to see the publication list.</p></noscript>
+                <h3 class="sub-heading" id="hobbies">Interests</h3>
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Skiing</h4>
+                            <p class="card-summary">SAJ Level 1 and SIA Gold.</p>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Photography</h4>
+                            <p class="card-summary">I publish my photos on Unsplash — see <a class="text-link" href="/photos/">Photos</a>.</p>
+                        </div>
+                    </article>
+                </div>
+
+                <h3 class="sub-heading" id="activity">Activities &amp; qualifications</h3>
+                <div data-list="activities" data-level="4" data-kind="other" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
                 </div>
 
             </div>
         </section>
 
-        <section id="activity" class="section section-tinted" aria-labelledby="h-activity">
+        <section id="background" class="section section-tinted" aria-labelledby="h-background">
             <div class="container">
 
                 <div class="section-heading">
                     <span class="section-number" aria-hidden="true">04</span>
-                    <h2 id="h-activity">Activity</h2>
+                    <h2 id="h-background">Background</h2>
                 </div>
 
-                <div data-list="activities" aria-busy="true">
-                    <noscript><p class="list-empty">Please enable JavaScript to see the activity list.</p></noscript>
+                <h3 class="sub-heading" id="career">Education &amp; work</h3>
+                <div data-list="career" data-level="4" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
                 </div>
 
             </div>
@@ -221,7 +254,7 @@
 
             <div class="footer-bottom">
                 <span>© 2026 (ice)^3</span>
-                <span class="footer-mono">Last updated: 2026-09-28</span>
+                <span class="footer-mono">Last updated: 2026-10-03</span>
             </div>
 
         </div>
