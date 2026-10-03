@@ -1,0 +1,287 @@
+[
+    {
+        "start": "2026",
+        "end": "",
+        "kind": "research",
+        "type": "award",
+        "title": {
+            "en": "Outstanding Student Presentation Award, JpGU-AGU Joint Meeting 2026",
+            "ja": "優秀学生発表賞（JpGU-AGU Joint Meeting 2026）"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": "https://www.jpgu.org/en/ospa/jpgu-2026-outstanding-student-presentation-award/"
+    },
+    {
+        "start": "2026",
+        "end": "",
+        "kind": "research",
+        "type": "talk",
+        "title": {
+            "en": "JpGU-AGU Joint Meeting 2026",
+            "ja": "JpGU-AGU Joint Meeting 2026"
+        },
+        "detail": {
+            "en": "Poster: Validation of machine-learning-based closure models for collisionless plasmas in the linear regime",
+            "ja": "ポスター発表：Validation of machine-learning-based closure models for collisionless plasmas in the linear regime"
+        },
+        "url": ""
+    },
+    {
+        "start": "2025",
+        "end": "",
+        "kind": "research",
+        "type": "talk",
+        "title": {
+            "en": "SGEPSS Fall Meeting 2025 (Kobe)",
+            "ja": "SGEPSS 秋季大会 2025（神戸）"
+        },
+        "detail": {
+            "en": "Poster: Linear properties of machine-learning-based closure models for collisionless plasmas",
+            "ja": "ポスター発表：Linear properties of machine-learning-based closure models for collisionless plasmas"
+        },
+        "url": ""
+    },
+    {
+        "start": "2023-01",
+        "end": "2023-04",
+        "kind": "research",
+        "type": "research",
+        "title": {
+            "en": "Research course PHYD01, University of Toronto",
+            "ja": "研究コース PHYD01（トロント大学）"
+        },
+        "detail": {
+            "en": "Examining simulation errors in chaotic systems: a Python-based double-pendulum study.",
+            "ja": "カオス系のシミュレーション誤差の検証：Python による二重振り子シミュレーション。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2022-05",
+        "end": "2023-04",
+        "kind": "research",
+        "type": "research",
+        "title": {
+            "en": "Particle detector laboratory (ATLAS HL-LHC), University of Toronto",
+            "ja": "トロント大学 ATLAS 実験 HL-LHC 検出器研究室"
+        },
+        "detail": {
+            "en": "Modelling the long-term annealing of ATLAS strip sensors for Run 4 planning.",
+            "ja": "ATLAS ストリップセンサーの長期アニーリングを解析するモデルの開発（Run 4 計画向け）。"
+        },
+        "url": "https://doi.org/10.22323/1.420.0043"
+    },
+    {
+        "start": "2021-04",
+        "end": "2021-08",
+        "kind": "research",
+        "type": "research",
+        "title": {
+            "en": "International Center for Elementary Particle Physics (ICEPP), The University of Tokyo",
+            "ja": "東京大学 素粒子物理国際研究センター（ICEPP）"
+        },
+        "detail": {
+            "en": "Statistical analysis of SiPM (MPPC) saturation for the ILC experiment.",
+            "ja": "ILC 実験に向けた SiPM（MPPC）の飽和の統計解析。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2025",
+        "end": "",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "Satellite Data Analysis Seminar at Astrocamp (2025–2026)",
+            "ja": "衛星データ解析ゼミ at Astrocamp（2025–2026）"
+        },
+        "detail": {
+            "en": "Organized the satellite data analysis seminar at Astrocamp.",
+            "ja": "Astrocamp での衛星データ解析ゼミの企画・運営。"
+        },
+        "url": "https://camp.ase-lab.space/"
+    },
+    {
+        "start": "2022",
+        "end": "present",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "ASE-Lab. — Facilitator, CanSat software team",
+            "ja": "ASE-Lab. ファシリテーター・CanSat ソフトウェアチーム"
+        },
+        "detail": {
+            "en": "Organize seminars on satellite imagery and astrostatistics. Built a CanSat navigation-control algorithm and k-means image processing for the August 2022 competition.",
+            "ja": "衛星画像・宇宙統計のゼミの企画・運営。2022年8月の CanSat 大会に向けて、航法制御アルゴリズムと k-means による画像処理を開発。"
+        },
+        "url": "https://www.ase-lab.space/"
+    },
+    {
+        "start": "",
+        "end": "2023",
+        "kind": "other",
+        "type": "club",
+        "title": {
+            "en": "TELSTAR (space outreach magazine) — PR Lead",
+            "ja": "宇宙広報団体 TELSTAR 広報リーダー"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": "https://spacemgz-telstar.com/"
+    },
+    {
+        "start": "2021",
+        "end": "2022",
+        "kind": "other",
+        "type": "club",
+        "title": {
+            "en": "Data Science and Statistics Club — Associate",
+            "ja": "Data Science and Statistics Club アソシエイト"
+        },
+        "detail": {
+            "en": "Wrote articles on applications of statistics, mainly in artificial intelligence.",
+            "ja": "統計の応用（主に AI 分野）についての記事を執筆。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2019",
+        "end": "2020",
+        "kind": "other",
+        "type": "volunteer",
+        "title": {
+            "en": "Vision of Science — Volunteer Senior Facilitator",
+            "ja": "Vision of Science シニアファシリテーター（ボランティア）"
+        },
+        "detail": {
+            "en": "Science experiments and outreach for elementary-school students from low-income families.",
+            "ja": "低所得家庭の小学生に、科学実験とアウトリーチの機会を提供。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2016",
+        "end": "",
+        "kind": "other",
+        "type": "qualification",
+        "title": {
+            "en": "SAJ Ski Badge Test, Level 1",
+            "ja": "SAJ（全日本スキー連盟）バッジテスト 1級"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
+    },
+    {
+        "start": "2016",
+        "end": "",
+        "kind": "other",
+        "type": "qualification",
+        "title": {
+            "en": "SIA Ski Badge, Gold",
+            "ja": "SIA（日本プロスキー教師協会）ゴールド"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
+    },
+    {
+        "start": "",
+        "end": "present",
+        "kind": "career",
+        "type": "education",
+        "title": {
+            "en": "The University of Tokyo, Graduate School of Science — Master's program, Department of Earth and Planetary Science",
+            "ja": "東京大学大学院 理学系研究科 地球惑星科学専攻 修士課程"
+        },
+        "detail": {
+            "en": "2nd year. Space plasma physics.",
+            "ja": "修士2年。宇宙プラズマ物理学を研究。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2025-06",
+        "end": "2025-10",
+        "kind": "career",
+        "type": "work",
+        "title": {
+            "en": "Tenchijin Inc. — Intern",
+            "ja": "株式会社天地人 インターン"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
+    },
+    {
+        "start": "2023",
+        "end": "present",
+        "kind": "career",
+        "type": "work",
+        "title": {
+            "en": "GHELIA Inc. — Intern",
+            "ja": "ギリア株式会社 インターン"
+        },
+        "detail": {
+            "en": "Fast physical simulation of object–fluid interaction with surrogate models; worked mainly on the differential-equation solver.",
+            "ja": "サロゲートモデルを使った、物体と流体の相互作用の高速な物理シミュレーション。主に微分方程式ソルバーを担当。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2019",
+        "end": "2024-06",
+        "kind": "career",
+        "type": "education",
+        "title": {
+            "en": "University of Toronto — Honours Bachelor of Science",
+            "ja": "トロント大学（Honours Bachelor of Science）"
+        },
+        "detail": {
+            "en": "Graduated June 2024. Physics & Astrophysics Specialist, Statistics Minor.",
+            "ja": "2024年6月卒業。物理・天体物理学スペシャリスト、統計学マイナー。"
+        },
+        "url": ""
+    },
+    {
+        "start": "2019",
+        "end": "2020",
+        "kind": "career",
+        "type": "work",
+        "title": {
+            "en": "TCK workshop — Tutor",
+            "ja": "TCK workshop 家庭教師"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
+    },
+    {
+        "start": "2016",
+        "end": "2019",
+        "kind": "career",
+        "type": "education",
+        "title": {
+            "en": "Glenlyon Norfolk School — International Baccalaureate Bilingual Diploma",
+            "ja": "Glenlyon Norfolk School 国際バカロレア バイリンガル・ディプロマ"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": ""
+    }
+]

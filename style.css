@@ -158,7 +158,7 @@ ol {
 .text-link,
 .prose a,
 .about-main a,
-.timeline-content a,
+.chrono-item a,
 .publication-body :is(h3, h4) a {
     color: var(--charcoal);
 
@@ -173,7 +173,7 @@ ol {
 .text-link:hover,
 .prose a:hover,
 .about-main a:hover,
-.timeline-content a:hover,
+.chrono-item a:hover,
 .publication-body :is(h3, h4) a:hover {
     background: var(--lime);
     text-decoration-color: var(--charcoal);
@@ -845,41 +845,138 @@ ol {
 
 
 /* =========================================================
-   TIMELINE (activity, CV-style list)
+   TIMELINE (profile chronology)
+   Year | line with a dot per entry | entry. The line and dots are
+   decoration; the order and the years carry the meaning.
    ========================================================= */
 
-.timeline {
-    border-top: var(--border);
+.chrono-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-bottom: var(--space-sm);
 }
 
-.timeline-item {
-    display: grid;
-    grid-template-columns: 80px minmax(0, 1fr);
+.chrono-btn {
+    border: 0;
 
-    gap: var(--space-md);
+    cursor: pointer;
 
-    padding: var(--space-md) 0;
-
-    border-bottom: var(--border);
+    font-family: inherit;
+    font-size: var(--fs-caption);
+    font-weight: 500;
 }
 
-.timeline-year {
-    padding-top: 2px;
+.chrono-btn[aria-pressed="true"] {
+    background: var(--ice-blue);
+    box-shadow: inset 0 0 0 1px var(--charcoal);
+}
+
+.chrono-status {
+    margin: 0 0 var(--space-md);
 
     color: var(--charcoal-soft);
-
-    font-family: var(--font-mono);
     font-size: var(--fs-caption);
 }
 
-.timeline-content {
+.chrono {
+    --chrono-label: 88px;   /* width of the year column */
+    --chrono-gutter: 32px;  /* line sits in the middle of this */
+}
+
+.chrono-year {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: var(--chrono-label) minmax(0, 1fr);
+
+    padding-bottom: var(--space-md);
+}
+
+/* the vertical line, running through every year */
+.chrono-year::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--chrono-label) + var(--chrono-gutter) / 2 - 1px);
+
+    width: 2px;
+
+    background: var(--ice-blue);
+}
+
+.chrono-year:last-child::before {
+    bottom: auto;
+    height: 1.2em;
+}
+
+.chrono-year[hidden],
+.chrono-item[hidden] {
+    display: none;
+}
+
+.chrono-label {
+    padding-top: 2px;
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    font-weight: 500;
+}
+
+.chrono-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.chrono-item {
+    position: relative;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+
+    padding-left: var(--chrono-gutter);
 }
 
-.timeline-content :is(h3, h4) {
+/* the dot on the line */
+.chrono-item::before {
+    content: "";
+
+    position: absolute;
+    top: 0.45em;
+    left: calc(var(--chrono-gutter) / 2 - 6px);
+
+    width: 12px;
+    height: 12px;
+
+    background: var(--white);
+
+    border: 2px solid var(--charcoal);
+    border-radius: 50%;
+}
+
+.chrono-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+
+    margin: 0;
+}
+
+.chrono-period {
+    color: var(--charcoal-soft);
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+}
+
+.chrono-item :is(h3, h4) {
     margin: 0;
 
     font-size: 1.125rem;
@@ -887,11 +984,34 @@ ol {
     line-height: 1.5;
 }
 
-.timeline-content p {
+.chrono-item > p:not(.chrono-meta) {
     margin: 0;
 
     color: var(--charcoal-soft);
     font-size: var(--fs-small);
+}
+
+
+/* =========================================================
+   SKILLS
+   ========================================================= */
+
+.skills {
+    display: grid;
+    gap: var(--space-sm);
+
+    margin: 0;
+}
+
+.skills > div {
+    display: grid;
+    grid-template-columns: 9em minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--space-sm);
+}
+
+.skills dd {
+    margin: 0;
 }
 
 
@@ -1571,10 +1691,31 @@ html[lang="ja"] .card-title,
         grid-template-columns: 1fr;
     }
 
-    .publication,
-    .timeline-item {
+    .publication {
         grid-template-columns: 1fr;
 
+        gap: 4px;
+    }
+
+    /* Phones: year above its entries, line along the left edge. */
+    .chrono {
+        --chrono-gutter: 28px;
+    }
+
+    .chrono-year {
+        grid-template-columns: 1fr;
+    }
+
+    .chrono-year::before {
+        left: calc(var(--chrono-gutter) / 2 - 1px);
+    }
+
+    .chrono-label {
+        padding: 0 0 var(--space-xs) var(--chrono-gutter);
+    }
+
+    .skills > div {
+        grid-template-columns: 1fr;
         gap: 4px;
     }
 

@@ -2,9 +2,8 @@
    LIST RENDERER
    Fills every <div data-list="..."> from /data/<name>.json.
 
-     data-list   projects | articles | activities | career | publications | photos
+     data-list   projects | articles | timeline | publications | photos
      data-limit  optional; show only the first N items
-     data-kind   activities only: "research" or "other"
      data-filter list pages only: show the tag bar and honour ?tag=
      data-level  heading level for each row (default 3; 4 under an h3)
 
@@ -23,10 +22,18 @@
             talk: "Presentation",
             organizer: "Organizer",
             seminar: "Seminar",
+            research: "Research",
             club: "Extracurricular",
+            volunteer: "Volunteer",
             qualification: "Qualification",
             education: "Education",
             work: "Work",
+            present: "Present",
+            now: "Now",
+            months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            kinds: { all: "All", research: "Research", other: "Beyond research", career: "Education & work" },
+            kindsLabel: "Filter the timeline",
+            shown: (n) => `Showing ${n} ${n === 1 ? "entry" : "entries"}`,
             written: { en: "English", ja: "Japanese" },
             tags: "Tags",
             all: "All",
@@ -36,8 +43,7 @@
             empty: {
                 projects: "Projects will appear here.",
                 articles: "Articles are on the way.",
-                activities: "Activities will appear here.",
-                career: "Coming soon.",
+                timeline: "Coming soon.",
                 publications: "Publications will appear here.",
                 photos: "Photos will appear here."
             },
@@ -48,10 +54,17 @@
             talk: "発表",
             organizer: "企画・運営",
             seminar: "ゼミ",
+            research: "研究経験",
             club: "課外活動",
+            volunteer: "ボランティア",
             qualification: "資格",
             education: "学歴",
             work: "職歴",
+            present: "在学中",
+            now: "現在",
+            kinds: { all: "すべて", research: "研究", other: "研究以外", career: "学歴・職歴" },
+            kindsLabel: "年表の絞り込み",
+            shown: (n) => `${n}件を表示中`,
             written: { en: "英語", ja: "日本語" },
             tags: "タグ",
             all: "すべて",
@@ -61,8 +74,7 @@
             empty: {
                 projects: "プロジェクトはここに表示されます。",
                 articles: "記事は準備中です。",
-                activities: "活動はここに表示されます。",
-                career: "準備中です。",
+                timeline: "準備中です。",
                 publications: "論文はここに表示されます。",
                 photos: "写真はここに表示されます。"
             },
@@ -160,8 +172,40 @@
             </article>`;
     }
 
-    // One row of a CV-style list. `when` may be empty (date not known yet).
-    function timelineRow(when, type, item) {
+    /* ---------- timeline (profile) ---------- */
+
+    // "2025-06" → { y: "2025", m: 6 }; "2025" → { y: "2025", m: 0 }
+    const parseDate = (d) => {
+        const [y, m] = String(d || "").split("-");
+        return { y, m: parseInt(m, 10) || 0 };
+    };
+
+    const fmtDate = ({ y, m }, withYear = true) => {
+        if (!m) return y;
+        if (LANG === "ja") return withYear ? `${y}年${m}月` : `${m}月`;
+        return withYear ? `${TEXT.months[m - 1]} ${y}` : TEXT.months[m - 1];
+    };
+
+    // The period shown on each entry, e.g. 2025年6月–10月 / Jun–Oct 2025.
+    function period(item) {
+        const { start, end } = item;
+        if (end === "present") return start ? `${fmtDate(parseDate(start))}–` : TEXT.present;
+        if (!start) return end ? (LANG === "ja" ? `〜${end}` : `–${end}`) : "";
+        if (!end) return fmtDate(parseDate(start));
+        const s = parseDate(start), e = parseDate(end);
+        if (s.y === e.y && s.m && e.m) {
+            return LANG === "ja"
+                ? `${s.y}年${s.m}月–${e.m}月`
+                : `${TEXT.months[s.m - 1]}–${TEXT.months[e.m - 1]} ${s.y}`;
+        }
+        return `${fmtDate(s)}–${fmtDate(e)}`;
+    }
+
+    // Newest first by start (or end); "present" with no start goes on top.
+    const sortKey = (item) =>
+        !item.start && item.end === "present" ? "9999" : (item.start || item.end || "0000");
+
+    function timelineEntry(item) {
         const title = escapeHtml(pick(item.title));
         const detail = pick(item.detail);
         const heading = item.url
@@ -169,18 +213,66 @@
             : title;
 
         return `
-            <li class="timeline-item">
-                <span class="timeline-year">${escapeHtml(when)}</span>
-                <div class="timeline-content">
-                    <span class="badge badge-${escapeHtml(type)}">${escapeHtml(TEXT[type] || type)}</span>
+                <li class="chrono-item" data-kind="${escapeHtml(item.kind)}">
+                    <p class="chrono-meta">
+                        <span class="badge badge-${escapeHtml(item.type)}">${escapeHtml(TEXT[item.type] || item.type)}</span>
+                        <span class="chrono-period">${escapeHtml(period(item))}</span>
+                    </p>
                     <h${LEVEL}>${heading}</h${LEVEL}>
                     ${detail ? `<p>${escapeHtml(detail)}</p>` : ""}
-                </div>
-            </li>`;
+                </li>`;
     }
 
-    const activityRow = (item) => timelineRow(pick(item.year), item.type, item);
-    const careerRow = (item) => timelineRow(pick(item.period), item.type, item);
+    // Items grouped by year, with buttons that show one kind at a time.
+    function timeline(items) {
+        const sorted = items
+            .map((item, i) => [item, i])
+            .sort(([a, i], [b, j]) => sortKey(b).localeCompare(sortKey(a)) || i - j)
+            .map(([item]) => item);
+
+        const groups = [];
+        for (const item of sorted) {
+            const key = sortKey(item).slice(0, 4);
+            const label = key === "9999" ? TEXT.now : key;
+            if (!groups.length || groups[groups.length - 1].label !== label) groups.push({ label, items: [] });
+            groups[groups.length - 1].items.push(item);
+        }
+
+        const kinds = ["all", ...new Set(items.map((item) => item.kind))];
+        const buttons = kinds.map((k) =>
+            `<button type="button" class="tag chrono-btn" data-kind="${k}" aria-pressed="${k === "all"}">${escapeHtml(TEXT.kinds[k] || k)}</button>`
+        ).join("");
+
+        return `
+            <div class="chrono-filter" role="group" aria-label="${escapeHtml(TEXT.kindsLabel)}">${buttons}</div>
+            <p class="chrono-status" role="status">${escapeHtml(TEXT.shown(items.length))}</p>
+            <ol class="chrono">${groups.map((g) => `
+                <li class="chrono-year">
+                    <span class="chrono-label">${escapeHtml(g.label)}</span>
+                    <ol class="chrono-items">${g.items.map(timelineEntry).join("")}</ol>
+                </li>`).join("")}
+            </ol>`;
+    }
+
+    function wireTimeline(container) {
+        const buttons = container.querySelectorAll(".chrono-btn");
+        const status = container.querySelector(".chrono-status");
+
+        buttons.forEach((button) => button.addEventListener("click", () => {
+            const kind = button.dataset.kind;
+            buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+
+            let shown = 0;
+            container.querySelectorAll(".chrono-item").forEach((item) => {
+                item.hidden = kind !== "all" && item.dataset.kind !== kind;
+                if (!item.hidden) shown++;
+            });
+            container.querySelectorAll(".chrono-year").forEach((year) => {
+                year.hidden = !year.querySelector(".chrono-item:not([hidden])");
+            });
+            status.textContent = TEXT.shown(shown);
+        }));
+    }
 
     // Titles and journals are kept in English on both language pages.
     function publicationRow(item) {
@@ -209,8 +301,7 @@
     const RENDERERS = {
         projects: { item: projectCard, wrap: (html) => `<div class="card-grid">${html}</div>` },
         articles: { item: articleCard, wrap: (html) => `<div class="card-grid">${html}</div>` },
-        activities: { item: activityRow, wrap: (html) => `<ol class="timeline">${html}</ol>` },
-        career: { item: careerRow, wrap: (html) => `<ol class="timeline">${html}</ol>` },
+        timeline: { all: timeline, after: wireTimeline },
         publications: { item: publicationRow, wrap: (html) => `<ol class="publication-list">${html}</ol>` },
         photos: { item: photoCard, wrap: (html) => html }
     };
@@ -258,26 +349,26 @@
         if (!renderer) return;
 
         const limit = parseInt(container.dataset.limit, 10);
-        const kind = container.dataset.kind;
         const filtering = "filter" in container.dataset && LIST_PAGE[name];
         const active = filtering ? new URLSearchParams(location.search).get("tag") : null;
 
         try {
             let items = await load(name);
-            if (kind) items = items.filter((item) => item.kind === kind);
 
             const all = items;
             if (active) items = items.filter((item) => (item.tags || []).includes(active));
             if (limit > 0) items = items.slice(0, limit);
 
             LEVEL = parseInt(container.dataset.level, 10) || 3;
-            const list = items.length
-                ? renderer.wrap(items.map(renderer.item).join(""))
-                : active ? "" : `<p class="list-empty">${escapeHtml(TEXT.empty[name])}</p>`;
+            const list = !items.length ? null
+                : renderer.all ? renderer.all(items)
+                : renderer.wrap(items.map(renderer.item).join(""));
+            const body = list ?? (active ? "" : `<p class="list-empty">${escapeHtml(TEXT.empty[name])}</p>`);
 
             container.innerHTML = filtering
-                ? filterBar(name, all, active) + filterStatus(name, active, items.length) + list
-                : list;
+                ? filterBar(name, all, active) + filterStatus(name, active, items.length) + body
+                : body;
+            if (renderer.after && list) renderer.after(container);
         } catch (error) {
             console.error(error);
             container.innerHTML = `<p class="list-empty">${escapeHtml(TEXT.failed)}</p>`;

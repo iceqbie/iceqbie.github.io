@@ -7,7 +7,7 @@ Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages f
 | Path | What it is |
 | --- | --- |
 | `/`, `/jp/` | Home (English / Japanese) |
-| `/about/`, `/jp/about/` | Profile → Research (interests slider, publications, talks) → Beyond research (interests, activities, qualifications) → Background (education and work) |
+| `/about/`, `/jp/about/` | Profile and skills → Research (interests slider, publications) → Interests → Timeline (everything with a date, filterable) |
 | `/projects/`, `/jp/projects/` | Project cards |
 | `/projects/<slug>/` | Each standalone HTML project |
 | `/jp/blog/` | Article cards (the blog is Japanese only; `/blog/` redirects here) |
@@ -109,13 +109,31 @@ Re-running the script for the same slug overwrites that post, so edit in Notion 
 
 **Publication** — add to the top of `data/publications.json` (`year`, `title`, `journal`, `links`). Home shows the first three. No author lists — see Privacy.
 
-**Activity / qualification** — add to `data/activities.json`, newest first. `kind` is `research` (shown under Research) or `other` (shown under Beyond research). `type` is one of `award`, `talk`, `organizer`, `seminar`, `club`, `qualification`. `year` can be a string, `{ "en": …, "ja": … }`, or empty.
+**Timeline** — everything with a date on the profile (research experience, talks, awards, activities, qualifications, education, work) lives in `data/timeline.json`; order in the file doesn't matter, the page sorts newest first and groups by year.
 
-**Education / work** — add to `data/career.json`, newest first. `type` is `education` or `work`; `period` is `{ "en": "2023–", "ja": "2023〜" }` and may be left empty until you know it.
+```json
+{
+    "start": "2025-06", "end": "2025-10",
+    "kind": "career", "type": "work",
+    "title": { "en": "Tenchijin Inc. — Intern", "ja": "株式会社天地人 インターン" },
+    "detail": { "en": "", "ja": "" },
+    "url": ""
+}
+```
+
+- `start` / `end`: `"YYYY"` or `"YYYY-MM"`; `end` can be `"present"`; either may be empty (`"start": "", "end": "2023"` shows as 〜2023). The period text (2025年6月–10月 / Jun–Oct 2025) is generated.
+- `kind` (filter buttons): `research`, `other` (beyond research), `career` (education and work).
+- `type` (badge): `award`, `talk`, `research`, `organizer`, `club`, `volunteer`, `qualification`, `education`, `work`.
 
 **Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`).
 
-**Photo** — add to `data/photos.json`: the Unsplash photo page URL, the image URL (right-click the photo on Unsplash → copy image address), and alt text in both languages.
+**Photos** — `data/photos.json` is refreshed daily by GitHub Actions (`.github/workflows/unsplash.yml` → `tools/fetch-unsplash.py`) with your most popular Unsplash photos. One-time setup:
+
+1. Create an app at <https://unsplash.com/oauth/applications> (demo mode is enough — one request a day) and copy its **Access Key**.
+2. `gh secret set UNSPLASH_ACCESS_KEY` and paste the key (or Settings → Secrets and variables → Actions). The key stays secret; it is never in the site.
+3. Actions → *Update Unsplash photos* → *Run workflow* to fill the list now.
+
+Until the key is set, the hand-written list is used as is. Alt text you write in `photos.json` (English or Japanese) is kept on each refresh; a new photo gets Unsplash's English description until you add a Japanese one.
 
 ## Previewing locally
 
