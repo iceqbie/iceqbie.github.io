@@ -1,0 +1,4 @@
+# The CV pages and PDFs carry the real name; keep them out of search results.
+User-agent: *
+Disallow: /cv/
+Disallow: /jp/cv/

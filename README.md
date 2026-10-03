@@ -126,7 +126,7 @@ Re-running the script for the same slug overwrites that post, so edit in Notion 
 - `kind`: `research` (timeline), `other` (timeline, shown as 課外活動 / Extracurricular), `career` (CV only: education and work).
 - `type` (badge): `award`, `talk`, `research`, `organizer`, `club`, `volunteer`, `qualification`, `education`, `work`.
 
-**CV PDFs** — `tools/build-cv.sh` prints `/cv/` and `/jp/cv/` to `cv/ice3-cv-en.pdf` and `cv/ice3-cv-ja.pdf` with headless Chrome. You don't need to run it: `.github/workflows/cv.yml` rebuilds and commits both PDFs whenever `data/timeline.json`, `data/publications.json`, the CV pages, `style.css` or `script.js` change. Run it locally only to preview (`tools/build-cv.sh`, then open the PDFs). The CV shows (ice)^3, the affiliation and the site/GitHub links — never a name, phone, email or supervisor.
+**CV PDFs** — `tools/build-cv.sh` prints `/cv/` and `/jp/cv/` to `cv/ice3-cv-en.pdf` and `cv/ice3-cv-ja.pdf` with headless Chrome. You don't need to run it: `.github/workflows/cv.yml` rebuilds and commits both PDFs whenever `data/timeline.json`, `data/publications.json`, the CV pages, `style.css` or `script.js` change. Run it locally only to preview (`tools/build-cv.sh`, then open the PDFs). The CV shows the real name, the affiliation, and the site, GitHub and LinkedIn links — never a phone number, email or supervisor (see Privacy).
 
 **Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`).
 
@@ -147,4 +147,6 @@ The pages load `/data/*.json` with `fetch()` and use root-relative paths, so ope
 
 ## Privacy
 
-The real name is intentionally kept off the site. Don't add author lists, a CV PDF, or LinkedIn/Scholar links.
+The site goes by (ice)^3. The real name and the LinkedIn link appear **only on the CV** (`/cv/`, `/jp/cv/` and the two PDFs), which is kept out of search engines: the CV pages carry `noindex, nofollow`, and `robots.txt` disallows `/cv/` and `/jp/cv/` (the PDFs live there too). The CV pages' title and link preview stay "CV - icebox." so the name doesn't show in shared links.
+
+Everywhere else, keep the name off: no author lists, no LinkedIn or Scholar links on other pages. The CV never shows a phone number, email or supervisor.

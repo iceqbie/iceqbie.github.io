@@ -135,19 +135,23 @@
 
                 <h3 class="sub-heading" id="interests">研究の関心</h3>
 
+                <figure class="core-question">
+                    <figcaption class="meta-label">Core question</figcaption>
+                    <blockquote><p>無衝突の乱流は、エネルギーをイオンと電子にどう分けるのか。そして、その数字に意味があると言えるほどシミュレーションは保存則を守れているのか——それを、誰もが払えるコストで確かめることに取り組んでいます。</p></blockquote>
+                </figure>
                 <div class="slider" data-slider>
                     <div class="slider-track" role="region" aria-label="研究の関心" tabindex="0">
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">01</span>
-                                <h4 class="card-title">乱流はエネルギーをどう分けるか</h4>
-                                <p class="card-summary">無衝突プラズマでは、イオンと電子のエネルギーを等しくする仕組みがありません。イオンと電子の加熱比は、プラズマβと温度比 Tᵢ/Tₑ でどう決まるのか。ブラックホール降着流の見え方を左右する問題です。</p>
+                                <span class="interest-index">Q1</span>
+                                <h4 class="card-title">イオンと電子の分け前</h4>
+                                <p class="card-summary">乱流は大きなスケールでエネルギーを運び、小さなスケールで吸収されます。イオンと電子の加熱比は β と Tᵢ/Tₑ でどう決まるのか。その依存性は、降着流の見え方を変えるほど急です。</p>
                                 <ul class="tags" aria-label="Tags"><li>Turbulence</li><li>Ion/Electron Heating</li><li>β</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">02</span>
+                                <span class="interest-index">Q2</span>
                                 <h4 class="card-title">熱か、非熱的なテールか</h4>
                                 <p class="card-summary">同じエネルギーが熱になることも、高速粒子のべき乗テールになることもあります。どれだけがどちらへ行き、傾きは何で決まるのか。答えは誤差付きでフィットした分布関数です。</p>
                                 <ul class="tags" aria-label="Tags"><li>Particle Acceleration</li><li>Distribution Functions</li></ul>
@@ -155,31 +159,39 @@
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">03</span>
+                                <span class="interest-index">Q3</span>
                                 <h4 class="card-title">何が散逸を担うのか</h4>
-                                <p class="card-summary">ランダウ減衰、確率的加熱、乱流が作る薄い電流シートでの磁気リコネクション、ファイアホース・ミラー不安定性。それぞれ異なる分配を予言し、どれが効くかはβとスケールで変わります。</p>
+                                <p class="card-summary">ランダウ減衰、確率的加熱、乱流が作る薄い電流シートでの磁気リコネクション、そしてファイアホース・ミラー不安定性（乱流が自分を調整する仕組み）。それぞれ異なる分配を予言し、どれが効くかはβとスケールで変わります。</p>
                                 <ul class="tags" aria-label="Tags"><li>Landau Damping</li><li>Reconnection</li><li>Instabilities</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">04</span>
-                                <h4 class="card-title">そのシミュレーションは信用できるか</h4>
-                                <p class="card-summary">標準的な陽解法 PIC は数値的にプラズマを加熱します。報告されている加熱率のうち、スキームを変えても残るのはどれだけか。エネルギー保存・構造保存型の手法で確かめます。</p>
+                                <span class="interest-index">Q4</span>
+                                <h4 class="card-title">物理か、コードか</h4>
+                                <p class="card-summary">標準的な陽解法 PIC は数値的にプラズマを加熱し、報告されている加熱率はどれもそうした計算から得られています。そのうちスキームを変えても残るのはどれだけか——それを系統的に調べた人はまだいません。</p>
                                 <ul class="tags" aria-label="Tags"><li>PIC</li><li>Structure-Preserving</li><li>Numerical Heating</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">05</span>
+                                <span class="interest-index">Q5</span>
                                 <h4 class="card-title">そのコストは見合うか</h4>
-                                <p class="card-summary">エネルギー保存スキームには陽解法 PIC にはない大域的な陰的ソルブが必要で、GPU は陽解法に有利です。大きな時間刻みでその分を取り返せるかは、実機で測るしかありません。</p>
+                                <p class="card-summary">エネルギー保存スキームには陽解法 PIC にはない大域的な陰的ソルブが必要で、GPU は陽解法に有利です。大きな時間刻みでその分を取り返せるかは理論では決まらず、実機で測るしかありません。</p>
                                 <ul class="tags" aria-label="Tags"><li>HPC</li><li>GPU</li><li>Profiling</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">06</span>
+                                <span class="interest-index">根っこの問い</span>
+                                <h4 class="card-title">可逆な系はなぜ不可逆になるのか</h4>
+                                <p class="card-summary">Vlasov 方程式は時間反転可能で、細かいエントロピーを厳密に保存します。それでもプラズマは加熱され、元には戻りません。格子は否応なく粗視化するので、その不可逆性は自然のものか、格子のものか。</p>
+                                <ul class="tags" aria-label="Tags"><li>Entropy</li><li>Phase Mixing</li><li>Arrow of Time</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index">現在の研究</span>
                                 <h4 class="card-title">機械学習によるクロージャ</h4>
                                 <p class="card-summary">現在の研究テーマ：データ駆動型のクロージャモデルは、計算コストの低い流体シミュレーションで運動論的プラズマの振る舞いを再現できるか。熱流束のクロージャと加熱率の処方は同じ種類の問題です。</p>
                                 <ul class="tags" aria-label="Tags"><li>Machine Learning</li><li>Closure Models</li><li>Kinetic</li></ul>
@@ -250,16 +262,10 @@
                     <h2 id="h-cv">CV</h2>
                 </div>
 
-                <p class="cv-lead">学歴と職歴です。研究経験・論文・発表・課外活動・資格・スキルを含む CV 全体は PDF でご覧いただけます。</p>
-
                 <div class="cv-actions">
-                    <a class="button button-primary" href="/cv/ice3-cv-ja.pdf" target="_blank" rel="noopener">PDF を開く</a>
+                    <a class="button button-primary" href="/cv/ice3-cv-ja.pdf" target="_blank" rel="noopener">PDF を表示</a>
                     <a class="button" href="/cv/ice3-cv-ja.pdf" download>PDF をダウンロード</a>
                     <a class="button" href="/jp/cv/">Web 版 CV</a>
-                </div>
-
-                <div data-list="timeline" data-view="cv" data-kinds="career" aria-busy="true">
-                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
                 </div>
 
             </div>

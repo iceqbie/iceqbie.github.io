@@ -1471,6 +1471,44 @@ h4.card-title {
 
 
 /* =========================================================
+   CORE QUESTION (above the research-interest cards)
+   ========================================================= */
+
+.core-question {
+    max-width: 860px;
+    margin: 0 0 var(--space-md);
+    padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-md) - 2px);
+
+    background: var(--white);
+
+    border-left: 6px solid var(--ice-blue);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.core-question figcaption {
+    display: block;
+
+    margin-bottom: var(--space-xs);
+}
+
+.core-question blockquote {
+    margin: 0;
+}
+
+.core-question p {
+    margin: 0;
+
+    font-size: var(--fs-lead);
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+html[lang="ja"] .core-question p {
+    line-height: 1.8;
+}
+
+
+/* =========================================================
    SLIDER (research interests)
    ========================================================= */
 

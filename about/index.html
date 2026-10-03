@@ -134,52 +134,64 @@
 
                 <h3 class="sub-heading" id="interests">Research interests</h3>
 
+                <figure class="core-question">
+                    <figcaption class="meta-label">Core question</figcaption>
+                    <blockquote><p>I work on how collisionless turbulence divides its energy between ions and electrons — and on whether simulations conserve well enough for that number to mean anything, at a cost anyone can afford.</p></blockquote>
+                </figure>
                 <div class="slider" data-slider>
                     <div class="slider-track" role="region" aria-label="Research interests" tabindex="0">
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">01</span>
-                                <h4 class="card-title">How Turbulence Divides Its Energy</h4>
-                                <p class="card-summary">In a collisionless plasma nothing makes ions and electrons share energy. What sets the ion-to-electron heating ratio, as a function of plasma β and Tᵢ/Tₑ? It decides what an accretion flow around a black hole looks like.</p>
+                                <span class="interest-index">Q1</span>
+                                <h4 class="card-title">The species split</h4>
+                                <p class="card-summary">Turbulence delivers energy at large scales; it is absorbed at small ones. What sets the ion-to-electron heating ratio as a function of β and Tᵢ/Tₑ? The dependence is steep enough to change what an accretion flow looks like.</p>
                                 <ul class="tags" aria-label="Tags"><li>Turbulence</li><li>Ion/Electron Heating</li><li>β</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">02</span>
-                                <h4 class="card-title">Heat or a Nonthermal Tail</h4>
+                                <span class="interest-index">Q2</span>
+                                <h4 class="card-title">Heat or a nonthermal tail</h4>
                                 <p class="card-summary">The same energy can thermalise or end up in a power-law tail of fast particles. How much goes where, and what sets the slope? The answer is a fitted distribution function with an honest error bar.</p>
                                 <ul class="tags" aria-label="Tags"><li>Particle Acceleration</li><li>Distribution Functions</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">03</span>
-                                <h4 class="card-title">Which Mechanism Dissipates</h4>
-                                <p class="card-summary">Landau damping, stochastic heating, reconnection in the thin sheets turbulence makes, or the firehose and mirror instabilities. Each predicts a different split, and which one wins depends on β and scale.</p>
+                                <span class="interest-index">Q3</span>
+                                <h4 class="card-title">Which mechanism dissipates</h4>
+                                <p class="card-summary">Landau damping, stochastic heating, reconnection in the thin sheets turbulence makes, or the firehose and mirror instabilities — turbulence regulating itself. Each predicts a different split, and which wins depends on β and scale.</p>
                                 <ul class="tags" aria-label="Tags"><li>Landau Damping</li><li>Reconnection</li><li>Instabilities</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">04</span>
-                                <h4 class="card-title">Can the Simulation Be Trusted?</h4>
-                                <p class="card-summary">Standard explicit PIC heats the plasma numerically. How much of a published heating fraction survives a change of scheme? Energy-conserving, structure-preserving methods are how to find out.</p>
+                                <span class="interest-index">Q4</span>
+                                <h4 class="card-title">Physics, or the code?</h4>
+                                <p class="card-summary">Standard explicit PIC heats the plasma numerically, and every published heating fraction comes from such runs. Nobody has systematically asked how much of it survives a change of scheme.</p>
                                 <ul class="tags" aria-label="Tags"><li>PIC</li><li>Structure-Preserving</li><li>Numerical Heating</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">05</span>
-                                <h4 class="card-title">What Does It Cost?</h4>
-                                <p class="card-summary">An energy-conserving scheme needs a global implicit solve where explicit PIC needs none, and GPUs favour explicit PIC. Whether larger timesteps pay for the solve has to be measured on real hardware.</p>
+                                <span class="interest-index">Q5</span>
+                                <h4 class="card-title">What does it cost?</h4>
+                                <p class="card-summary">An energy-conserving scheme needs a global implicit solve where explicit PIC needs none, and GPUs favour explicit PIC. Whether larger timesteps pay for the solve cannot be answered from theory — it has to be measured.</p>
                                 <ul class="tags" aria-label="Tags"><li>HPC</li><li>GPU</li><li>Profiling</li></ul>
                             </div>
                         </article>
                         <article class="card">
                             <div class="card-body">
-                                <span class="interest-index" aria-hidden="true">06</span>
-                                <h4 class="card-title">Machine-Learning Closures</h4>
+                                <span class="interest-index">Deeper</span>
+                                <h4 class="card-title">How does a reversible system become irreversible?</h4>
+                                <p class="card-summary">The Vlasov equation is time-reversible and conserves fine-grained entropy, yet plasmas heat and heating cannot be undone. A grid coarse-grains whether asked to or not — so is the irreversibility nature's, or the grid's?</p>
+                                <ul class="tags" aria-label="Tags"><li>Entropy</li><li>Phase Mixing</li><li>Arrow of Time</li></ul>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card-body">
+                                <span class="interest-index">Now</span>
+                                <h4 class="card-title">Machine-learning closures</h4>
                                 <p class="card-summary">My current research: can data-driven closure models reproduce kinetic plasma behavior in affordable fluid simulations? A heat-flux closure and a heating prescription are the same kind of object.</p>
                                 <ul class="tags" aria-label="Tags"><li>Machine Learning</li><li>Closure Models</li><li>Kinetic</li></ul>
                             </div>
@@ -249,16 +261,10 @@
                     <h2 id="h-cv">CV</h2>
                 </div>
 
-                <p class="cv-lead">Education and work. The full CV (research experience, publications, presentations, activities, qualifications and skills) is in the PDF.</p>
-
                 <div class="cv-actions">
-                    <a class="button button-primary" href="/cv/ice3-cv-en.pdf" target="_blank" rel="noopener">Open PDF</a>
+                    <a class="button button-primary" href="/cv/ice3-cv-en.pdf" target="_blank" rel="noopener">View PDF</a>
                     <a class="button" href="/cv/ice3-cv-en.pdf" download>Download PDF</a>
                     <a class="button" href="/cv/">Web version</a>
-                </div>
-
-                <div data-list="timeline" data-view="cv" data-kinds="career" aria-busy="true">
-                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
                 </div>
 
             </div>
