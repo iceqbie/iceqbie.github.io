@@ -67,13 +67,8 @@
         <!--
             HOW TO PUBLISH A NOTION ARTICLE
             --------------------------------
-            1. Copy this file to /blog/<slug>/index.html  (slug: short, lowercase, hyphens, e.g. 2026-10-first-post)
-            2. In Notion: ••• → Export → HTML. Unzip it.
-            3. Open the exported .html, copy everything INSIDE <div class="page-body"> … </div>
-               and paste it where it says "PASTE NOTION CONTENT HERE" below.
-            4. Put the exported images in /blog/<slug>/ and fix the <img src="…"> paths.
-            5. Fill in <title>, the <h1>, the date, and set lang="ja" or lang="en" on <html>.
-            6. Add an entry to /data/articles.json so the card shows up on Home and /blog/.
+            Don't edit this by hand for each post. tools/import-notion.py
+            builds /blog/<slug>/index.html from this template — see README.md.
         -->
 
         <article class="prose container">

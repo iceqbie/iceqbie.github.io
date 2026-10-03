@@ -81,23 +81,31 @@ Open it once with signal and it keeps working offline; on iPhone, Share → *Add
 
 ### Article (Notion → HTML)
 
-1. Write the draft in Notion, then ••• → Export → HTML, and unzip.
-2. Copy `blog/_template.html` to `blog/<slug>/index.html`.
-3. Paste everything inside the export's `<div class="page-body">` where the template says `PASTE NOTION CONTENT HERE`. Copy the images into `blog/<slug>/` and fix their `src`.
-4. Set the title, date, and `lang` (`ja` or `en`) on `<html>`. Remove the `noindex` line.
-5. Add to `data/articles.json`:
+Each post is one folder; the originals stay in `blog/_source/`, which git ignores, so nothing private or oversized gets published.
 
-```json
-{
-    "slug": "2026-10-first-post",
-    "date": "2026-10-01",
-    "lang": "ja",
-    "title": { "en": "English title", "ja": "日本語タイトル" },
-    "summary": { "en": "", "ja": "要約" },
-    "tags": ["Plasma"],
-    "url": "/blog/2026-10-first-post/"
-}
+```text
+blog/
+├── _source/<slug>/          not published: Notion export, original photo and figures
+└── <slug>/
+    ├── index.html           built by tools/import-notion.py
+    ├── thumb.jpg            card and link-preview image (1200px, metadata removed)
+    └── figures/fig01-….png
 ```
+
+1. Write the post in Notion. Where a figure goes, put a line `<>file.png|alt text describing the figure<>`.
+2. ••• → Export → HTML. Put the `.html`, the figure files and a thumbnail photo in `blog/_source/<slug>/` (`slug`: lowercase and hyphens, e.g. `astrocamp-2026`).
+3. Run:
+
+   ```sh
+   python3 tools/import-notion.py "blog/_source/<slug>/<export>.html" \
+       --slug <slug> --date 2026-10-03 --thumb "blog/_source/<slug>/<photo>.jpg" \
+       --summary "One or two sentences for the card and link previews."
+   ```
+
+   It takes the first heading as the title, removes Notion's leftovers (empty paragraphs, stray line breaks, literal `**bold**`, split lists), copies the figures as `figures/fig01-…`, shrinks the photo and strips its EXIF (camera, GPS), and fills in the link-preview tags. Fix any warnings it prints (usually a missing alt text) and run it again.
+4. Paste the JSON it prints at the top of `data/articles.json`, and add the English title, English summary and tags.
+
+Re-running the script for the same slug overwrites that post, so edit in Notion and re-export rather than editing `index.html`.
 
 **Publication** — add to the top of `data/publications.json` (`year`, `title`, `journal`, `links`). Home shows the first three. No author lists — see Privacy.
 

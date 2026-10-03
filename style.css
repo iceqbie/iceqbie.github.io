@@ -108,6 +108,17 @@ h3 {
     margin-top: 0;
 }
 
+/* A single long word or URL (e.g. "AstroCamp" in a large heading at
+   200% text size) wraps instead of pushing the page sideways. */
+h1,
+h2,
+h3,
+p,
+li,
+td {
+    overflow-wrap: break-word;
+}
+
 ul,
 ol {
     margin: 0;
@@ -1020,6 +1031,15 @@ ol {
     list-style: disc;
 }
 
+.prose ul ul {
+    list-style: circle;
+}
+
+.prose li > ul,
+.prose li > ol {
+    margin: 0.3em 0 0.6em;
+}
+
 .prose ol {
     list-style: decimal;
 }
@@ -1038,6 +1058,11 @@ ol {
     margin-inline: 0;
 }
 
+.prose figure img {
+    width: 100%;
+    height: auto;
+}
+
 .prose figcaption {
     margin-top: 6px;
 
@@ -1048,13 +1073,19 @@ ol {
 
 .prose blockquote,
 .prose .callout {
-    margin-inline: 0;
-    padding: 12px 18px;
+    margin: 0 0 1.2em;
+    padding: 14px 18px;
 
     background: var(--light-gray);
 
     border-left: 3px solid var(--ice-blue);
     border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* No extra space under the last paragraph inside a quote box. */
+.prose blockquote > :last-child,
+.prose .callout > div > :last-child {
+    margin-bottom: 0;
 }
 
 .prose .callout {
@@ -1276,6 +1307,12 @@ html[lang="ja"] .card-title,
     text-align: justify;
     text-justify: inter-character;
     line-break: strict;
+}
+
+/* Justify body text only; a justified two-line heading spreads its
+   characters apart. */
+.prose:lang(ja) :is(h1, h2, h3, figcaption) {
+    text-align: start;
 }
 
 

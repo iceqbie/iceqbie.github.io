@@ -102,15 +102,22 @@
 
     function articleCard(item) {
         const written = TEXT.written[item.lang] || "";
+        // The card shows the title in the page language when there is one,
+        // so its lang follows what is actually displayed.
+        const titleLang = item.title && item.title[LANG] ? LANG : (item.lang || LANG);
+        const thumb = item.thumb
+            ? `<img class="card-thumb" src="${escapeHtml(item.thumb)}" alt="" loading="lazy">`
+            : "";
 
         return `
             <article class="card">
+                ${thumb}
                 <div class="card-body">
                     <p class="card-meta">
                         <time datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
                         ${written ? `<span class="badge" lang="${escapeHtml(item.lang)}">${escapeHtml(written)}</span>` : ""}
                     </p>
-                    <h3 class="card-title" lang="${escapeHtml(item.lang || LANG)}">
+                    <h3 class="card-title" lang="${escapeHtml(titleLang)}">
                         <a class="card-link" href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${escapeHtml(pick(item.title))}</a>
                     </h3>
                     <p class="card-summary">${escapeHtml(pick(item.summary))}</p>

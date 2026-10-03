@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "slug": "astrocamp-2026",
+        "date": "2026-10-03",
+        "lang": "ja",
+        "title": {
+            "en": "Of course you can't teach what you can't define — AstroCamp 2026",
+            "ja": "当たり前だけど, 定義できないものは教えられないんだよね 【AstroCamp 2026】"
+        },
+        "summary": {
+            "en": "I made critical thinking the hidden theme of a satellite-data seminar, and only communication skills came across. A look back that splits \"definition\" into boundary, gate and savepoint.",
+            "ja": "衛星データ解析ゼミで「批判的思考」を裏テーマにしたら、伝わったのは言語能力だけだった。定義を境界・判定点・復帰点の3つに分けて振り返る。"
+        },
+        "tags": ["AstroCamp", "衛星データ解析", "批判的思考"],
+        "url": "/blog/astrocamp-2026/",
+        "thumb": "/blog/astrocamp-2026/thumb.jpg"
+    }
+]
