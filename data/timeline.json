@@ -55,7 +55,7 @@
         },
         "detail": {
             "en": "Examining simulation errors in chaotic systems: a Python-based double-pendulum study.",
-            "ja": "カオス系のシミュレーション誤差の検証：Python による二重振り子シミュレーション。"
+            "ja": "カオス系のシミュレーション誤差の検証：Python による二重振り子シミュレーション."
         },
         "url": ""
     },
@@ -70,7 +70,7 @@
         },
         "detail": {
             "en": "Modelling the long-term annealing of ATLAS strip sensors for Run 4 planning.",
-            "ja": "ATLAS ストリップセンサーの長期アニーリングを解析するモデルの開発（Run 4 計画向け）。"
+            "ja": "ATLAS ストリップセンサーの長期アニーリングを解析するモデルの開発（Run 4 計画向け）."
         },
         "url": "https://doi.org/10.22323/1.420.0043"
     },
@@ -85,7 +85,7 @@
         },
         "detail": {
             "en": "Statistical analysis of SiPM (MPPC) saturation for the ILC experiment.",
-            "ja": "ILC 実験に向けた SiPM（MPPC）の飽和の統計解析。"
+            "ja": "ILC 実験に向けた SiPM（MPPC）の飽和の統計解析."
         },
         "url": ""
     },
@@ -100,7 +100,7 @@
         },
         "detail": {
             "en": "Organized the satellite data analysis seminar at Astrocamp.",
-            "ja": "Astrocamp での衛星データ解析ゼミの企画・運営。"
+            "ja": "Astrocamp での衛星データ解析ゼミの企画・運営."
         },
         "url": "https://camp.ase-lab.space/"
     },
@@ -115,7 +115,7 @@
         },
         "detail": {
             "en": "Organize seminars on satellite imagery and astrostatistics. Built a CanSat navigation-control algorithm and k-means image processing for the August 2022 competition.",
-            "ja": "衛星画像・宇宙統計のゼミの企画・運営。2022年8月の CanSat 大会に向けて、航法制御アルゴリズムと k-means による画像処理を開発。"
+            "ja": "衛星画像・宇宙統計のゼミの企画・運営. 2022年8月の CanSat 大会に向けて, 航法制御アルゴリズムと k-means による画像処理を開発."
         },
         "url": "https://www.ase-lab.space/"
     },
@@ -145,7 +145,7 @@
         },
         "detail": {
             "en": "Wrote articles on applications of statistics, mainly in artificial intelligence.",
-            "ja": "統計の応用（主に AI 分野）についての記事を執筆。"
+            "ja": "統計の応用（主に AI 分野）についての記事を執筆."
         },
         "url": ""
     },
@@ -160,7 +160,22 @@
         },
         "detail": {
             "en": "Science experiments and outreach for elementary-school students from low-income families.",
-            "ja": "低所得家庭の小学生に、科学実験とアウトリーチの機会を提供。"
+            "ja": "低所得家庭の小学生に, 科学実験とアウトリーチの機会を提供."
+        },
+        "url": ""
+    },
+    {
+        "start": "2019",
+        "end": "",
+        "kind": "other",
+        "type": "qualification",
+        "title": {
+            "en": "International Baccalaureate Bilingual Diploma",
+            "ja": "国際バカロレア バイリンガル・ディプロマ"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
         },
         "url": ""
     },
@@ -205,7 +220,7 @@
         },
         "detail": {
             "en": "2nd year. Space plasma physics.",
-            "ja": "修士2年。宇宙プラズマ物理学を研究。"
+            "ja": "修士2年. 宇宙プラズマ物理学を研究."
         },
         "url": ""
     },
@@ -235,7 +250,7 @@
         },
         "detail": {
             "en": "Fast physical simulation of object–fluid interaction with surrogate models; worked mainly on the differential-equation solver.",
-            "ja": "サロゲートモデルを使った、物体と流体の相互作用の高速な物理シミュレーション。主に微分方程式ソルバーを担当。"
+            "ja": "サロゲートモデルを使った, 物体と流体の相互作用の高速な物理シミュレーション. 主に微分方程式ソルバーを担当."
         },
         "url": ""
     },
@@ -250,7 +265,7 @@
         },
         "detail": {
             "en": "Graduated June 2024. Physics & Astrophysics Specialist, Statistics Minor.",
-            "ja": "2024年6月卒業。物理・天体物理学スペシャリスト、統計学マイナー。"
+            "ja": "2024年6月卒業. 物理・天体物理学スペシャリスト, 統計学マイナー."
         },
         "url": ""
     },

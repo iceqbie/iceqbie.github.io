@@ -49,6 +49,7 @@ Sizes are `rem` tokens (`--fs-*`) at the top of `style.css`, so the visitor's br
 - The face follows the nearest `lang` attribute: an English title on a Japanese page (`lang="en"`) is set in Inter.
 - Use mono only for the metadata in the table, not for buttons or links.
 - Don't add letter-spacing to body text or anything Japanese.
+- Japanese text uses a comma and a period (`, ` and `. `) instead of 、 and 。.
 - Articles are at most 680px wide (about 40 Japanese characters per line).
 
 ## Adding things
