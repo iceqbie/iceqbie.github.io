@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>研究 - icebox.</title>
+
+    <meta name="description" content="(ice)^3のホームページです">
+
+    <!-- Link previews (LINE, X, Slack, Facebook, ...) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="icebox.">
+    <meta property="og:title" content="研究 - icebox.">
+    <meta property="og:description" content="(ice)^3のホームページです">
+    <meta property="og:url" content="https://iceqbie.github.io/jp/research/">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#FFFFFF">
+
+    <link rel="alternate" hreflang="en" href="https://iceqbie.github.io/research/">
+    <link rel="alternate" hreflang="ja" href="https://iceqbie.github.io/jp/research/">
+    <link rel="alternate" hreflang="x-default" href="https://iceqbie.github.io/research/">
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+
+    <script src="/script.js" defer></script>
+</head>
+<body>
+
+    <a class="skip-link" href="#main">本文へ移動</a>
+
+    <!-- =========================================
+         HEADER / NAVIGATION
+         ========================================= -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="/jp/" class="site-name">icebox.</a>
+
+            <nav class="site-nav" aria-label="メインナビゲーション">
+                <a href="/jp/research/" aria-current="page">研究</a>
+                <a href="/jp/blog/">ブログ</a>
+                <a href="/jp/about/">プロフィール</a>
+                <a href="/research/" class="lang-switch" lang="en" hreflang="en">English</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main id="main" class="page">
+
+        <header class="page-title">
+            <h1>研究</h1>
+            <p>宇宙プラズマ物理学（東京大学大学院 理学系研究科 地球惑星科学専攻）</p>
+        </header>
+
+        <section class="block" aria-labelledby="h-core">
+            <h2 id="h-core">中心の問い</h2>
+            <div class="block-body">
+                <blockquote class="question">
+                    <p>無衝突の乱流は、エネルギーをイオンと電子にどう分けるのか。そして、その数字に意味があると言えるほどシミュレーションは保存則を守れているのか——それを、誰もが払えるコストで確かめることに取り組んでいます。</p>
+                </blockquote>
+            </div>
+        </section>
+
+        <section class="block" aria-labelledby="h-now">
+            <h2 id="h-now">現在の研究</h2>
+            <div class="block-body">
+                <h3 class="resource-title">機械学習によるクロージャ</h3>
+                <p>現在の研究テーマ：データ駆動型のクロージャモデルは、計算コストの低い流体シミュレーションで運動論的プラズマの振る舞いを再現できるか。熱流束のクロージャと加熱率の処方は同じ種類の問題です。</p>
+            </div>
+        </section>
+
+        <section class="block" id="questions" aria-labelledby="h-questions">
+            <h2 id="h-questions">問い</h2>
+            <div class="block-body">
+                <ol class="questions">
+                    <li>
+                        <span class="interest-index">Q1</span>
+                        <div>
+                            <h3>イオンと電子の分け前</h3>
+                            <p>乱流は大きなスケールでエネルギーを運び、小さなスケールで吸収されます。イオンと電子の加熱比は β と Tᵢ/Tₑ でどう決まるのか。その依存性は、降着流の見え方を変えるほど急です。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q2</span>
+                        <div>
+                            <h3>熱か、非熱的なテールか</h3>
+                            <p>同じエネルギーが熱になることも、高速粒子のべき乗テールになることもあります。どれだけがどちらへ行き、傾きは何で決まるのか。答えは誤差付きでフィットした分布関数です。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q3</span>
+                        <div>
+                            <h3>何が散逸を担うのか</h3>
+                            <p>ランダウ減衰、確率的加熱、乱流が作る薄い電流シートでの磁気リコネクション、そしてファイアホース・ミラー不安定性（乱流が自分を調整する仕組み）。それぞれ異なる分配を予言し、どれが効くかはβとスケールで変わります。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q4</span>
+                        <div>
+                            <h3>物理か、コードか</h3>
+                            <p>標準的な陽解法 PIC は数値的にプラズマを加熱し、報告されている加熱率はどれもそうした計算から得られています。そのうちスキームを変えても残るのはどれだけか——それを系統的に調べた人はまだいません。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q5</span>
+                        <div>
+                            <h3>そのコストは見合うか</h3>
+                            <p>エネルギー保存スキームには陽解法 PIC にはない大域的な陰的ソルブが必要で、GPU は陽解法に有利です。大きな時間刻みでその分を取り返せるかは理論では決まらず、実機で測るしかありません。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">根っこの問い</span>
+                        <div>
+                            <h3>可逆な系はなぜ不可逆になるのか</h3>
+                            <p>Vlasov 方程式は時間反転可能で、細かいエントロピーを厳密に保存します。それでもプラズマは加熱され、元には戻りません。格子は否応なく粗視化するので、その不可逆性は自然のものか、格子のものか。</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="block" id="publications" aria-labelledby="h-publications">
+            <h2 id="h-publications">論文</h2>
+            <div class="block-body">
+                <div data-list="publications" data-level="3" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="talks" aria-labelledby="h-talks">
+            <h2 id="h-talks">発表と受賞</h2>
+            <div class="block-body">
+                <div data-list="timeline" data-types="talk award" data-view="list" data-level="3" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="earlier" aria-labelledby="h-earlier">
+            <h2 id="h-earlier">これまでの研究</h2>
+            <div class="block-body">
+                <div data-list="timeline" data-types="research" data-view="list" data-level="3" aria-busy="true">
+                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="resources" aria-labelledby="h-resources">
+            <h2 id="h-resources">公開リソース</h2>
+            <div class="block-body">
+                <p class="resource-type">インタラクティブ教材 · プラズマ波動</p>
+                <h3 class="resource-title"><a href="/projects/plasma-wave-workbench/">プラズマ波動ワークベンチ</a></h3>
+                <p>一つのプラズマを五つの視点で：特性スケール、仮定ごとに残る波、CMA 図、3D 粒子ビューア、単位換算。ブラウザで動き、一度開けばオフラインでも使えます。</p>
+                <p><a class="more-link" href="/projects/plasma-wave-workbench/">ワークベンチを開く →</a></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========================================
+         FOOTER / CONTACT
+         ========================================= -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+
+            <div class="footer-contact">
+                <div class="social-links">
+                    <a href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a href="https://x.com/iceqbie" target="_blank" rel="noopener noreferrer">X ↗</a>
+                    <a href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 (ice)^3</span>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

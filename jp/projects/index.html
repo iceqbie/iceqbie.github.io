@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>プロジェクト - icebox.</title>
+    <title>公開リソース - icebox.</title>
 
     <meta name="description" content="(ice)^3のホームページです">
 
     <!-- Link previews (LINE, X, Slack, Facebook, ...) -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="icebox.">
-    <meta property="og:title" content="プロジェクト - icebox.">
+    <meta property="og:title" content="公開リソース - icebox.">
     <meta property="og:description" content="(ice)^3のホームページです">
     <meta property="og:url" content="https://iceqbie.github.io/jp/projects/">
     <meta property="og:locale" content="ja_JP">
@@ -50,33 +50,27 @@
             <a href="/jp/" class="site-name">icebox.</a>
 
             <nav class="site-nav" aria-label="メインナビゲーション">
-                <a href="/jp/">ホーム</a>
-                <a href="/jp/about/">プロフィール</a>
-                <a href="/jp/projects/" aria-current="page">プロジェクト</a>
+                <a href="/jp/research/">研究</a>
                 <a href="/jp/blog/">ブログ</a>
-                <a href="/jp/photos/">写真</a>
+                <a href="/jp/about/">プロフィール</a>
                 <a href="/projects/" class="lang-switch" lang="en" hreflang="en">English</a>
             </nav>
 
         </div>
     </header>
 
-    <main id="main">
+    <main id="main" class="page">
 
-        <section class="page-header">
-            <div class="container">
-                <h1>プロジェクト</h1>
-                <p>これまでに作ってきたもののポートフォリオです。インタラクティブなツール、コード、シミュレーション、研究成果などをまとめています。</p>
-            </div>
-        </section>
+        <header class="page-title">
+            <h1>公開リソース</h1>
+            <p>公開しているインタラクティブなデモ、コード、教材です。</p>
+        </header>
 
-        <section class="section">
-            <div class="container">
-                <div data-list="projects" data-filter aria-busy="true">
-                    <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
-                </div>
+        <div class="block block-wide">
+            <div data-list="projects" data-view="list" data-level="2" aria-busy="true">
+                <noscript><p class="list-empty">一覧の表示には JavaScript を有効にしてください。</p></noscript>
             </div>
-        </section>
+        </div>
 
     </main>
 
@@ -96,7 +90,6 @@
 
             <div class="footer-bottom">
                 <span>© 2026 (ice)^3</span>
-                <span class="footer-mono">最終更新: 2026-10-03</span>
             </div>
 
         </div>

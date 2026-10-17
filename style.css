@@ -45,7 +45,7 @@
     --lh-heading: 1.2;
 
     /* Layout */
-    --content-width: 1100px;
+    --content-width: 920px;
     --text-width: 680px;
     --side-padding: 32px;
 
@@ -2025,4 +2025,382 @@ html[lang="ja"] .card-title,
         align-items: flex-start;
         flex-direction: column;
     }
+}
+
+
+/* =========================================================
+   NOTEBOOK LAYOUT (Home, Research, About)
+   One narrow column of text. Each block has its heading in a
+   label column on wide screens and above its content on narrow
+   ones. No tinted bands, cards or numbered badges: hairlines and
+   whitespace carry the structure.
+   ========================================================= */
+
+.page {
+    width: min(
+        calc(100% - (var(--side-padding) * 2)),
+        var(--content-width)
+    );
+
+    margin-inline: auto;
+    padding-bottom: var(--space-xl);
+}
+
+/* Who, where, what — the first thing on Home. */
+.intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-lg);
+
+    padding: var(--space-xl) 0 var(--space-lg);
+}
+
+.intro h1 {
+    margin-bottom: var(--space-xs);
+
+    font-size: var(--fs-h1-page);
+    font-weight: 600;
+    line-height: var(--lh-heading);
+    letter-spacing: -0.02em;
+}
+
+.intro-role {
+    margin-bottom: var(--space-md);
+
+    color: var(--charcoal-soft);
+}
+
+.intro-lead {
+    max-width: var(--text-width);
+    margin-bottom: var(--space-sm);
+
+    font-size: 1.125rem;
+}
+
+.avatar {
+    width: 160px;
+    height: 160px;
+
+    border-radius: 50%;
+}
+
+/* Sub-page title in the same column as the blocks. */
+.page-title {
+    padding: var(--space-xl) 0 var(--space-lg);
+}
+
+.page-title h1 {
+    margin-bottom: var(--space-xs);
+
+    font-size: var(--fs-h1-page);
+    font-weight: 600;
+    line-height: var(--lh-heading);
+    letter-spacing: -0.02em;
+}
+
+.page-title p {
+    max-width: var(--text-width);
+    margin-bottom: 0;
+
+    color: var(--charcoal-soft);
+}
+
+.block {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-sm) var(--space-lg);
+
+    padding: var(--space-lg) 0;
+
+    border-top: var(--border);
+}
+
+.block > h2 {
+    margin: 0;
+    padding-top: 2px;
+
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.block-body {
+    max-width: var(--text-width);
+}
+
+.block-body > :last-child {
+    margin-bottom: 0;
+}
+
+.block-body p {
+    margin-bottom: var(--space-sm);
+}
+
+/* A small heading between lists inside one block. */
+.block-sub {
+    margin: var(--space-md) 0 var(--space-sm);
+
+    color: var(--charcoal-soft);
+
+    font-size: var(--fs-caption);
+    font-weight: 600;
+}
+
+.block-sub:first-child {
+    margin-top: 0;
+}
+
+/* The research question, set apart by a rule rather than a box. */
+.question {
+    margin: 0 0 var(--space-md);
+    padding-left: var(--space-md);
+
+    border-left: 3px solid var(--ice-blue);
+
+    font-size: 1.125rem;
+    line-height: 1.7;
+}
+
+.question p {
+    margin: 0;
+}
+
+/* Links in running text and "more" links share the body-link look. */
+.block-body a,
+.intro a,
+.footer-links a {
+    color: var(--charcoal);
+
+    text-decoration: underline;
+    text-decoration-color: var(--ice-blue);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+
+    transition: background-color 160ms ease;
+}
+
+.block-body a:hover,
+.intro a:hover,
+.footer-links a:hover {
+    background: var(--lime);
+    text-decoration-color: var(--charcoal);
+}
+
+.inline-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-md);
+
+    font-size: var(--fs-nav);
+    font-weight: 500;
+}
+
+.inline-links a {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 44px;
+}
+
+.more-link {
+    font-size: var(--fs-nav);
+    font-weight: 500;
+}
+
+/* Rows: date or year | entry. Used for publications, talks,
+   activities and posts inside a block. */
+.block .publication-list,
+.block .cv-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+
+    margin-bottom: var(--space-sm);
+
+    border-top: 0;
+}
+
+.block .publication,
+.block .cv-row {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-sm);
+
+    padding: 0;
+
+    border-bottom: 0;
+}
+
+.block .publication-year,
+.block .cv-period {
+    padding-top: 3px;
+
+    font-size: var(--fs-meta);
+}
+
+.block .publication-body :is(h3, h4),
+.block .cv-body :is(h3, h4) {
+    margin: 0 0 2px;
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.block .journal {
+    margin-bottom: 2px;
+}
+
+.block .publication-links {
+    font-size: var(--fs-meta);
+}
+
+.post-lang {
+    color: var(--charcoal-soft);
+
+    font-size: var(--fs-caption);
+    font-weight: 400;
+}
+
+/* A public resource: what it is, what it explains, how to use it. */
+.resource-type {
+    margin-bottom: 4px;
+
+    color: var(--charcoal-soft);
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+}
+
+.resource-title {
+    margin-bottom: var(--space-xs);
+
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* The research questions: index | title and text, one per row. */
+.questions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+
+}
+
+.questions li {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-sm);
+}
+
+.questions .interest-index {
+    padding-top: 3px;
+}
+
+.questions h3 {
+    margin: 0 0 4px;
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.questions p {
+    margin: 0;
+
+    color: var(--charcoal-soft);
+
+    font-size: var(--fs-small);
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-md);
+
+    margin-bottom: var(--space-sm);
+}
+
+.footer-links a {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 44px;
+}
+
+@media (max-width: 800px) {
+
+    .block {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .intro {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    /* Avatar above the name on phones. */
+    .intro .avatar {
+        order: -1;
+
+        width: 112px;
+        height: 112px;
+    }
+
+    .block .publication,
+    .block .cv-row,
+    .questions li {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+}
+
+/* Short label | value pairs, e.g. affiliation and field. */
+.facts {
+    display: grid;
+    gap: var(--space-xs);
+
+    margin: 0;
+
+    font-size: var(--fs-small);
+}
+
+.facts > div {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-sm);
+}
+
+.facts dt {
+    color: var(--charcoal-soft);
+}
+
+.facts dd {
+    margin: 0;
+}
+
+/* A list page: rows span the full column, no label column. */
+.block-wide {
+    display: block;
+}
+
+.block-wide .cv-list {
+    max-width: var(--text-width);
+}
+
+.block .cv-body .resource-type {
+    margin: 0 0 2px;
+}
+
+.block .cv-body h2 {
+    margin: 0 0 4px;
+
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
 }

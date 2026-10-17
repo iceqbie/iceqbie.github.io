@@ -8,7 +8,8 @@
      data-level  heading level for each row (default 3; 4 under an h3)
      data-kinds  timeline only: space-separated kinds to include
      data-types  timeline only: space-separated types to include
-     data-view   timeline only: "cv" for plain CV rows instead of the chronology
+     data-view   "list" for plain date | title rows (timeline, articles);
+                 timeline also takes "cv"
 
    Items are written once with { en, ja } fields; the page
    language comes from <html lang>. Lists are shown newest
@@ -92,8 +93,9 @@
         articles: "/jp/blog/"
     };
 
-    // Heading level for list rows; set per container before rendering.
+    // Heading level and view for list rows; set per container before rendering.
     let LEVEL = 3;
+    let VIEW = "";
 
     const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -175,6 +177,36 @@
             </article>`;
     }
 
+    // A resource as one row: date | title, what it is, its keywords.
+    function projectRow(item) {
+        const tags = (item.tags || []).join(" · ");
+        return `
+                <li class="cv-row">
+                    <span class="cv-period">${escapeHtml(item.date)}</span>
+                    <div class="cv-body">
+                        ${tags ? `<p class="resource-type">${escapeHtml(tags)}</p>` : ""}
+                        <h${LEVEL}><a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${escapeHtml(pick(item.title))}</a></h${LEVEL}>
+                        <p>${escapeHtml(pick(item.summary))}</p>
+                    </div>
+                </li>`;
+    }
+
+    // A post as one row: date | title, with its language when it differs
+    // from the page's (the blog is Japanese only).
+    function articleRow(item) {
+        const titleLang = item.title && item.title[LANG] ? LANG : (item.lang || LANG);
+        const written = item.lang && item.lang !== LANG ? TEXT.written[item.lang] : "";
+
+        return `
+                <li class="cv-row">
+                    <time class="cv-period" datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
+                    <div class="cv-body">
+                        <h${LEVEL} lang="${escapeHtml(titleLang)}"><a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${escapeHtml(pick(item.title))}</a>${written ? ` <span class="post-lang">(${LANG === "ja" ? "" : "in "}${escapeHtml(written)})</span>` : ""}</h${LEVEL}>
+                        <p>${escapeHtml(pick(item.summary))}</p>
+                    </div>
+                </li>`;
+    }
+
     /* ---------- timeline (profile) ---------- */
 
     // "2025-06" → { y: "2025", m: 6 }; "2025" → { y: "2025", m: 0 }
@@ -231,7 +263,7 @@
     const entryHeading = (item) => {
         const title = escapeHtml(pick(item.title));
         return item.url
-            ? `<a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${title}${isExternal(item.url) ? " ↗" : ""}</a>`
+            ? `<a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${title}${isExternal(item.url) ? "\u00a0↗" : ""}</a>`
             : title;
     };
 
@@ -252,7 +284,7 @@
 
     // Items grouped by year, with buttons that show one kind at a time.
     function timeline(items, container) {
-        if (container.dataset.view === "cv") return cvList(items);
+        if (VIEW === "cv" || VIEW === "list") return cvList(items);
         const sorted = newestFirst(items);
 
         const groups = [];
@@ -280,7 +312,7 @@
     }
 
     function wireTimeline(container) {
-        if (container.dataset.view === "cv") return;
+        if (container.dataset.view === "cv" || container.dataset.view === "list") return;
         const buttons = container.querySelectorAll(".chrono-btn");
         const status = container.querySelector(".chrono-status");
 
@@ -325,8 +357,14 @@
     }
 
     const RENDERERS = {
-        projects: { item: projectCard, wrap: (html) => `<div class="card-grid">${html}</div>` },
-        articles: { item: articleCard, wrap: (html) => `<div class="card-grid">${html}</div>` },
+        projects: {
+            item: (item) => VIEW === "list" ? projectRow(item) : projectCard(item),
+            wrap: (html) => VIEW === "list" ? `<ol class="cv-list">${html}</ol>` : `<div class="card-grid">${html}</div>`
+        },
+        articles: {
+            item: (item) => VIEW === "list" ? articleRow(item) : articleCard(item),
+            wrap: (html) => VIEW === "list" ? `<ol class="cv-list">${html}</ol>` : `<div class="card-grid">${html}</div>`
+        },
         timeline: { all: timeline, after: wireTimeline },
         publications: { item: publicationRow, wrap: (html) => `<ol class="publication-list">${html}</ol>` },
         photos: { item: photoCard, wrap: (html) => html }
@@ -393,6 +431,7 @@
             if (limit > 0) items = items.slice(0, limit);
 
             LEVEL = parseInt(container.dataset.level, 10) || 3;
+            VIEW = container.dataset.view || "";
             const list = !items.length ? null
                 : renderer.all ? renderer.all(items, container)
                 : renderer.wrap(items.map(renderer.item).join(""));

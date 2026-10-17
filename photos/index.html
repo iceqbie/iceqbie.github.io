@@ -50,48 +50,28 @@
             <a href="/" class="site-name">icebox.</a>
 
             <nav class="site-nav" aria-label="Main navigation">
-                <a href="/">Home</a>
+                <a href="/research/">Research</a>
+                <a href="/jp/blog/" hreflang="ja">Blog</a>
                 <a href="/about/">About</a>
-                <a href="/projects/">Projects</a>
-                <a href="/photos/" aria-current="page">Photos</a>
                 <a href="/jp/photos/" class="lang-switch" lang="ja" hreflang="ja">日本語</a>
             </nav>
 
         </div>
     </header>
 
-    <main id="main">
+    <main id="main" class="page">
 
-        <section class="page-header">
-            <div class="container">
-                <h1>Photos</h1>
-                <p>Photographs I've published on Unsplash — free to use under the Unsplash License.</p>
+        <header class="page-title">
+            <h1>Photos</h1>
+            <p>Photographs I've published on Unsplash — free to use under the Unsplash License.</p>
+        </header>
+
+        <div class="block block-wide">
+            <div class="photo-grid" data-list="photos" aria-busy="true">
+                <noscript><p class="list-empty">Photos are on <a class="text-link" href="https://unsplash.com/@iceqbie">Unsplash</a>.</p></noscript>
             </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <div class="unsplash-card">
-
-                    <div class="unsplash-card-header">
-                        <div>
-                            <span class="meta-label">Unsplash</span>
-                            <h3>@iceqbie</h3>
-                        </div>
-                    </div>
-
-                <div class="photo-grid" data-list="photos" aria-busy="true">
-                    <noscript><p class="list-empty">Photos are on <a class="text-link" href="https://unsplash.com/@iceqbie">Unsplash</a>.</p></noscript>
-                </div>
-
-                    <div class="unsplash-card-footer">
-                        <span>Selected photographs</span>
-                        <a class="text-link" href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">View all on Unsplash ↗</a>
-                    </div>
-
-                </div>
-            </div>
-        </section>
+            <p><a class="text-link" href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">View all on Unsplash ↗</a></p>
+        </div>
 
     </main>
 
@@ -111,7 +91,6 @@
 
             <div class="footer-bottom">
                 <span>© 2026 (ice)^3</span>
-                <span class="footer-mono">Last updated: 2026-10-03</span>
             </div>
 
         </div>

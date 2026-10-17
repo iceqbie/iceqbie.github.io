@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Research - icebox.</title>
+
+    <meta name="description" content="This is (ice)^3's homepage">
+
+    <!-- Link previews (LINE, X, Slack, Facebook, ...) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="icebox.">
+    <meta property="og:title" content="Research - icebox.">
+    <meta property="og:description" content="This is (ice)^3's homepage">
+    <meta property="og:url" content="https://iceqbie.github.io/research/">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#FFFFFF">
+
+    <link rel="alternate" hreflang="en" href="https://iceqbie.github.io/research/">
+    <link rel="alternate" hreflang="ja" href="https://iceqbie.github.io/jp/research/">
+    <link rel="alternate" hreflang="x-default" href="https://iceqbie.github.io/research/">
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+
+    <script src="/script.js" defer></script>
+</head>
+<body>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- =========================================
+         HEADER / NAVIGATION
+         ========================================= -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="/" class="site-name">icebox.</a>
+
+            <nav class="site-nav" aria-label="Main navigation">
+                <a href="/research/" aria-current="page">Research</a>
+                <a href="/jp/blog/" hreflang="ja">Blog</a>
+                <a href="/about/">About</a>
+                <a href="/jp/research/" class="lang-switch" lang="ja" hreflang="ja">日本語</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main id="main" class="page">
+
+        <header class="page-title">
+            <h1>Research</h1>
+            <p>Space plasma physics, Department of Earth and Planetary Science, The University of Tokyo</p>
+        </header>
+
+        <section class="block" aria-labelledby="h-core">
+            <h2 id="h-core">Core question</h2>
+            <div class="block-body">
+                <blockquote class="question">
+                    <p>I work on how collisionless turbulence divides its energy between ions and electrons — and on whether simulations conserve well enough for that number to mean anything, at a cost anyone can afford.</p>
+                </blockquote>
+            </div>
+        </section>
+
+        <section class="block" aria-labelledby="h-now">
+            <h2 id="h-now">Current work</h2>
+            <div class="block-body">
+                <h3 class="resource-title">Machine-learning closures</h3>
+                <p>My current research: can data-driven closure models reproduce kinetic plasma behavior in affordable fluid simulations? A heat-flux closure and a heating prescription are the same kind of object.</p>
+            </div>
+        </section>
+
+        <section class="block" id="questions" aria-labelledby="h-questions">
+            <h2 id="h-questions">Questions</h2>
+            <div class="block-body">
+                <ol class="questions">
+                    <li>
+                        <span class="interest-index">Q1</span>
+                        <div>
+                            <h3>The species split</h3>
+                            <p>Turbulence delivers energy at large scales; it is absorbed at small ones. What sets the ion-to-electron heating ratio as a function of β and Tᵢ/Tₑ? The dependence is steep enough to change what an accretion flow looks like.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q2</span>
+                        <div>
+                            <h3>Heat or a nonthermal tail</h3>
+                            <p>The same energy can thermalise or end up in a power-law tail of fast particles. How much goes where, and what sets the slope? The answer is a fitted distribution function with an honest error bar.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q3</span>
+                        <div>
+                            <h3>Which mechanism dissipates</h3>
+                            <p>Landau damping, stochastic heating, reconnection in the thin sheets turbulence makes, or the firehose and mirror instabilities — turbulence regulating itself. Each predicts a different split, and which wins depends on β and scale.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q4</span>
+                        <div>
+                            <h3>Physics, or the code?</h3>
+                            <p>Standard explicit PIC heats the plasma numerically, and every published heating fraction comes from such runs. Nobody has systematically asked how much of it survives a change of scheme.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Q5</span>
+                        <div>
+                            <h3>What does it cost?</h3>
+                            <p>An energy-conserving scheme needs a global implicit solve where explicit PIC needs none, and GPUs favour explicit PIC. Whether larger timesteps pay for the solve cannot be answered from theory — it has to be measured.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="interest-index">Deeper</span>
+                        <div>
+                            <h3>How does a reversible system become irreversible?</h3>
+                            <p>The Vlasov equation is time-reversible and conserves fine-grained entropy, yet plasmas heat and heating cannot be undone. A grid coarse-grains whether asked to or not — so is the irreversibility nature's, or the grid's?</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="block" id="publications" aria-labelledby="h-publications">
+            <h2 id="h-publications">Publications</h2>
+            <div class="block-body">
+                <div data-list="publications" data-level="3" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="talks" aria-labelledby="h-talks">
+            <h2 id="h-talks">Presentations and awards</h2>
+            <div class="block-body">
+                <div data-list="timeline" data-types="talk award" data-view="list" data-level="3" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="earlier" aria-labelledby="h-earlier">
+            <h2 id="h-earlier">Earlier research</h2>
+            <div class="block-body">
+                <div data-list="timeline" data-types="research" data-view="list" data-level="3" aria-busy="true">
+                    <noscript><p class="list-empty">Please enable JavaScript to see this list.</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="resources" aria-labelledby="h-resources">
+            <h2 id="h-resources">Resources</h2>
+            <div class="block-body">
+                <p class="resource-type">Interactive · Plasma waves</p>
+                <h3 class="resource-title"><a href="/projects/plasma-wave-workbench/">Plasma Wave Workbench</a></h3>
+                <p>One plasma, five views: scales, which waves survive which assumptions, the CMA diagram, a 3D particle viewer and unit conversion. It runs in the browser and works offline once opened.</p>
+                <p><a class="more-link" href="/projects/plasma-wave-workbench/">Open interactive demo →</a></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========================================
+         FOOTER / CONTACT
+         ========================================= -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+
+            <div class="footer-contact">
+                <div class="social-links">
+                    <a href="https://github.com/iceqbie" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a href="https://x.com/iceqbie" target="_blank" rel="noopener noreferrer">X ↗</a>
+                    <a href="https://unsplash.com/@iceqbie" target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 (ice)^3</span>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>
