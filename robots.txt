@@ -1,4 +1,3 @@
-# The CV pages and PDFs carry the real name; keep them out of search results.
+# Everything on the site may be indexed.
 User-agent: *
-Disallow: /cv/
-Disallow: /jp/cv/
+Disallow:

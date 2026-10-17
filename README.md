@@ -6,12 +6,12 @@ Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages f
 
 | Path | What it is |
 | --- | --- |
-| `/`, `/jp/` | Home (English / Japanese) |
-| `/about/`, `/jp/about/` | Profile and skills → Research (interests slider, publications) → Interests → Timeline (research and extracurricular) → CV (education and work, PDF buttons) |
-| `/cv/`, `/jp/cv/` | Full CV page; `cv/ice3-cv-en.pdf` and `cv/ice3-cv-ja.pdf` are printed from it |
-| `/projects/`, `/jp/projects/` | Project cards |
+| `/`, `/jp/` | Home (English / Japanese): intro with the panda icon → research → resources → publications and talks → latest post |
+| `/research/`, `/jp/research/` | Core question, current work, the research questions, publications, talks and awards, earlier research |
+| `/about/`, `/jp/about/` | Short profile: intro, affiliation and field, activities outside research |
+| `/projects/`, `/jp/projects/` | Resources: public demos, code and teaching material (not in the nav while there is one) |
 | `/projects/<slug>/` | Each standalone HTML project |
-| `/jp/blog/` | Article cards (the blog is Japanese only; `/blog/` redirects here) |
+| `/jp/blog/` | List of posts (the blog is Japanese only; `/blog/` redirects here) |
 | `/blog/<slug>/` | Each article |
 | `/photos/`, `/jp/photos/` | Unsplash gallery |
 | `/data/*.json` | The lists shown on the pages above |
@@ -123,10 +123,16 @@ Re-running the script for the same slug overwrites that post, so edit in Notion 
 ```
 
 - `start` / `end`: `"YYYY"` or `"YYYY-MM"`; `end` can be `"present"`; either may be empty (`"start": "", "end": "2023"` shows as 〜2023). The period text (2025年6月–10月 / Jun–Oct 2025) is generated.
-- `kind`: `research` (timeline), `other` (timeline, shown as 課外活動 / Extracurricular), `career` (CV only: education and work).
+- `kind`: `research` (timeline), `other` (timeline, shown as 課外活動 / Extracurricular), `career` (education and work; not shown on the site since the CV was archived).
 - `type` (badge): `award`, `talk`, `research`, `organizer`, `club`, `volunteer`, `qualification`, `education`, `work`.
 
-**CV PDFs** — `tools/build-cv.sh` prints `/cv/` and `/jp/cv/` to `cv/ice3-cv-en.pdf` and `cv/ice3-cv-ja.pdf` with headless Chrome. You don't need to run it: `.github/workflows/cv.yml` rebuilds and commits both PDFs whenever `data/timeline.json`, `data/publications.json`, the CV pages, `style.css` or `script.js` change. Run it locally only to preview (`tools/build-cv.sh`, then open the PDFs). The CV shows the real name, the affiliation, and the site, GitHub and LinkedIn links — never a phone number, email or supervisor (see Privacy).
+**CV** — the CV pages (`/cv/`, `/jp/cv/`), their PDFs, `tools/build-cv.sh` and `.github/workflows/cv.yml` were taken off the site in October 2026. They are kept at the git tag `cv-archive`. To bring them back:
+
+```sh
+git checkout cv-archive -- cv/ jp/cv/ tools/build-cv.sh .github/workflows/cv.yml
+```
+
+then add `Disallow: /cv/` and `Disallow: /jp/cv/` back to `robots.txt` (the CV carries the real name).
 
 **Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`).
 
@@ -147,6 +153,4 @@ The pages load `/data/*.json` with `fetch()` and use root-relative paths, so ope
 
 ## Privacy
 
-The site goes by (ice)^3. The real name and the LinkedIn link appear **only on the CV** (`/cv/`, `/jp/cv/` and the two PDFs), which is kept out of search engines: the CV pages carry `noindex, nofollow`, and `robots.txt` disallows `/cv/` and `/jp/cv/` (the PDFs live there too). The CV pages' title and link preview stay "CV - icebox." so the name doesn't show in shared links.
-
-Everywhere else, keep the name off: no author lists, no LinkedIn or Scholar links on other pages. The CV never shows a phone number, email or supervisor.
+The site goes by (ice)^3 and never shows the real name: no author lists, no LinkedIn or Scholar links. The real name only appeared on the CV, which is archived (see CV above).
