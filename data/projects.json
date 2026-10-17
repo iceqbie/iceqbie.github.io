@@ -2,6 +2,7 @@
     {
         "slug": "plasma-wave-workbench",
         "date": "2026-09",
+        "updated": "",
         "title": { "en": "Plasma Wave Workbench", "ja": "プラズマ波動ワークベンチ" },
         "summary": {
             "en": "One plasma, five views: scales, which waves survive which assumptions, the CMA diagram, a 3D particle viewer and unit conversion. Works offline once opened.",

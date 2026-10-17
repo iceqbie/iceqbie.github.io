@@ -156,7 +156,7 @@ def build_page(title, date, lang, body, summary, slug, has_thumb):
     esc = html.escape
 
     page = page.replace('    <meta name="robots" content="noindex">\n', "")
-    page = page.replace("<title>記事タイトル - icebox.</title>", f"<title>{esc(title)} - icebox.</title>")
+    page = page.replace("<title>記事タイトル - (ice)^3</title>", f"<title>{esc(title)} - (ice)^3</title>")
     page = re.sub(r'<meta name="description" content="[^"]*">',
                   f'<meta name="description" content="{esc(summary)}">', page)
     page = page.replace('<meta property="og:type" content="website">', '<meta property="og:type" content="article">')

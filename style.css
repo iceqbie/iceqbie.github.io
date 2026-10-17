@@ -28,11 +28,9 @@
     --font-jp: "Noto Sans JP", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-    --fs-h1: clamp(2.25rem, 7vw, 4rem);         /* 36–64px */
     --fs-h1-page: clamp(2rem, 5vw, 3rem);       /* 32–48px, sub-page titles */
     --fs-h2: clamp(1.75rem, 4vw, 2.25rem);      /* 28–36px */
     --fs-h3: 1.25rem;                           /* 20px */
-    --fs-lead: 1.25rem;                         /* 20px */
     --fs-body: 1.0625rem;                       /* 17px */
     --fs-small: 0.9375rem;                      /* 15px, summaries */
     --fs-nav: 0.9375rem;                        /* 15px */
@@ -55,7 +53,6 @@
     --space-md: 24px;
     --space-lg: 48px;
     --space-xl: 96px;
-    --space-xxl: 128px;
 
     /* Borders */
     --border: 1px solid var(--line);
@@ -275,108 +272,9 @@ ol {
 }
 
 
-/* =========================================================
-   HERO
-   ========================================================= */
-
-.hero {
-    padding-top: var(--space-xxl);
-    padding-bottom: var(--space-xl);
-}
-
-.hero h1 {
-    max-width: 900px;
-
-    margin-bottom: var(--space-lg);
-
-    font-size: var(--fs-h1);
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-}
-
-.hero-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.button {
-    display: inline-flex;
-    align-items: center;
-
-    min-height: 44px;
-    padding: 0 18px;
-
-    color: var(--charcoal);
-
-    font-size: var(--fs-nav);
-
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--white);
-
-    transition:
-        border-color 160ms ease,
-        background-color 160ms ease,
-        color 160ms ease;
-    font-weight: 500;
-}
-
-.button:hover,
-.button-primary:hover {
-    background: var(--lime);
-    border-color: var(--lime);
-}
-
-.button-primary {
-    background: var(--ice-blue);
-    border-color: var(--ice-blue);
-}
-
-
-/* =========================================================
-   HERO TITLE / CARET
-   ========================================================= */
-
-.site-title {
-    display: inline-block;
-}
-
-.site-title::after {
-    content: "|";
-
-    display: inline-block;
-
-    margin-left: 0.1em;
-
-    color: var(--ice-blue);
-
-    font-family: var(--font-mono);
-    font-weight: 500;
-
-    animation: caret-blink 0.9s steps(1, end) infinite;
-}
-
-@keyframes caret-blink {
-    0%,
-    50% {
-        opacity: 1;
-    }
-
-    50.01%,
-    100% {
-        opacity: 0;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
-    }
-
-    .site-title::after {
-        animation: none;
     }
 
     * {
@@ -386,165 +284,11 @@ ol {
 
 
 /* =========================================================
-   PAGE HEADER (sub-pages)
-   ========================================================= */
-
-.page-header {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-lg);
-}
-
-.page-header h1 {
-    margin-bottom: var(--space-sm);
-
-    font-size: var(--fs-h1-page);
-    font-weight: 600;
-    line-height: var(--lh-heading);
-    letter-spacing: -0.02em;
-}
-
-.page-header p {
-    max-width: var(--text-width);
-    margin-bottom: 0;
-
-    color: var(--charcoal-soft);
-
-    font-size: 1.125rem;
-}
-
-
-/* =========================================================
    SECTIONS
    ========================================================= */
 
-.section {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-xl);
-
-    border-top: var(--border);
-}
-
-.section-tinted {
-    background: var(--light-gray);
-}
-
-.section-heading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-sm) var(--space-md);
-
-    margin-bottom: var(--space-lg);
-}
-
-.section-number {
-    align-self: center;
-
-    padding: 2px 10px;
-
-    color: var(--charcoal);
-    background: var(--ice-blue);
-
-    border-radius: 99px;
-
-    font-family: var(--font-mono);
-    font-size: var(--fs-caption);
-    font-weight: 500;
-}
-
-.section-heading h2 {
-    margin: 0;
-
-    font-size: var(--fs-h2);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: var(--lh-heading);
-}
-
-.section-more {
-    margin-left: auto;
-
-    color: var(--charcoal);
-
-    font-size: var(--fs-caption);
-
-    text-decoration: underline;
-    text-decoration-color: var(--ice-blue);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 3px;
-    font-weight: 500;
-}
-
-.section-more:hover {
-    background: var(--lime);
-    text-decoration-color: var(--charcoal);
-}
-
-.sub-heading {
-    margin: var(--space-lg) 0 var(--space-md);
-
-    font-size: var(--fs-h3);
-    font-weight: 600;
-}
-
 .list-empty {
     color: var(--charcoal-soft);
-}
-
-
-/* =========================================================
-   ABOUT
-   ========================================================= */
-
-.about-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
-
-    gap: var(--space-xl);
-}
-
-.about-main {
-    max-width: var(--text-width);
-}
-
-.lead {
-    font-size: var(--fs-lead);
-    line-height: 1.6;
-}
-
-.about-main p + p {
-    color: var(--charcoal-soft);
-}
-
-.about-meta {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-
-    margin: 0;
-    padding-top: 4px;
-
-    font-size: var(--fs-small);
-}
-
-.about-meta > div {
-    display: flex;
-    flex-direction: column;
-}
-
-.about-meta dd {
-    margin: 0;
-}
-
-.meta-label {
-    margin-bottom: 2px;
-
-    color: var(--charcoal-soft);
-
-    font-family: var(--font-mono);
-    font-size: var(--fs-meta);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
 }
 
 
@@ -576,11 +320,6 @@ ol {
         border-color 160ms ease,
         transform 160ms ease,
         box-shadow 160ms ease;
-}
-
-/* Cards are light gray on white sections, white on gray ones. */
-.section-tinted .card {
-    background: var(--white);
 }
 
 .card:has(.card-link):hover {
@@ -768,12 +507,6 @@ ol {
     background: var(--lime);
 }
 
-.interest-index {
-    color: var(--charcoal-soft);
-
-    font-family: var(--font-mono);
-    font-size: var(--fs-meta);
-}
 
 
 /* =========================================================
@@ -993,75 +726,8 @@ ol {
 
 
 /* =========================================================
-   SKILLS
-   ========================================================= */
-
-.skills {
-    display: grid;
-    gap: var(--space-sm);
-
-    margin: 0;
-}
-
-.skills > div {
-    display: grid;
-    grid-template-columns: 9em minmax(0, 1fr);
-    align-items: baseline;
-    gap: var(--space-sm);
-}
-
-.skills dd {
-    margin: 0;
-}
-
-
-/* =========================================================
    PHOTOGRAPHY / UNSPLASH
    ========================================================= */
-
-.unsplash-card {
-    padding: var(--space-md);
-
-    background: var(--white);
-
-    border: var(--border);
-    border-radius: var(--radius);
-}
-
-.unsplash-card-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-
-    gap: var(--space-md);
-
-    margin-bottom: var(--space-md);
-}
-
-.unsplash-card-header h3 {
-    margin: 4px 0 0;
-
-    font-size: var(--fs-h3);
-    font-weight: 600;
-}
-
-/* Horizontal strip (home) */
-
-.photo-strip {
-    display: flex;
-
-    overflow-x: auto;
-
-    gap: 8px;
-
-    padding-bottom: 8px;
-
-    scroll-snap-type: x mandatory;
-
-    -webkit-overflow-scrolling: touch;
-
-    scrollbar-color: var(--line) transparent;
-}
 
 .photo-card {
     display: block;
@@ -1071,16 +737,6 @@ ol {
     background: var(--light-gray);
 
     border-radius: 4px;
-}
-
-.photo-strip .photo-card {
-    flex: 0 0 auto;
-
-    width: 300px;
-
-    aspect-ratio: 4 / 3;
-
-    scroll-snap-align: start;
 }
 
 .photo-card img {
@@ -1107,24 +763,6 @@ ol {
 
 .photo-grid .photo-card {
     aspect-ratio: 3 / 2;
-}
-
-.unsplash-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    gap: 12px 20px;
-
-    margin-top: var(--space-sm);
-    padding-top: var(--space-sm);
-
-    border-top: var(--border);
-
-    color: var(--charcoal-soft);
-
-    font-size: var(--fs-caption);
 }
 
 
@@ -1363,28 +1001,6 @@ ol {
     margin-bottom: var(--space-md);
 }
 
-.footer-email {
-    display: inline-block;
-
-    margin-bottom: var(--space-sm);
-
-    color: var(--charcoal);
-
-    font-size: 1.05rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-
-    border-bottom: 2px solid var(--ice-blue);
-
-    transition:
-        background-color 160ms ease,
-        border-color 160ms ease;
-}
-
-.footer-email:hover {
-    background: var(--ice-blue);
-}
-
 .social-links {
     display: flex;
     flex-wrap: wrap;
@@ -1423,176 +1039,6 @@ ol {
 
     font-size: var(--fs-caption);
 }
-
-.footer-mono {
-    font-family: var(--font-mono);
-    font-size: var(--fs-meta);
-}
-
-
-/* =========================================================
-   PAGE TABLE OF CONTENTS
-   ========================================================= */
-
-.page-toc {
-    margin-top: var(--space-md);
-}
-
-.page-toc ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.page-toc a {
-    display: inline-flex;
-    align-items: center;
-
-    min-height: 40px;
-    padding: 0 14px;
-
-    border: var(--border);
-    border-radius: 99px;
-
-    font-size: var(--fs-caption);
-    font-weight: 500;
-
-    transition: background-color 160ms ease, border-color 160ms ease;
-}
-
-.page-toc a:hover {
-    background: var(--lime);
-    border-color: var(--lime);
-}
-
-h4.card-title {
-    font-size: var(--fs-h3);
-}
-
-
-/* =========================================================
-   CORE QUESTION (above the research-interest cards)
-   ========================================================= */
-
-.core-question {
-    max-width: 860px;
-    margin: 0 0 var(--space-md);
-    padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-md) - 2px);
-
-    background: var(--white);
-
-    border-left: 6px solid var(--ice-blue);
-    border-radius: 0 var(--radius) var(--radius) 0;
-}
-
-.core-question figcaption {
-    display: block;
-
-    margin-bottom: var(--space-xs);
-}
-
-.core-question blockquote {
-    margin: 0;
-}
-
-.core-question p {
-    margin: 0;
-
-    font-size: var(--fs-lead);
-    font-weight: 500;
-    line-height: 1.6;
-}
-
-html[lang="ja"] .core-question p {
-    line-height: 1.8;
-}
-
-
-/* =========================================================
-   SLIDER (research interests)
-   ========================================================= */
-
-.slider-track {
-    display: flex;
-    gap: var(--space-md);
-
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-
-    /* room for the focus ring and card shadow; the scroll padding
-       keeps the first card snapping to scrollLeft 0 */
-    padding: 4px 4px 12px;
-    scroll-padding-inline: 4px;
-    margin: -4px -4px 0;
-
-    scrollbar-color: var(--line) transparent;
-}
-
-.slider-track > .card {
-    flex: 0 0 min(340px, 85%);
-
-    scroll-snap-align: start;
-}
-
-.slider-controls {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-
-    margin-top: var(--space-sm);
-}
-
-.slider-controls[hidden] {
-    display: none;
-}
-
-.slider-btn {
-    width: 44px;
-    height: 44px;
-
-    color: var(--charcoal);
-    background: var(--white);
-
-    border: var(--border);
-    border-radius: 99px;
-
-    font: inherit;
-    font-size: 1.125rem;
-
-    cursor: pointer;
-
-    transition: background-color 160ms ease, border-color 160ms ease;
-}
-
-.slider-btn:hover:not(:disabled) {
-    background: var(--lime);
-    border-color: var(--lime);
-}
-
-.slider-btn:disabled {
-    opacity: 0.35;
-    cursor: default;
-}
-
-.slider-count {
-    min-width: 3.5em;
-
-    color: var(--charcoal-soft);
-
-    font-family: var(--font-mono);
-    font-size: var(--fs-caption);
-    text-align: center;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .slider-track {
-        scroll-behavior: auto;
-    }
-}
-
 
 /* =========================================================
    CV (web page and the PDF printed from it)
@@ -1864,8 +1310,6 @@ html[lang="ja"] body {
 }
 
 /* Japanese headings look heavy with the Latin negative tracking. */
-html[lang="ja"] .section-heading h2,
-html[lang="ja"] .page-header h1,
 html[lang="ja"] .card-title,
 :lang(ja).card-title,
 .prose:lang(ja) h1 {
@@ -1899,7 +1343,6 @@ html[lang="ja"] .card-title,
     :root {
         --side-padding: 24px;
         --space-xl: 72px;
-        --space-xxl: 96px;
     }
 
     .header-inner {
@@ -1914,16 +1357,6 @@ html[lang="ja"] .card-title,
     .site-nav {
         margin-left: -10px;
     }
-
-    .about-grid {
-        grid-template-columns: 1fr;
-        gap: var(--space-lg);
-    }
-
-    .about-meta {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-    }
 }
 
 
@@ -1937,7 +1370,6 @@ html[lang="ja"] .card-title,
         --side-padding: 16px;
         --space-lg: 36px;
         --space-xl: 56px;
-        --space-xxl: 72px;
     }
 
 
@@ -1954,20 +1386,6 @@ html[lang="ja"] .card-title,
 
     .site-nav .lang-switch {
         margin-left: 0;
-    }
-
-    .hero h1 {
-        font-size: clamp(2.25rem, 11vw, 3rem);
-    }
-
-
-    .section-more {
-        margin-left: 0;
-        flex-basis: 100%;
-    }
-
-    .about-meta {
-        grid-template-columns: 1fr;
     }
 
     .card-grid {
@@ -1995,26 +1413,6 @@ html[lang="ja"] .card-title,
 
     .chrono-label {
         padding: 0 0 var(--space-xs) var(--chrono-gutter);
-    }
-
-    .skills > div {
-        grid-template-columns: 1fr;
-        gap: 4px;
-    }
-
-    .unsplash-card {
-        padding: var(--space-sm);
-    }
-
-    .unsplash-card-header {
-        align-items: flex-start;
-        flex-direction: column;
-
-        gap: 8px;
-    }
-
-    .photo-strip .photo-card {
-        width: 78vw;
     }
 
     .photo-grid {
@@ -2168,8 +1566,7 @@ html[lang="ja"] .card-title,
 
 /* Links in running text and "more" links share the body-link look. */
 .block-body a,
-.intro a,
-.footer-links a {
+.intro a {
     color: var(--charcoal);
 
     text-decoration: underline;
@@ -2181,8 +1578,7 @@ html[lang="ja"] .card-title,
 }
 
 .block-body a:hover,
-.intro a:hover,
-.footer-links a:hover {
+.intro a:hover {
     background: var(--lime);
     text-decoration-color: var(--charcoal);
 }
@@ -2281,55 +1677,6 @@ html[lang="ja"] .card-title,
     line-height: 1.4;
 }
 
-/* The research questions: index | title and text, one per row. */
-.questions {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-
-}
-
-.questions li {
-    display: grid;
-    grid-template-columns: 6rem minmax(0, 1fr);
-    gap: var(--space-sm);
-}
-
-.questions .interest-index {
-    padding-top: 3px;
-}
-
-.questions h3 {
-    margin: 0 0 4px;
-
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.5;
-}
-
-.questions p {
-    margin: 0;
-
-    color: var(--charcoal-soft);
-
-    font-size: var(--fs-small);
-}
-
-.footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--space-md);
-
-    margin-bottom: var(--space-sm);
-}
-
-.footer-links a {
-    display: inline-flex;
-    align-items: center;
-
-    min-height: 44px;
-}
-
 @media (max-width: 800px) {
 
     .block {
@@ -2353,8 +1700,7 @@ html[lang="ja"] .card-title,
     }
 
     .block .publication,
-    .block .cv-row,
-    .questions li {
+    .block .cv-row {
         grid-template-columns: 1fr;
         gap: 2px;
     }
@@ -2372,7 +1718,7 @@ html[lang="ja"] .card-title,
 
 .facts > div {
     display: grid;
-    grid-template-columns: 6rem minmax(0, 1fr);
+    grid-template-columns: 8rem minmax(0, 1fr);
     gap: var(--space-sm);
 }
 
@@ -2403,4 +1749,150 @@ html[lang="ja"] .card-title,
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.5;
+}
+
+
+/* =========================================================
+   CARDS: DATES, YEARS (Home, Blog, Projects)
+   ========================================================= */
+
+.card-dates {
+    margin: 0;
+
+    color: var(--charcoal-soft);
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+}
+
+/* A year above its cards on Home's mixed list. */
+.year-heading {
+    margin: 0 0 var(--space-sm);
+
+    color: var(--charcoal-soft);
+
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    font-weight: 500;
+}
+
+.card-grid + .year-heading {
+    margin-top: var(--space-lg);
+}
+
+/* A wide block: heading above, content across the whole column. */
+.block-wide > h2 {
+    margin-bottom: var(--space-md);
+}
+
+
+/* =========================================================
+   UNSPLASH CARD (Home)
+   ========================================================= */
+
+.unsplash-card {
+    padding: var(--space-md);
+
+    background: var(--white);
+
+    border: var(--border);
+    border-radius: var(--radius);
+}
+
+/* A row of photos that scrolls sideways. */
+.photo-strip {
+    display: flex;
+
+    overflow-x: auto;
+
+    gap: 8px;
+
+    padding-bottom: 8px;
+
+    scroll-snap-type: x mandatory;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-color: var(--line) transparent;
+}
+
+.photo-strip .photo-card {
+    flex: 0 0 auto;
+
+    width: 300px;
+
+    aspect-ratio: 4 / 3;
+
+    scroll-snap-align: start;
+}
+
+.unsplash-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    gap: 12px 20px;
+
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+
+    border-top: var(--border);
+
+    color: var(--charcoal-soft);
+
+    font-size: var(--fs-caption);
+}
+
+@media (max-width: 600px) {
+
+    .unsplash-card {
+        padding: var(--space-sm);
+    }
+
+    .photo-strip .photo-card {
+        width: 78vw;
+    }
+}
+
+.card-grid + .inline-links {
+    margin-top: var(--space-sm);
+}
+
+/* Further research interests: title and question, one per row. */
+.interest-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.interest-list h3 {
+    margin: 0 0 2px;
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.interest-list p {
+    margin: 0;
+
+    color: var(--charcoal-soft);
+
+    font-size: var(--fs-small);
+}
+
+/* A short list without markers, one item per line. */
+.plain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+@media (max-width: 600px) {
+
+    .facts > div {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
 }

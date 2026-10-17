@@ -2,14 +2,15 @@
    LIST RENDERER
    Fills every <div data-list="..."> from /data/<name>.json.
 
-     data-list   projects | articles | timeline | publications | photos
+     data-list   projects | articles | recent | timeline | publications | photos
+                 (recent = articles and projects together, for Home)
      data-limit  optional; show only the first N items
      data-filter list pages only: show the tag bar and honour ?tag=
      data-level  heading level for each row (default 3; 4 under an h3)
      data-kinds  timeline only: space-separated kinds to include
      data-types  timeline only: space-separated types to include
-     data-view   "list" for plain date | title rows (timeline, articles);
-                 timeline also takes "cv"
+     data-view   timeline only: "list" for plain date | title rows,
+                 "cv" for the CV layout
 
    Items are written once with { en, ja } fields; the page
    language comes from <html lang>. Lists are shown newest
@@ -39,6 +40,9 @@
             kindsLabel: "Filter the timeline",
             shown: (n) => `Showing ${n} ${n === 1 ? "entry" : "entries"}`,
             written: { en: "English", ja: "Japanese" },
+            published: "Published",
+            updated: "Updated",
+            kind: { articles: "Blog", projects: "Project" },
             tags: "Tags",
             all: "All",
             showAll: "Show all",
@@ -46,6 +50,7 @@
             noMatch: (tag) => `Nothing is tagged #${tag}.`,
             empty: {
                 projects: "Projects will appear here.",
+                recent: "Posts and projects will appear here.",
                 articles: "Articles are on the way.",
                 timeline: "Coming soon.",
                 publications: "Publications will appear here.",
@@ -70,6 +75,9 @@
             kindsLabel: "年表の絞り込み",
             shown: (n) => `${n}件を表示中`,
             written: { en: "英語", ja: "日本語" },
+            published: "公開",
+            updated: "更新",
+            kind: { articles: "ブログ", projects: "プロジェクト" },
             tags: "タグ",
             all: "すべて",
             showAll: "すべて表示",
@@ -77,6 +85,7 @@
             noMatch: (tag) => `#${tag} が付いたものはありません。`,
             empty: {
                 projects: "プロジェクトはここに表示されます。",
+                recent: "記事とプロジェクトはここに表示されます。",
                 articles: "記事は準備中です。",
                 timeline: "準備中です。",
                 publications: "論文はここに表示されます。",
@@ -96,8 +105,6 @@
     // Heading level and view for list rows; set per container before rendering.
     let LEVEL = 3;
     let VIEW = "";
-
-    const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 
     /* ---------- helpers ---------- */
@@ -131,8 +138,25 @@
 
     /* ---------- renderers ---------- */
 
-    function projectCard(item) {
+    // Published (and, when set, updated) dates, e.g.
+    // "Published 2026-10-03 · Updated 2026-10-10" / "2026-10-03 公開 · 2026-10-10 更新".
+    function dates(item) {
+        const one = (label, d) => {
+            const time = `<time datetime="${escapeHtml(d)}">${escapeHtml(d)}</time>`;
+            return LANG === "ja" ? `${time} ${label}` : `${label} ${time}`;
+        };
+        return [one(TEXT.published, item.date), item.updated ? one(TEXT.updated, item.updated) : ""]
+            .filter(Boolean).join(" · ");
+    }
+
+    // A post or a project: thumbnail, title, dates, caption, hashtags.
+    // list is "articles" or "projects"; showKind labels it on mixed lists.
+    function card(item, list, showKind = false) {
         const title = escapeHtml(pick(item.title));
+        // The title is shown in the page language when there is one,
+        // so its lang follows what is actually displayed.
+        const titleLang = item.title && item.title[LANG] ? LANG : (item.lang || LANG);
+        const written = item.lang && item.lang !== LANG ? TEXT.written[item.lang] : "";
         const thumb = item.thumb
             ? `<img class="card-thumb" src="${escapeHtml(item.thumb)}" alt="" loading="lazy">`
             : `<div class="card-thumb card-thumb-placeholder" aria-hidden="true"><span>${title.charAt(0)}</span></div>`;
@@ -141,70 +165,45 @@
             <article class="card">
                 ${thumb}
                 <div class="card-body">
-                    <p class="card-meta">${escapeHtml(item.date)}</p>
-                    <h3 class="card-title">
-                        <a class="card-link" href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${title}</a>
-                    </h3>
-                    <p class="card-summary">${escapeHtml(pick(item.summary))}</p>
-                    ${tagList(item.tags, "projects")}
-                </div>
-            </article>`;
-    }
-
-    function articleCard(item) {
-        const written = TEXT.written[item.lang] || "";
-        // The card shows the title in the page language when there is one,
-        // so its lang follows what is actually displayed.
-        const titleLang = item.title && item.title[LANG] ? LANG : (item.lang || LANG);
-        const thumb = item.thumb
-            ? `<img class="card-thumb" src="${escapeHtml(item.thumb)}" alt="" loading="lazy">`
-            : "";
-
-        return `
-            <article class="card">
-                ${thumb}
-                <div class="card-body">
-                    <p class="card-meta">
-                        <time datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
+                    ${showKind || written ? `<p class="card-meta">
+                        ${showKind ? `<span class="badge">${escapeHtml(TEXT.kind[list])}</span>` : ""}
                         ${written ? `<span class="badge" lang="${escapeHtml(item.lang)}">${escapeHtml(written)}</span>` : ""}
-                    </p>
-                    <h3 class="card-title" lang="${escapeHtml(titleLang)}">
-                        <a class="card-link" href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${escapeHtml(pick(item.title))}</a>
-                    </h3>
+                    </p>` : ""}
+                    <h${LEVEL} class="card-title" lang="${escapeHtml(titleLang)}">
+                        <a class="card-link" href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${title}</a>
+                    </h${LEVEL}>
+                    <p class="card-dates">${dates(item)}</p>
                     <p class="card-summary">${escapeHtml(pick(item.summary))}</p>
-                    ${tagList(item.tags, "articles")}
+                    ${tagList(item.tags, list)}
                 </div>
             </article>`;
     }
 
-    // A resource as one row: date | title, what it is, its keywords.
-    function projectRow(item) {
-        const tags = (item.tags || []).join(" · ");
-        return `
-                <li class="cv-row">
-                    <span class="cv-period">${escapeHtml(item.date)}</span>
-                    <div class="cv-body">
-                        ${tags ? `<p class="resource-type">${escapeHtml(tags)}</p>` : ""}
-                        <h${LEVEL}><a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${escapeHtml(pick(item.title))}</a></h${LEVEL}>
-                        <p>${escapeHtml(pick(item.summary))}</p>
-                    </div>
-                </li>`;
-    }
+    // Home: posts and projects together, most recently published or
+    // updated first, under a heading per year.
+    const latest = (item) => item.updated || item.date || "";
 
-    // A post as one row: date | title, with its language when it differs
-    // from the page's (the blog is Japanese only).
-    function articleRow(item) {
-        const titleLang = item.title && item.title[LANG] ? LANG : (item.lang || LANG);
-        const written = item.lang && item.lang !== LANG ? TEXT.written[item.lang] : "";
+    function recent(items) {
+        const sorted = items
+            .map((item, i) => [item, i])
+            .sort(([a, i], [b, j]) => latest(b).localeCompare(latest(a)) || i - j)
+            .map(([item]) => item);
 
-        return `
-                <li class="cv-row">
-                    <time class="cv-period" datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
-                    <div class="cv-body">
-                        <h${LEVEL} lang="${escapeHtml(titleLang)}"><a href="${escapeHtml(item.url)}"${linkAttrs(item.url)}>${escapeHtml(pick(item.title))}</a>${written ? ` <span class="post-lang">(${LANG === "ja" ? "" : "in "}${escapeHtml(written)})</span>` : ""}</h${LEVEL}>
-                        <p>${escapeHtml(pick(item.summary))}</p>
-                    </div>
-                </li>`;
+        const groups = [];
+        for (const item of sorted) {
+            const year = latest(item).slice(0, 4);
+            if (!groups.length || groups[groups.length - 1].year !== year) groups.push({ year, items: [] });
+            groups[groups.length - 1].items.push(item);
+        }
+
+        const level = LEVEL;
+        return groups.map((g) => {
+            LEVEL = level + 1;
+            const cards = g.items.map((item) => card(item, item.list, true)).join("");
+            LEVEL = level;
+            return `<h${level} class="year-heading">${escapeHtml(g.year)}</h${level}>
+                <div class="card-grid">${cards}</div>`;
+        }).join("");
     }
 
     /* ---------- timeline (profile) ---------- */
@@ -357,14 +356,9 @@
     }
 
     const RENDERERS = {
-        projects: {
-            item: (item) => VIEW === "list" ? projectRow(item) : projectCard(item),
-            wrap: (html) => VIEW === "list" ? `<ol class="cv-list">${html}</ol>` : `<div class="card-grid">${html}</div>`
-        },
-        articles: {
-            item: (item) => VIEW === "list" ? articleRow(item) : articleCard(item),
-            wrap: (html) => VIEW === "list" ? `<ol class="cv-list">${html}</ol>` : `<div class="card-grid">${html}</div>`
-        },
+        projects: { item: (item) => card(item, "projects"), wrap: (html) => `<div class="card-grid">${html}</div>` },
+        articles: { item: (item) => card(item, "articles"), wrap: (html) => `<div class="card-grid">${html}</div>` },
+        recent: { all: recent },
         timeline: { all: timeline, after: wireTimeline },
         publications: { item: publicationRow, wrap: (html) => `<ol class="publication-list">${html}</ol>` },
         photos: { item: photoCard, wrap: (html) => html }
@@ -402,10 +396,15 @@
     const cache = {};
 
     const load = (name) =>
-        cache[name] ??= fetch(`/data/${name}.json`).then((response) => {
-            if (!response.ok) throw new Error(`${name}: HTTP ${response.status}`);
-            return response.json();
-        });
+        cache[name] ??= name === "recent"
+            // Home's mixed list: every post and project, each marked with its list.
+            ? Promise.all(["articles", "projects"].map((list) =>
+                load(list).then((items) => items.map((item) => ({ ...item, list })))))
+                .then((lists) => lists.flat())
+            : fetch(`/data/${name}.json`).then((response) => {
+                if (!response.ok) throw new Error(`${name}: HTTP ${response.status}`);
+                return response.json();
+            });
 
     document.querySelectorAll("[data-list]").forEach(async (container) => {
         const name = container.dataset.list;
@@ -425,6 +424,10 @@
                 const key = field === "kinds" ? "kind" : "type";
                 if (keep) items = items.filter((item) => keep.includes(item[key]));
             }
+
+            // The newest entries first, so data-limit keeps the latest ones.
+            if (name === "timeline") items = newestFirst(items);
+            if (name === "recent") items = [...items].sort((a, b) => latest(b).localeCompare(latest(a)));
 
             const all = items;
             if (active) items = items.filter((item) => (item.tags || []).includes(active));
@@ -462,50 +465,5 @@
         time.textContent = updated;
         stamp.hidden = false;
     }
-
-
-    /* ---------- sliders ---------- */
-
-    // A horizontally scrolling row of cards with Previous / Next buttons.
-    // Without JavaScript the row still scrolls; the buttons stay hidden.
-    document.querySelectorAll("[data-slider]").forEach((slider) => {
-        const track = slider.querySelector(".slider-track");
-        const controls = slider.querySelector(".slider-controls");
-        const [prev, next] = slider.querySelectorAll(".slider-btn");
-        const count = slider.querySelector(".slider-count");
-        const cards = track.children;
-
-        const step = () => {
-            const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-            return cards[0].getBoundingClientRect().width + gap;
-        };
-
-        const update = () => {
-            const max = track.scrollWidth - track.clientWidth;
-            const atEnd = track.scrollLeft >= max - 2;
-            const index = atEnd ? cards.length : Math.round(track.scrollLeft / step()) + 1;
-            count.textContent = `${index} / ${cards.length}`;
-            prev.disabled = track.scrollLeft <= 2;
-            next.disabled = atEnd;
-            controls.hidden = max <= 2;   // everything fits: no buttons needed
-        };
-
-        const go = (dir) => track.scrollBy({ left: dir * step(), behavior: REDUCED_MOTION ? "auto" : "smooth" });
-
-        // Arrow keys scroll the focused track natively; Home / End jump.
-        track.addEventListener("keydown", (event) => {
-            if (event.key !== "Home" && event.key !== "End") return;
-            event.preventDefault();
-            track.scrollTo({ left: event.key === "Home" ? 0 : track.scrollWidth, behavior: REDUCED_MOTION ? "auto" : "smooth" });
-        });
-
-        prev.addEventListener("click", () => go(-1));
-        next.addEventListener("click", () => go(1));
-        track.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
-        window.addEventListener("resize", update);
-
-        controls.hidden = false;
-        update();
-    });
 
 })();

@@ -1,4 +1,4 @@
-# icebox. — iceqbie.github.io
+# (ice)^3 — iceqbie.github.io
 
 Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages from `main`.
 
@@ -6,12 +6,12 @@ Portfolio of (ice)^3. Plain HTML/CSS/JS, no build step, served by GitHub Pages f
 
 | Path | What it is |
 | --- | --- |
-| `/`, `/jp/` | Home (English / Japanese): intro with the panda icon → research → resources → publications and talks → latest post |
-| `/research/`, `/jp/research/` | Core question, current work, the research questions, publications, talks and awards, earlier research |
-| `/about/`, `/jp/about/` | Short profile: intro, affiliation and field, activities outside research |
-| `/projects/`, `/jp/projects/` | Resources: public demos, code and teaching material (not in the nav while there is one) |
+| `/`, `/jp/` | Home (English / Japanese): intro with the panda icon → recent posts and projects (cards, newest first by year) → recent research activities → Unsplash photos |
+| `/research/`, `/jp/research/` | Interests, publications, talks and awards, earlier research |
+| `/about/`, `/jp/about/` | Short profile: intro, affiliation and field, activities outside research, interests, likes |
+| `/projects/`, `/jp/projects/` | Project cards with a tag filter |
 | `/projects/<slug>/` | Each standalone HTML project |
-| `/jp/blog/` | List of posts (the blog is Japanese only; `/blog/` redirects here) |
+| `/jp/blog/` | Article cards with a tag filter (the blog is Japanese only; `/blog/` redirects here) |
 | `/blog/<slug>/` | Each article |
 | `/photos/`, `/jp/photos/` | Unsplash gallery |
 | `/data/*.json` | The lists shown on the pages above |
@@ -61,6 +61,7 @@ Every list item is written once with `en` and `ja` text, and shows up on Home, t
 {
     "slug": "my-tool",
     "date": "2026-10",
+    "updated": "",
     "title": { "en": "My Tool", "ja": "ツール名" },
     "summary": { "en": "One sentence.", "ja": "一文で説明。" },
     "tags": ["Plasma"],
@@ -69,7 +70,7 @@ Every list item is written once with `en` and `ja` text, and shows up on Home, t
 }
 ```
 
-A project doesn't have to be an HTML page here: `url` can point to a GitHub repo, a PDF or any other page. Leave `thumb` empty (`""`) to get the coloured placeholder.
+`date` is when it was published; set `updated` (`"YYYY-MM-DD"`) when you change it, and the card shows both and moves up on Home, which sorts by the later of the two. Articles take the same `updated` field. A project doesn't have to be an HTML page here: `url` can point to a GitHub repo, a PDF or any other page. Leave `thumb` empty (`""`) to get the coloured placeholder.
 
 **Plasma Wave Workbench** — developed in the private `self-study` repo. To update the copy here (it also regenerates the offline cache version):
 
