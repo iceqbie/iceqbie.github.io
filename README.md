@@ -32,6 +32,27 @@ Defined once at the top of `style.css`. Keep to these five (tints of them are fi
 
 Ice Blue and Acid Lime are too light to be text on white — use them as backgrounds, underlines and highlights with Charcoal text on top.
 
+### Figures and images in posts
+
+Figures, diagrams and generated images use the site's colours arranged by lightness, plus one orange for emphasis. Contrast is against white.
+
+| Step | Colour | HEX | Contrast | Use |
+| --- | --- | --- | ---: | --- |
+| Background | White | `#FFFFFF` | – | background |
+| Panel | Light Gray | `#F5F6F7` | 1.08 | panel ground, always with an outline |
+| Pale fill | Pale Ice | `#CBE5EF` | 1.31 | background areas only, always with an outline |
+| Fill | Ice Blue | `#A9D9E6` | 1.53 | label grounds; outline it if it carries meaning |
+| Visible fill, thick line | Mid Ice | `#4D96B1` | 3.33 | areas that must be told apart, bars |
+| Line, arrow, blue text | Deep Ice | `#2F6F8A` | 5.58 | the main data line; blue text |
+| Text, outline | Charcoal | `#252A2E` | 14.49 | text and outlines |
+| Secondary text | Soft Charcoal | `#5C6268` | 6.17 | on White or Pale Ice only (4.0 on Ice Blue) |
+| Emphasis | Signal Orange | `#C2410C` | 5.18 | the one or two things to look at (3.39 on Ice Blue) |
+
+- Pale fills (Light Gray, Pale Ice, Ice Blue) are nearly as light as white, so give them a Charcoal or Deep Ice outline.
+- Emphasis is Signal Orange only, once or twice per image. Blue against orange stays distinct for most colour-vision differences.
+- Acid Lime is not used in figures: at 1.36 on white it barely shows.
+- Prompt for image generators: *flat, clean illustration on a white background; charcoal #252A2E text and outlines; deep blue #2F6F8A lines; blue #4D96B1 and pale #A9D9E6 / #CBE5EF fills with outlines; one orange #C2410C accent for the key point; no gradients, no shadows.*
+
 ## Typography
 
 Sizes are `rem` tokens (`--fs-*`) at the top of `style.css`, so the visitor's browser font-size setting applies. Nothing is smaller than 13px.
