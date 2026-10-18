@@ -9,6 +9,7 @@
      data-level  heading level for each row (default 3; 4 under an h3)
      data-kinds  timeline only: space-separated kinds to include
      data-types  timeline only: space-separated types to include
+     data-years  timeline only: show each period as years (2023–2024)
      data-view   timeline only: "list" for plain date | title rows,
                  "cv" for the CV layout
 
@@ -109,6 +110,7 @@
     // Heading level and view for list rows; set per container before rendering.
     let LEVEL = 3;
     let VIEW = "";
+    let YEARS = false;   // data-years: show periods as years only
 
 
     /* ---------- helpers ---------- */
@@ -226,7 +228,12 @@
 
     // The period shown on each entry, e.g. 2025年6月–10月 / Jun–Oct 2025.
     function period(item) {
-        const { start, end } = item;
+        let { start, end } = item;
+        if (YEARS) {
+            start = (start || "").slice(0, 4);
+            end = end === "present" ? end : (end || "").slice(0, 4);
+            if (start && start === end) end = "";
+        }
         if (end === "present") return start ? `${fmtDate(parseDate(start))}–` : TEXT.present;
         if (!start) return end ? (LANG === "ja" ? `〜${end}` : `–${end}`) : "";
         if (!end) return fmtDate(parseDate(start));
@@ -439,6 +446,7 @@
 
             LEVEL = parseInt(container.dataset.level, 10) || 3;
             VIEW = container.dataset.view || "";
+            YEARS = "years" in container.dataset;
             const list = !items.length ? null
                 : renderer.all ? renderer.all(items, container)
                 : renderer.wrap(items.map(renderer.item).join(""));
