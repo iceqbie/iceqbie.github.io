@@ -187,6 +187,42 @@
         "url": ""
     },
     {
+        "start": "2023-11",
+        "end": "",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "Organizer and instructor, Satellite Data Analysis Workshop — HELLO SPACE WORK! NIHONBASHI",
+            "ja": "衛星データ解析ワークショップ 企画・講師（HELLO SPACE WORK! 日本橋）"
+        },
+        "detail": {
+            "en": "A hands-on workshop with real satellite data in Google Colaboratory, mainly for elementary and junior high school students.",
+            "ja": "小中学生を主な対象に, Google Colaboratory で実際の衛星データを使うワークショップ."
+        },
+        "url": "",
+        "links": [
+            { "label": { "en": "Event report (note)", "ja": "イベントレポート（note）" }, "url": "https://note.com/ase_lab_/n/n6c17eed303ef" }
+        ]
+    },
+    {
+        "start": "2023-09",
+        "end": "",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "Organizer and instructor, Satellite Data Analysis Workshop — ASE-Lab. Open School",
+            "ja": "衛星データ解析体験会 企画・講師（ASE-Lab. オープンスクール）"
+        },
+        "detail": {
+            "en": "Mapping satellite data and graphing night lights with Python in Google Colaboratory.",
+            "ja": "Google Colaboratory と Python で, 衛星データの地図化と夜間光のグラフ化を体験."
+        },
+        "url": "",
+        "links": [
+            { "label": { "en": "Event report (note)", "ja": "イベントレポート（note）" }, "url": "https://note.com/ase_lab_/n/nd871348dc8aa" }
+        ]
+    },
+    {
         "start": "2022",
         "end": "present",
         "kind": "other",
@@ -199,11 +235,7 @@
             "en": "Organize seminars on satellite imagery and astrostatistics. Built a CanSat navigation-control algorithm and k-means image processing for the August 2022 competition.",
             "ja": "衛星画像・宇宙統計のゼミの企画・運営. 2022年8月の CanSat 大会に向けて, 航法制御アルゴリズムと k-means による画像処理を開発."
         },
-        "url": "https://www.ase-lab.space/",
-        "links": [
-            { "label": { "en": "Satellite data analysis workshop (2023)", "ja": "衛星データ解析体験会（2023）" }, "url": "https://note.com/ase_lab_/n/nd871348dc8aa" },
-            { "label": { "en": "HELLO SPACE WORK! workshop (2023)", "ja": "HELLO SPACE WORK! ワークショップ（2023）" }, "url": "https://note.com/ase_lab_/n/n6c17eed303ef" }
-        ]
+        "url": "https://www.ase-lab.space/"
     },
     {
         "start": "2020",
