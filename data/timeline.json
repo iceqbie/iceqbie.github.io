@@ -245,14 +245,14 @@
         "kind": "other",
         "type": "qualification",
         "title": {
-            "en": "SIA Ski Badge, Gold",
-            "ja": "SIA（日本プロスキー教師協会）ゴールド"
+            "en": "SIA Gold Badge (Professional Ski Instructors Association of Japan)*",
+            "ja": "SIA（日本職業スキー教師協会）ゴールド※"
         },
         "detail": {
-            "en": "",
-            "ja": ""
+            "en": "* SIA: Japan's member of the International Ski Instructors Association (ISIA)",
+            "ja": "※ SIA: 国際スキー教師連盟（ISIA）の加盟団体"
         },
-        "url": ""
+        "url": "https://isia.ski/"
     },
     {
         "start": "2025-09",
