@@ -90,6 +90,21 @@
         "url": ""
     },
     {
+        "start": "2026-10",
+        "end": "2026-12",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "Organizer, Satellite Data Analysis Seminar — Kanagawa Astro Camp",
+            "ja": "衛星データ解析ゼミ 企画者（神奈川県 アストロキャンプ）"
+        },
+        "detail": {
+            "en": "Hosted by Kanagawa Prefecture with ASE-Lab as operating partner; three online sessions.",
+            "ja": "神奈川県主催, ASE-Lab 運営協力. オンラインで全3回."
+        },
+        "url": "https://www.amulapo.net/kanagawa-astro-camp"
+    },
+    {
         "start": "2026",
         "end": "",
         "kind": "other",
