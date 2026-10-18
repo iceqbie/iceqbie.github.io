@@ -160,7 +160,7 @@ Re-running the script for the same slug overwrites that post, so edit the draft 
 
 - `start` / `end`: `"YYYY"` or `"YYYY-MM"`; `end` can be `"present"`; either may be empty (`"start": "", "end": "2023"` shows as 〜2023). The period text (2025年6月–10月 / Jun–Oct 2025) is generated.
 - `kind`: `research` (timeline), `other` (timeline, shown as 課外活動 / Extracurricular), `career` (education and work; not shown on the site since the CV was archived).
-- `type` (badge): `award`, `talk`, `research`, `organizer`, `club`, `volunteer`, `qualification`, `education`, `work`.
+- `type` (badge): `award`, `talk`, `research`, `organizer`, `club`, `volunteer`, `competition`, `qualification`, `education`, `work`, `internship` (shown in About → Internships).
 
 **CV** — the CV pages (`/cv/`, `/jp/cv/`), their PDFs, `tools/build-cv.sh` and `.github/workflows/cv.yml` were taken off the site in October 2026. They are kept at the git tag `cv-archive`. To bring them back:
 

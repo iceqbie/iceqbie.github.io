@@ -288,14 +288,14 @@
         "start": "2025-06",
         "end": "2025-10",
         "kind": "career",
-        "type": "work",
+        "type": "internship",
         "title": {
             "en": "Tenchijin Inc. — Intern",
             "ja": "株式会社天地人 インターン"
         },
         "detail": {
-            "en": "",
-            "ja": ""
+            "en": "Developed code that reduces noise in SAR data with machine learning.",
+            "ja": "SAR データと機械学習を組み合わせたノイズ軽減のコード開発."
         },
         "url": ""
     },
@@ -303,7 +303,7 @@
         "start": "2023",
         "end": "2024-08",
         "kind": "career",
-        "type": "work",
+        "type": "internship",
         "title": {
             "en": "GHELIA Inc. — Intern",
             "ja": "ギリア株式会社 インターン"
