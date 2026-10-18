@@ -1999,3 +1999,15 @@ html[lang="ja"] .card-title,
 .bullets li::marker {
     color: var(--charcoal-soft);
 }
+
+/* Hashtags under a post's title. */
+.prose .prose-tags {
+    margin: 0 0 var(--space-lg);
+    padding-left: 0;
+
+    list-style: none;
+}
+
+.prose .prose-tags li + li {
+    margin-top: 0;
+}

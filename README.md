@@ -145,7 +145,7 @@ git checkout cv-archive -- cv/ jp/cv/ tools/build-cv.sh .github/workflows/cv.yml
 
 then add `Disallow: /cv/` and `Disallow: /jp/cv/` back to `robots.txt` (the CV carries the real name).
 
-**Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`).
+**Tags** — tags on project and article cards are links: clicking one opens `/projects/?tag=…` or `/jp/blog/?tag=…`, which shows only items with that tag. The bar above each list is built from the tags in the data, so a new tag appears there automatically. Keep spelling identical across items (`AstroCamp`, not `Astrocamp`). Give each post or project up to five tags. A post shows its tags under the title (from the draft's `tags:` line), and the Workbench shows its tags in the top bar (from `data/projects.json`, added by `tools/import-workbench.py`).
 
 **Photos** — `data/photos.json` is refreshed daily by GitHub Actions (`.github/workflows/unsplash.yml` → `tools/fetch-unsplash.py`) with your most popular Unsplash photos. One-time setup:
 

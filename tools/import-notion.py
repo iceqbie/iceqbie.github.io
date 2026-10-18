@@ -48,6 +48,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.parse
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://iceqbie.github.io"
@@ -259,7 +260,7 @@ def make_thumb(src, dest):
 
 # ---------------------------------------------------------------- page
 
-def build_page(title, date, lang, body, summary, slug, has_thumb, updated=""):
+def build_page(title, date, lang, body, summary, slug, has_thumb, updated="", tags=()):
     page = TEMPLATE.read_text(encoding="utf8")
     url = f"{SITE}/blog/{slug}/"
     esc = html.escape
@@ -292,6 +293,12 @@ def build_page(title, date, lang, body, summary, slug, has_thumb, updated=""):
     dates = label("公開" if lang == "ja" else "Published", date)
     if updated and updated != date:
         dates += " · " + label("更新" if lang == "ja" else "Updated", updated)
+    # Hashtags under the title; each opens the blog list filtered by it.
+    tag_list = ""
+    if tags:
+        links = "".join(f'<li><a class="tag" href="/jp/blog/?tag={urllib.parse.quote(t)}">#{esc(t)}</a></li>'
+                        for t in tags)
+        tag_list = f'\n            <ul class="tags prose-tags" aria-label="{"タグ" if lang == "ja" else "Tags"}">{links}</ul>\n'
     article = f"""        <article class="prose container" lang="{lang}">
 
             <p class="prose-meta">
@@ -299,7 +306,7 @@ def build_page(title, date, lang, body, summary, slug, has_thumb, updated=""):
             </p>
 
             <h1>{esc(title)}</h1>
-
+{tag_list}
 {body.strip()}
 
             <a class="back-link" href="{back}">{back_text}</a>
@@ -364,7 +371,7 @@ def main():
         warn("no --summary: the card and link previews will have no description")
 
     (out_dir / "index.html").write_text(
-        build_page(title, args.date, args.lang, body, args.summary, args.slug, bool(args.thumb), args.updated),
+        build_page(title, args.date, args.lang, body, args.summary, args.slug, bool(args.thumb), args.updated, tags),
         encoding="utf8")
 
     print(f"  wrote blog/{args.slug}/index.html, {n_figures} figure(s)"

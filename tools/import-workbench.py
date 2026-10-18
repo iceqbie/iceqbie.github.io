@@ -4,7 +4,7 @@ The workbench is developed in the (private) self-study repo. Its
 `tools/build.py --standalone` writes one self-contained HTML file; this
 script copies that file here and adds what a page on this site needs:
 
-  - a small "back to projects" bar,
+  - a small "back to projects" bar with the project's tags (from data/projects.json),
   - a favicon and a web-app manifest, so it can be added to the home screen,
   - a service worker, so after one visit it keeps working offline (on the train).
 
@@ -15,9 +15,11 @@ Re-run it whenever the workbench changes:
 """
 
 import hashlib
+import html
 import json
 import pathlib
 import sys
+import urllib.parse
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SOURCE = pathlib.Path(
@@ -36,8 +38,23 @@ HEAD = """<meta name="description" content="Plasma Wave Workbench: scales, assum
 <meta name="apple-mobile-web-app-title" content="Workbench">
 """
 
-BAR = """<nav aria-label="Site" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;border-bottom:1px solid rgba(0,0,0,.08)">
+TAG_STYLE = ("color:#252A2E;background:rgba(169,217,230,.35);border-radius:99px;padding:2px 9px;"
+             "min-height:24px;display:inline-flex;align-items:center;text-decoration:none")
+
+
+def bar():
+    """The "back to projects" bar, with the project's tags from data/projects.json.
+    Each tag opens the project list filtered by it."""
+    projects = json.loads((REPO / "data" / "projects.json").read_text(encoding="utf8"))
+    tags = next((p.get("tags", []) for p in projects if p.get("slug") == OUT.name), [])
+    links = "".join(f'<li><a href="/projects/?tag={urllib.parse.quote(t)}" style="{TAG_STYLE}">#{html.escape(t)}</a></li>'
+                    for t in tags)
+    tag_list = (f'<ul aria-label="Tags" style="display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none">'
+                f'{links}</ul>\n') if links else ""
+    return f"""<nav aria-label="Site" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 12px;padding:10px 16px;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;border-bottom:1px solid rgba(0,0,0,.08)">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px">
 <a href="/projects/" style="color:#252A2E;text-decoration:underline;text-decoration-color:#A9D9E6;text-decoration-thickness:2px;text-underline-offset:3px;min-height:32px;display:inline-flex;align-items:center">← (ice)^3 / projects</a>
+{tag_list}</div>
 <span id="offline-status" style="color:#5C6268"></span>
 </nav>
 """
@@ -137,7 +154,7 @@ def main():
     html = SOURCE.read_text(encoding="utf8")
 
     html = insert_once(html, "</head>", HEAD, after=False)
-    html = insert_once(html, "<body>\n", BAR)
+    html = insert_once(html, "<body>\n", bar())
     html = insert_once(html, "</body>", REGISTER, after=False)
 
     version = hashlib.sha256(html.encode("utf8")).hexdigest()[:12]
