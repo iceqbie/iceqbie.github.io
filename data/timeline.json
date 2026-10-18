@@ -90,19 +90,34 @@
         "url": ""
     },
     {
+        "start": "2026",
+        "end": "",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "Organizer, Satellite Data Analysis Seminar — AstroCamp 2026",
+            "ja": "衛星データ解析ゼミ 企画者（AstroCamp 2026）"
+        },
+        "detail": {
+            "en": "Planned and ran the satellite data analysis seminar.",
+            "ja": "衛星データ解析ゼミの企画・運営."
+        },
+        "url": "https://camp.ase-lab.space/"
+    },
+    {
         "start": "2025",
         "end": "",
         "kind": "other",
         "type": "organizer",
         "title": {
-            "en": "Satellite Data Analysis Seminar at Astrocamp (2025–2026)",
-            "ja": "衛星データ解析ゼミ at Astrocamp（2025–2026）"
+            "en": "Organizer, Satellite Data Analysis Seminar — AstroCamp 2025",
+            "ja": "衛星データ解析ゼミ 企画者（AstroCamp 2025）"
         },
         "detail": {
-            "en": "Organized the satellite data analysis seminar at Astrocamp.",
-            "ja": "Astrocamp での衛星データ解析ゼミの企画・運営."
+            "en": "Planned and ran the satellite data analysis seminar.",
+            "ja": "衛星データ解析ゼミの企画・運営."
         },
-        "url": "https://camp.ase-lab.space/"
+        "url": "https://astro-camp.notion.site/1c8f492792ce8197b330d4178b4e5382"
     },
     {
         "start": "2022",
