@@ -250,6 +250,13 @@
     const sortKey = (item) =>
         !item.start && item.end === "present" ? "9999" : (item.start || item.end || "0000");
 
+    // Related pages (reports, articles) listed under an entry, like a
+    // publication's arXiv / DOI links.
+    const entryLinks = (item) => (item.links || []).length
+        ? `<div class="publication-links">${item.links.map((l) =>
+            `<a href="${escapeHtml(l.url)}"${linkAttrs(l.url)}>${escapeHtml(pick(l.label))}${isExternal(l.url) ? "\u00a0↗" : ""}</a>`).join("")}</div>`
+        : "";
+
     function timelineEntry(item) {
         const detail = pick(item.detail);
         const heading = entryHeading(item);
@@ -262,6 +269,7 @@
                     </p>
                     <h${LEVEL}>${heading}</h${LEVEL}>
                     ${detail ? `<p>${escapeHtml(detail)}</p>` : ""}
+                    ${entryLinks(item)}
                 </li>`;
     }
 
@@ -287,6 +295,7 @@
                     <div class="cv-body">
                         <h${LEVEL}>${entryHeading(item)}</h${LEVEL}>
                         ${detail ? `<p>${escapeHtml(detail)}</p>` : ""}
+                        ${entryLinks(item)}
                     </div>
                 </li>`;
         }).join("")}</ol>`;

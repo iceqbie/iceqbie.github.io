@@ -2022,3 +2022,17 @@ html[lang="ja"] .card-title,
 .prose figure img {
     border: var(--border);
 }
+
+/* Report links under a timeline row. */
+.block .cv-body .publication-links {
+    gap: 4px 16px;
+
+    margin-top: 4px;
+
+    font-size: var(--fs-meta);
+}
+
+/* Even spacing between rows, whether a row ends with text or links. */
+.block .cv-body > :last-child {
+    margin-bottom: 0;
+}

@@ -117,7 +117,11 @@
             "en": "Planned and ran the satellite data analysis seminar.",
             "ja": "衛星データ解析ゼミの企画・運営."
         },
-        "url": "https://camp.ase-lab.space/"
+        "url": "https://camp.ase-lab.space/",
+        "links": [
+            { "label": { "en": "Event report (note)", "ja": "イベントレポート（note）" }, "url": "https://note.com/ase_lab_/n/n5c56367c6662" },
+            { "label": { "en": "DemoDay report (cross U)", "ja": "DemoDay レポート（cross U）" }, "url": "https://www.crossu.org/event_report/260912rt/" }
+        ]
     },
     {
         "start": "2025",
@@ -133,6 +137,24 @@
             "ja": "衛星データ解析ゼミの企画・運営."
         },
         "url": "https://astro-camp.notion.site/1c8f492792ce8197b330d4178b4e5382"
+    },
+    {
+        "start": "2024-03",
+        "end": "",
+        "kind": "other",
+        "type": "organizer",
+        "title": {
+            "en": "Organizer, Satellite Data Analysis Hackathon — AstroCamp 2024",
+            "ja": "衛星データ解析ハッカソン 企画者（AstroCamp 2024）"
+        },
+        "detail": {
+            "en": "",
+            "ja": ""
+        },
+        "url": "",
+        "links": [
+            { "label": { "en": "Event report (note)", "ja": "イベントレポート（note）" }, "url": "https://note.com/ase_lab_/n/n26f4b881350f" }
+        ]
     },
     {
         "start": "2024-03",
@@ -177,7 +199,11 @@
             "en": "Organize seminars on satellite imagery and astrostatistics. Built a CanSat navigation-control algorithm and k-means image processing for the August 2022 competition.",
             "ja": "衛星画像・宇宙統計のゼミの企画・運営. 2022年8月の CanSat 大会に向けて, 航法制御アルゴリズムと k-means による画像処理を開発."
         },
-        "url": "https://www.ase-lab.space/"
+        "url": "https://www.ase-lab.space/",
+        "links": [
+            { "label": { "en": "Satellite data analysis workshop (2023)", "ja": "衛星データ解析体験会（2023）" }, "url": "https://note.com/ase_lab_/n/nd871348dc8aa" },
+            { "label": { "en": "HELLO SPACE WORK! workshop (2023)", "ja": "HELLO SPACE WORK! ワークショップ（2023）" }, "url": "https://note.com/ase_lab_/n/n6c17eed303ef" }
+        ]
     },
     {
         "start": "2020",
