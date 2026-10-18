@@ -1,15 +1,37 @@
-"""Turn a Notion HTML export into a blog post on this site.
+"""Turn a Notion draft into a blog post on this site.
+
+From the Markdown draft (the Notion "ブログ下書きテンプレート" format):
+
+    python3 tools/import-notion.py blog/_source/<slug>/post.md
+
+  The draft starts with the title and the post's details, then the body:
+
+    # Title
+    slug: astrocamp-2026       (the URL: /blog/<slug>/)
+    published: YYYY-MM-DD
+    updated: YYYY-MM-DD        (optional)
+    caption: One or two sentences for the card and link previews.
+    tags: AstroCamp, thoughts  (optional)
+    thumbnail: photo.jpg       (next to the draft)
+
+    ## First heading
+    …
+    ![alt text describing the figure](file.png)
+
+From a Notion HTML export (older posts):
 
     python3 tools/import-notion.py blog/_source/<slug>/<export>.html \\
         --slug <slug> --date YYYY-MM-DD --thumb blog/_source/<slug>/<photo>.jpg \\
         --summary "One or two sentences for the card and link previews."
 
+Options on the command line win over the details in the draft.
+
 Writes blog/<slug>/index.html, blog/<slug>/thumb.jpg and blog/<slug>/figures/,
 then prints the entry to paste into data/articles.json (English title and
 summary are left for you to write).
 
-Figures: in Notion, write a line   <>file.png|alt text<>   where a figure
-goes, and put file.png next to the export. Figures are copied in order as
+Figures: in a Markdown draft, a line   ![alt text](file.png)   ; in an HTML
+export, a line   <>file.png|alt text<>   . Put file.png next to the draft. Figures are copied in order as
 figures/fig01-<name>.png, fig02-…
 
 The thumbnail is shrunk to 1200px (enough for link previews) and its metadata (EXIF: camera, GPS,
@@ -72,6 +94,93 @@ def clean(body):
     # External links open in a new tab.
     body = re.sub(r'<a href="(https?://[^"]+)">', r'<a href="\1" target="_blank" rel="noopener noreferrer">', body)
     return body
+
+
+# ---------------------------------------------------------------- markdown drafts
+
+DETAILS = {"slug", "published", "updated", "caption", "tags", "thumbnail"}
+
+
+def read_markdown(text):
+    """Split a draft into its title, its details (published, caption, …) and the body."""
+    title, details, lines = None, {}, text.strip("\n").splitlines()
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        key, sep, value = line.partition(":")
+        if not line:
+            pass
+        elif title is None and line.startswith("# "):
+            title = line[2:].strip()
+        elif sep and key.strip().lower() in DETAILS:
+            details[key.strip().lower()] = value.strip()
+        else:
+            break
+        i += 1
+    return title, details, "\n".join(lines[i:])
+
+
+def inline(text):
+    text = html.escape(text, quote=False)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+    text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)",
+                  lambda m: f'<a href="{m.group(2)}"'
+                            + (' target="_blank" rel="noopener noreferrer"' if m.group(2).startswith("http") else "")
+                            + f">{m.group(1)}</a>", text)
+    return text
+
+
+def markdown_to_html(md):
+    """The Markdown a Notion draft uses: headings, paragraphs, bold, links,
+    quotes, nested bullet lists and figures. Figures become <>file|alt<>
+    markers, which place_figures() then copies in."""
+    out, para, items = [], [], []   # items: (depth, text) of the current list
+
+    def flush_para():
+        if para:
+            out.append(f"<p>{inline(''.join(para))}</p>")
+            para.clear()
+
+    def flush_list():
+        if not items:
+            return
+        html_list, depth = "", -1
+        for d, text in items:
+            if d > depth:
+                html_list += "<ul>" * (d - depth)
+            else:
+                html_list += "</li>" + "</ul></li>" * (depth - d)
+            html_list += f"<li>{inline(text)}"
+            depth = d
+        out.append(html_list + "</li>" + "</ul></li>" * depth + "</ul>")
+        items.clear()
+
+    for raw in md.splitlines():
+        line = raw.rstrip()
+        bullet = re.match(r"^( *)[-*] (.+)$", line)
+        image = re.match(r"^!\[(.*?)\]\((.+?)\)$", line.strip())
+        heading = re.match(r"^(#{2,4}) (.+)$", line)
+        if bullet:
+            flush_para()
+            items.append((len(bullet.group(1)) // 4, bullet.group(2)))
+            continue
+        flush_list()
+        if not line.strip():
+            flush_para()
+        elif heading:
+            flush_para()
+            out.append(f"<h{len(heading.group(1))}>{inline(heading.group(2))}</h{len(heading.group(1))}>")
+        elif image:
+            flush_para()
+            out.append(f"<p>&lt;&gt;{html.escape(image.group(2))}|{html.escape(image.group(1))}&lt;&gt;</p>")
+        elif line.startswith(">"):
+            flush_para()
+            out.append(f"<blockquote><p>{inline(line.lstrip('> ').strip())}</p></blockquote>")
+        else:
+            para.append(line.strip())
+    flush_para()
+    flush_list()
+    return "\n".join(out)
 
 
 def take_title(body):
@@ -150,7 +259,7 @@ def make_thumb(src, dest):
 
 # ---------------------------------------------------------------- page
 
-def build_page(title, date, lang, body, summary, slug, has_thumb):
+def build_page(title, date, lang, body, summary, slug, has_thumb, updated=""):
     page = TEMPLATE.read_text(encoding="utf8")
     url = f"{SITE}/blog/{slug}/"
     esc = html.escape
@@ -178,10 +287,15 @@ def build_page(title, date, lang, body, summary, slug, has_thumb):
     end = page.index("    </main>")
     back = "/jp/blog/" if lang == "ja" else "/blog/"
     back_text = "← ブログ一覧へ" if lang == "ja" else "← All articles"
+    label = (lambda word, d: f'<time datetime="{d}">{d}</time> {word}') if lang == "ja" \
+        else (lambda word, d: f'{word} <time datetime="{d}">{d}</time>')
+    dates = label("公開" if lang == "ja" else "Published", date)
+    if updated and updated != date:
+        dates += " · " + label("更新" if lang == "ja" else "Updated", updated)
     article = f"""        <article class="prose container" lang="{lang}">
 
             <p class="prose-meta">
-                <time datetime="{date}">{date}</time>
+                {dates}
             </p>
 
             <h1>{esc(title)}</h1>
@@ -198,30 +312,47 @@ def build_page(title, date, lang, body, summary, slug, has_thumb):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("export", type=pathlib.Path, help="the Notion .html export")
-    ap.add_argument("--slug", required=True, help="URL name, lowercase with hyphens")
-    ap.add_argument("--date", required=True, help="publication date, YYYY-MM-DD")
+    ap.add_argument("export", type=pathlib.Path, help="the Markdown draft (.md) or Notion .html export")
+    ap.add_argument("--slug", help="URL name, lowercase with hyphens (or slug: in the draft)")
+    ap.add_argument("--date", help="publication date, YYYY-MM-DD (or published: in the draft)")
+    ap.add_argument("--updated", help="date of the last change, YYYY-MM-DD (or updated: in the draft)")
     ap.add_argument("--lang", default="ja", choices=["ja", "en"])
     ap.add_argument("--thumb", type=pathlib.Path, help="photo for the card and link previews")
     ap.add_argument("--summary", default="", help="one or two sentences for the card and previews")
     args = ap.parse_args()
 
-    if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", args.slug):
-        sys.exit("import-notion: --slug must be lowercase letters, digits and hyphens")
-    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.date):
-        sys.exit("import-notion: --date must be YYYY-MM-DD")
-
     export = args.export.read_text(encoding="utf8")
-    page_name = html.unescape(re.search(r"<title>(.*?)</title>", export, re.S).group(1)).strip()
+    details, tags = {}, []
+    if args.export.suffix.lower() == ".md":
+        title, details, markdown = read_markdown(export)
+        page_name = title or ""
+        body = markdown_to_html(markdown)
+        tags = [t.strip() for t in details.get("tags", "").split(",") if t.strip()]
+    else:
+        page_name = html.unescape(re.search(r"<title>(.*?)</title>", export, re.S).group(1)).strip()
+        title, body = take_title(clean(extract_body(export)))
+
+    args.slug = args.slug or details.get("slug")
+    if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", args.slug or ""):
+        sys.exit("import-notion: the slug (--slug or slug:) must be lowercase letters, digits and hyphens")
+    args.date = args.date or details.get("published")
+    args.updated = args.updated or details.get("updated", "")
+    args.summary = args.summary or details.get("caption", "")
+    if args.thumb is None and details.get("thumbnail"):
+        args.thumb = args.export.parent / details["thumbnail"]
+    if args.thumb and not args.thumb.exists():
+        sys.exit(f"import-notion: thumbnail {str(args.thumb)!r} not found — put the photo next to the draft")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.date or ""):
+        sys.exit("import-notion: the publication date (--date or published:) must be YYYY-MM-DD")
+    if args.updated and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.updated):
+        sys.exit("import-notion: the update date (--updated or updated:) must be YYYY-MM-DD")
 
     out_dir = REPO / "blog" / args.slug
     if (out_dir / "figures").exists():
         shutil.rmtree(out_dir / "figures")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    body = clean(extract_body(export))
-    title, body = take_title(body)
-    title = title or page_name
+    title = title or page_name or args.slug
     body, n_figures = place_figures(body, args.export.parent, out_dir, args.slug)
 
     kb = None
@@ -233,15 +364,16 @@ def main():
         warn("no --summary: the card and link previews will have no description")
 
     (out_dir / "index.html").write_text(
-        build_page(title, args.date, args.lang, body, args.summary, args.slug, bool(args.thumb)), encoding="utf8")
+        build_page(title, args.date, args.lang, body, args.summary, args.slug, bool(args.thumb), args.updated),
+        encoding="utf8")
 
     print(f"  wrote blog/{args.slug}/index.html, {n_figures} figure(s)"
           + (f", thumb.jpg ({kb:.0f} KB)" if kb else ""))
     entry = {
-        "slug": args.slug, "date": args.date, "lang": args.lang,
+        "slug": args.slug, "date": args.date, "updated": args.updated, "lang": args.lang,
         "title": {"en": "", "ja": title} if args.lang == "ja" else {"en": title, "ja": ""},
         "summary": {"en": "", "ja": args.summary} if args.lang == "ja" else {"en": args.summary, "ja": ""},
-        "tags": [],
+        "tags": tags,
         "url": f"/blog/{args.slug}/",
         "thumb": f"/blog/{args.slug}/thumb.jpg" if args.thumb else "",
     }

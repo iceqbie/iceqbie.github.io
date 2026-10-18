@@ -2,15 +2,15 @@
     {
         "slug": "astrocamp-2026",
         "date": "2026-10-03",
-        "updated": "",
+        "updated": "2026-10-18",
         "lang": "ja",
         "title": {
-            "en": "Of course you can't teach what you can't define — AstroCamp 2026",
-            "ja": "当たり前だけど, 定義できないものは教えられないんだよね 【AstroCamp 2026】"
+            "en": "How do you teach a vague kind of thinking? — AstroCamp 2026",
+            "ja": "曖昧な「思考」をどう教えるか【AstroCamp 2026】"
         },
         "summary": {
             "en": "A look back and reflections as the organizer of the satellite data analysis seminar at AstroCamp 2026.",
-            "ja": "AstroCamp 2026の衛星データ解析ゼミの企画者としての振り返り・反省記録です."
+            "ja": "AstroCamp 2026 衛星データ解析ゼミの企画者としての振り返り・反省記録です."
         },
         "tags": ["AstroCamp", "衛星データ解析", "thoughts"],
         "url": "/blog/astrocamp-2026/",

@@ -88,27 +88,36 @@ Each post is one folder; the originals stay in `blog/_source/`, which git ignore
 
 ```text
 blog/
-├── _source/<slug>/          not published: Notion export, original photo and figures
+├── _source/<slug>/          not published: the draft (post.md), original photo and figures
 └── <slug>/
     ├── index.html           built by tools/import-notion.py
     ├── thumb.jpg            card and link-preview image (1200px, metadata removed)
     └── figures/fig01-….png
 ```
 
-1. Write the post in Notion. Where a figure goes, put a line `<>file.png|alt text describing the figure<>`.
-2. ••• → Export → HTML. Put the `.html`, the figure files and a thumbnail photo in `blog/_source/<slug>/` (`slug`: lowercase and hyphens, e.g. `astrocamp-2026`).
-3. Run:
+Drafts are written in Notion: duplicate the page **ブログ下書きテンプレート** (under ブログ in the private hub) and write inside its code block. The draft starts with the post's details, then the body in Markdown:
 
-   ```sh
-   python3 tools/import-notion.py "blog/_source/<slug>/<export>.html" \
-       --slug <slug> --date 2026-10-03 --thumb "blog/_source/<slug>/<photo>.jpg" \
-       --summary "One or two sentences for the card and link previews."
-   ```
+```text
+# Title
+slug: astrocamp-2026         URL: /blog/<slug>/
+published: 2026-10-03
+updated: 2026-10-18          only after a rewrite
+caption: One or two sentences for the card and link previews.
+tags: AstroCamp, thoughts    spell them like the existing tags
+thumbnail: photo.jpg
 
-   It takes the first heading as the title, removes Notion's leftovers (empty paragraphs, stray line breaks, literal `**bold**`, split lists), copies the figures as `figures/fig01-…`, shrinks the photo and strips its EXIF (camera, GPS), and fills in the link-preview tags. Fix any warnings it prints (usually a missing alt text) and run it again.
-4. Paste the JSON it prints at the top of `data/articles.json`, and add the English title, English summary and tags.
+## First heading
+…  **bold**, [link](https://…), > quote, - bullets (nest with 4 spaces)
+![alt text describing the figure](figure.png)
+```
 
-Re-running the script for the same slug overwrites that post, so edit in Notion and re-export rather than editing `index.html`.
+To publish (or republish after a rewrite):
+
+1. Save the code block's text as `blog/_source/<slug>/post.md`, next to the thumbnail photo and the figure files. (Claude can do this from the Notion link.)
+2. Run `python3 tools/import-notion.py blog/_source/<slug>/post.md`. It copies the figures as `figures/fig01-…`, shrinks the photo and strips its EXIF (camera, GPS), fills in the link-preview tags, shows the published and updated dates, and prints the entry for `data/articles.json`. Fix any warnings it prints (usually a missing alt text) and run it again.
+3. Put the entry at the top of `data/articles.json` (or update the existing one: title, caption, `updated`), and add the English title and summary.
+
+Re-running the script for the same slug overwrites that post, so edit the draft in Notion rather than editing `index.html`. Older posts exported from Notion as HTML still work: pass the `.html` export with `--slug`, `--date` and `--summary` (see the script's header).
 
 **Publication** — add to the top of `data/publications.json` (`year`, `title`, `journal`, `links`). Home shows the first three. No author lists — see Privacy.
 
