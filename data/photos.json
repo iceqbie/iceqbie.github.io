@@ -51,8 +51,8 @@
         "page": "https://unsplash.com/photos/3drJ7eH603Y",
         "src": "https://images.unsplash.com/photo-1655302688116-8f665c3f2a05?ixid=M3wxMDkxNDQ5fDB8MXxhbGx8N3x8fHx8fHx8MTc5MjI5MTg2OXw&ixlib=rb-4.1.0&auto=format&fit=crop&w=1200&q=80",
         "alt": {
-            "en": "",
-            "ja": ""
+            "en": "The CN Tower and the Toronto skyline against a dusk sky fading from blue to pink",
+            "ja": "青からピンクへ移る夕暮れの空と, CN タワーとトロントの街並み"
         }
     },
     {
@@ -76,7 +76,7 @@
         "src": "https://images.unsplash.com/photo-1785886429321-e3e397ecf2cb?ixid=M3wxMDkxNDQ5fDB8MXxhbGx8MTB8fHx8fHx8fDE3OTIyOTE4Njl8&ixlib=rb-4.1.0&auto=format&fit=crop&w=1200&q=80",
         "alt": {
             "en": "A vibrant field of sunflowers under a clear blue sky",
-            "ja": ""
+            "ja": "青空の下に咲き誇るひまわり畑"
         }
     },
     {
@@ -91,8 +91,8 @@
         "page": "https://unsplash.com/photos/5m6bXYsO8K4",
         "src": "https://images.unsplash.com/photo-1655641720293-cb061274658c?ixid=M3wxMDkxNDQ5fDB8MXxhbGx8MTJ8fHx8fHx8fDE3OTIyOTE4Njl8&ixlib=rb-4.1.0&auto=format&fit=crop&w=1200&q=80",
         "alt": {
-            "en": "",
-            "ja": ""
+            "en": "The Toronto skyline and the CN Tower lit up at night, seen across the water",
+            "ja": "水面越しに見る, 夜に明かりの灯ったトロントの街並みと CN タワー"
         }
     }
 ]
