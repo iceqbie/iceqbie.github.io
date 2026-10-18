@@ -2011,3 +2011,14 @@ html[lang="ja"] .card-title,
 .prose .prose-tags li + li {
     margin-top: 0;
 }
+
+/* Figures in posts: a thin frame so a white figure reads as one block,
+   and a link to the full-size image for zooming in on a phone. */
+.prose .figure-link,
+.prose figure picture {
+    display: block;
+}
+
+.prose figure img {
+    border: var(--border);
+}

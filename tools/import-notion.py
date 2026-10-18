@@ -31,7 +31,9 @@ then prints the entry to paste into data/articles.json (English title and
 summary are left for you to write).
 
 Figures: in a Markdown draft, a line   ![alt text](file.png)   ; in an HTML
-export, a line   <>file.png|alt text<>   . Put file.png next to the draft. Figures are copied in order as
+export, a line   <>file.png|alt text<>   . Put file.png next to the draft,
+and file-mobile.png next to it for a narrow version shown on phones. Draw
+figures at twice the width they are shown at (README → Figures). Figures are copied in order as
 figures/fig01-<name>.png, fig02-…
 
 The thumbnail is shrunk to 1200px (enough for link previews) and its metadata (EXIF: camera, GPS,
@@ -211,13 +213,36 @@ def place_figures(body, source_dir, out_dir, slug):
         dest = f"fig{count:02d}-{slugify(src.stem)}{src.suffix.lower()}"
         figures.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(src, figures / dest)
-        return (f'<figure><img src="/blog/{slug}/figures/{dest}" alt="{html.escape(alt)}" '
-                f'loading="lazy"></figure>')
+        url = f"/blog/{slug}/figures/{dest}"
+        size = png_size(src)
+        dims = f' width="{size[0]}" height="{size[1]}"' if size else ""
+        img = f'<img src="{url}" alt="{html.escape(alt)}"{dims} loading="lazy">'
+        # A narrow version for phones sits next to it as <name>-mobile.<ext>.
+        mobile = src.with_name(f"{src.stem}-mobile{src.suffix}")
+        if mobile.exists():
+            mobile_dest = f"fig{count:02d}-{slugify(src.stem)}-mobile{src.suffix.lower()}"
+            shutil.copyfile(mobile, figures / mobile_dest)
+            msize = png_size(mobile)
+            mdims = f' width="{msize[0]}" height="{msize[1]}"' if msize else ""
+            img = (f'<picture><source media="(max-width: 600px)" srcset="/blog/{slug}/figures/{mobile_dest}"{mdims}>'
+                   f"{img}</picture>")
+        elif size and size[0] / size[1] > 1.6:
+            warn(f"figure {name!r} is wide ({size[0]}x{size[1]}) and has no {mobile.name} for phones")
+        # The figure links to the full-size image, to zoom in on a phone.
+        return f'<figure><a class="figure-link" href="{url}">{img}</a></figure>'
 
     body = re.sub(r"<p>\s*&lt;&gt;(.+?)&lt;&gt;\s*</p>", figure, body, flags=re.S)
     if "&lt;&gt;" in body:
         warn("a <>…<> figure marker is not on its own line and was left as text")
     return body, count
+
+
+def png_size(path):
+    """(width, height) of a PNG, read from its header; None for other files."""
+    head = path.read_bytes()[:24]
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
 
 
 # ---------------------------------------------------------------- thumbnail

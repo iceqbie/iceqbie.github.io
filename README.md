@@ -51,6 +51,10 @@ Figures, diagrams and generated images use the site's colours arranged by lightn
 - Pale fills (Light Gray, Pale Ice, Ice Blue) are nearly as light as white, so give them a Charcoal or Deep Ice outline.
 - Emphasis is Signal Orange only, once or twice per image. Blue against orange stays distinct for most colour-vision differences.
 - Acid Lime is not used in figures: at 1.36 on white it barely shows.
+- Size: draw at twice the width the figure is shown at, so it is sharp and its text is readable. Posts are 680px wide, so a PC figure is 1360px wide (for example 1360×720); text is at least 30px in the image (15px on screen), names 34px.
+- Phones: a wide figure shrinks to 335px on a phone. Add a narrow version, 670px wide and laid out top to bottom, saved next to the figure as `<name>-mobile.png`; the post shows it below 600px. `tools/import-notion.py` warns when a wide figure has none. Tapping a figure opens it full size.
+- Keep figures tight: no empty margins, every name right next to the thing it names.
+- The AstroCamp 2026 figure is drawn by `blog/_source/astrocamp-2026/make_fig01.py` (SVG → PNG with `rsvg-convert`; kept on this Mac only, since `blog/_source/` is not in git) and can serve as a starting point.
 - Prompt for image generators: *flat, clean illustration on a white background; charcoal #252A2E text and outlines; deep blue #2F6F8A lines; blue #4D96B1 and pale #A9D9E6 / #CBE5EF fills with outlines; one orange #C2410C accent for the key point; no gradients, no shadows.*
 
 ## Typography
