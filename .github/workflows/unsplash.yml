@@ -1,4 +1,4 @@
-# Keep the photo strip on Home and /photos/ in "most popular" order.
+# Keep the photo strip on Home and /photos/ in "most downloaded" order.
 # Needs the repository secret UNSPLASH_ACCESS_KEY (see README → Photos).
 name: Update Unsplash photos
 
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch popular photos
+      - name: Fetch most downloaded photos
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
         run: python3 tools/fetch-unsplash.py
@@ -36,7 +36,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/photos.json
-          git commit -m "Update Unsplash photos (most popular first)"
+          git commit -m "Update Unsplash photos (most downloaded first)"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
 

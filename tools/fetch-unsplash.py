@@ -1,4 +1,4 @@
-"""Refresh data/photos.json with the most popular photos on Unsplash.
+"""Refresh data/photos.json with the most downloaded photos on Unsplash.
 
     UNSPLASH_ACCESS_KEY=… python3 tools/fetch-unsplash.py
     python3 tools/fetch-unsplash.py --from-file response.json   # test without the API
@@ -22,7 +22,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 PHOTOS = REPO / "data" / "photos.json"
 USER = "iceqbie"
 COUNT = 12
-API = f"https://api.unsplash.com/users/{USER}/photos?order_by=popular&per_page={COUNT}"
+API = f"https://api.unsplash.com/users/{USER}/photos?order_by=downloads&per_page={COUNT}"
 
 
 def fetch(key):
@@ -87,7 +87,7 @@ def main():
         print("fetch-unsplash: no change")
         return
     PHOTOS.write_text(text, encoding="utf8")
-    print(f"fetch-unsplash: wrote {len(entries)} photos (most popular first)")
+    print(f"fetch-unsplash: wrote {len(entries)} photos (most downloaded first)")
 
 
 if __name__ == "__main__":
