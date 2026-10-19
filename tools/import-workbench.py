@@ -6,7 +6,8 @@ script copies that file here and adds what a page on this site needs:
 
   - a small "back to projects" bar with the project's tags (from data/projects.json),
   - a favicon and a web-app manifest, so it can be added to the home screen,
-  - a service worker, so after one visit it keeps working offline (on the train).
+  - a service worker, so after one visit it keeps working offline (on the train),
+  - the Cloudflare Web Analytics snippet the rest of the site uses.
 
 Re-run it whenever the workbench changes:
 
@@ -58,6 +59,9 @@ def bar():
 <span id="offline-status" style="color:#5C6268"></span>
 </nav>
 """
+
+# Page views, counted by Cloudflare Web Analytics (no cookies); same snippet as every page of the site.
+ANALYTICS = """<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "86a3de7f5e4c42edb8b7a116b199c0b4"}'></script><!-- End Cloudflare Web Analytics -->"""
 
 REGISTER = """<script>
 /* Offline support: cache this page so it opens without signal. */
@@ -156,6 +160,7 @@ def main():
     html = insert_once(html, "</head>", HEAD, after=False)
     html = insert_once(html, "<body>\n", bar())
     html = insert_once(html, "</body>", REGISTER, after=False)
+    html = insert_once(html, "</body>", ANALYTICS + "\n", after=False)
 
     version = hashlib.sha256(html.encode("utf8")).hexdigest()[:12]
 

@@ -181,6 +181,10 @@ then add `Disallow: /cv/` and `Disallow: /jp/cv/` back to `robots.txt` (the CV c
 
 Until the key is set, the hand-written list is used as is. Alt text you write in `photos.json` (English or Japanese) is kept on each refresh; a new photo gets Unsplash's English description until you add a Japanese one.
 
+## Analytics
+
+Page views are counted by Cloudflare Web Analytics (free, no cookies; the dashboard can break views down by path). Every page carries the same `<script … data-cf-beacon='{"token": …}'>` snippet just before `</body>`; `blog/_template.html` and `tools/import-workbench.py` add it to new posts and the Workbench. The token is public by design. Ad blockers stop the beacon, so counts are a lower bound.
+
 ## Previewing locally
 
 The pages load `/data/*.json` with `fetch()` and use root-relative paths, so open them through a local server, not by double-clicking the file.
