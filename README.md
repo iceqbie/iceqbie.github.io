@@ -32,6 +32,9 @@ Defined once at the top of `style.css`. Keep to these five (tints of them are fi
 
 Ice Blue and Acid Lime are too light to be text on white — use them as backgrounds, underlines and highlights with Charcoal text on top.
 
+- Acid Lime stays rare: hover, the award badge, one-off highlights; never a large fill.
+- Secondary text is Soft Charcoal `#5C6268` (`--charcoal-soft`); focus rings are Charcoal (`--focus-ring`).
+
 ### Figures and images in posts
 
 Figures, diagrams and generated images use the site's colours arranged by lightness, plus one orange for emphasis. Contrast is against white.
@@ -72,6 +75,9 @@ Sizes are `rem` tokens (`--fs-*`) at the top of `style.css`, so the visitor's br
 | Code | IBM Plex Mono | 400 | 15px |
 
 - The face follows the nearest `lang` attribute: an English title on a Japanese page (`lang="en"`) is set in Inter.
+- The face is set by `:where([lang="ja"])` / `:where([lang="en"])` rules (zero specificity), so class rules win.
+- Articles: line-height 2; English articles at most 68ch.
+- Letter-spacing is negative (-0.01 to -0.05em) only on H1s, the site name, card titles and the thumbnail placeholder, and +0.04em on English nav.
 - Use mono only for the metadata in the table, not for buttons or links.
 - Don't add letter-spacing to body text or anything Japanese.
 - Japanese text uses a comma and a period (`, ` and `. `) instead of 、 and 。.
